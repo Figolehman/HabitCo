@@ -18,6 +18,13 @@
 		1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBC95282B7286D800FF9353 /* ContentView.swift */; };
 		1BBC952B2B7286D900FF9353 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952A2B7286D900FF9353 /* Assets.xcassets */; };
 		1BBC952E2B7286D900FF9353 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952D2B7286D900FF9353 /* Preview Assets.xcassets */; };
+		1BC115B02B73466600738AD9 /* SignInWithAppleButtonViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115AF2B73466600738AD9 /* SignInWithAppleButtonViewRepresentable.swift */; };
+		1BC115B22B734FB400738AD9 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115B12B734FB400738AD9 /* AuthenticationViewModel.swift */; };
+		1BC115B42B73529700738AD9 /* AuthDataResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115B32B73529700738AD9 /* AuthDataResultModel.swift */; };
+		1BC115B62B73563A00738AD9 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115B52B73563A00738AD9 /* AuthenticationManager.swift */; };
+		1BC115B82B7373C800738AD9 /* AppleAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115B72B7373C800738AD9 /* AppleAuthModel.swift */; };
+		1BC115BB2B73887800738AD9 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115BA2B73887800738AD9 /* Utilities.swift */; };
+		1BC115BF2B7395A500738AD9 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115BE2B7395A500738AD9 /* RootView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +34,14 @@
 		1BBC95282B7286D800FF9353 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1BBC952A2B7286D900FF9353 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BBC952D2B7286D900FF9353 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1BC115AF2B73466600738AD9 /* SignInWithAppleButtonViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleButtonViewRepresentable.swift; sourceTree = "<group>"; };
+		1BC115B12B734FB400738AD9 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
+		1BC115B32B73529700738AD9 /* AuthDataResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthDataResultModel.swift; sourceTree = "<group>"; };
+		1BC115B52B73563A00738AD9 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
+		1BC115B72B7373C800738AD9 /* AppleAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleAuthModel.swift; sourceTree = "<group>"; };
+		1BC115BA2B73887800738AD9 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		1BC115BE2B7395A500738AD9 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		1BD84F852B733D09001B9C2F /* HabitCo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitCo.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,11 +80,19 @@
 		1BBC95252B7286D800FF9353 /* HabitCo */ = {
 			isa = PBXGroup;
 			children = (
+				1BC115B92B7385F500738AD9 /* Utlities */,
+				1BD84F852B733D09001B9C2F /* HabitCo.entitlements */,
 				1B4B25782B7320B70081929F /* GoogleService-Info.plist */,
 				1BBC95262B7286D800FF9353 /* HabitCoApp.swift */,
+				1BC115BE2B7395A500738AD9 /* RootView.swift */,
 				1BBC95282B7286D800FF9353 /* ContentView.swift */,
+				1BC115AF2B73466600738AD9 /* SignInWithAppleButtonViewRepresentable.swift */,
+				1BC115B12B734FB400738AD9 /* AuthenticationViewModel.swift */,
 				1BBC952A2B7286D900FF9353 /* Assets.xcassets */,
 				1BBC952C2B7286D900FF9353 /* Preview Content */,
+				1BC115B32B73529700738AD9 /* AuthDataResultModel.swift */,
+				1BC115B72B7373C800738AD9 /* AppleAuthModel.swift */,
+				1BC115B52B73563A00738AD9 /* AuthenticationManager.swift */,
 			);
 			path = HabitCo;
 			sourceTree = "<group>";
@@ -80,6 +103,14 @@
 				1BBC952D2B7286D900FF9353 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1BC115B92B7385F500738AD9 /* Utlities */ = {
+			isa = PBXGroup;
+			children = (
+				1BC115BA2B73887800738AD9 /* Utilities.swift */,
+			);
+			path = Utlities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,8 +195,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BC115B22B734FB400738AD9 /* AuthenticationViewModel.swift in Sources */,
+				1BC115B02B73466600738AD9 /* SignInWithAppleButtonViewRepresentable.swift in Sources */,
 				1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */,
+				1BC115B82B7373C800738AD9 /* AppleAuthModel.swift in Sources */,
+				1BC115B62B73563A00738AD9 /* AuthenticationManager.swift in Sources */,
+				1BC115BF2B7395A500738AD9 /* RootView.swift in Sources */,
 				1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */,
+				1BC115BB2B73887800738AD9 /* Utilities.swift in Sources */,
+				1BC115B42B73529700738AD9 /* AuthDataResultModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,7 +262,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -281,7 +319,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -296,6 +334,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HabitCo/HabitCo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HabitCo/Preview Content\"";
@@ -307,7 +346,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -329,6 +368,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HabitCo/HabitCo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HabitCo/Preview Content\"";
@@ -340,7 +380,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
