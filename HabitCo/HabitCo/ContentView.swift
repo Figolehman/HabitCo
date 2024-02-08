@@ -9,7 +9,7 @@ import SwiftUI
 import AuthenticationServices
 
 struct ContentView: View {
-    @StateObject var authVM = AuthenticationViewModel()
+    
     @Binding var showSignInView: Bool
     
     var body: some View {
@@ -22,7 +22,11 @@ struct ContentView: View {
             Button(action: {
                 Task{
                     do {
-                        try await authVM.signInApple()
+//                        try await authVM.signInApple()
+                        let (userAuthInfo, isNewUser) = try await AuthManagerEnvironmentKey.defaultValue.signInApple()
+                        if userAuthInfo != nil {
+                            showSignInView = false
+                        }
                     } catch {
                         print(error)
                     }
@@ -33,11 +37,7 @@ struct ContentView: View {
                     .allowsHitTesting(false)
             })
             .frame(height: 55)
-            .onChange(of: authVM.didSignIn, perform: { value in
-                if value {
-                    showSignInView = false
-                }
-            })
+
         }
         .padding()
     }
