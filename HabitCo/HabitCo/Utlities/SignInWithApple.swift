@@ -162,6 +162,8 @@ private extension SignInWithAppleHelper {
 }
 
 extension SignInWithAppleHelper: ASAuthorizationControllerDelegate {
+    
+    // function that will be called after authenticating
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         do {
             guard let currentNonce else {
@@ -178,6 +180,7 @@ extension SignInWithAppleHelper: ASAuthorizationControllerDelegate {
             return
         }
     }
+    // same but with error
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         completionHandler?(.failure(error))
         return
