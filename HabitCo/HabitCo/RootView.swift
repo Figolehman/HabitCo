@@ -9,17 +9,24 @@ import SwiftUI
 
 struct RootView: View {
     @State private var showSignInView = false
+    @Environment(\.auth) var authUser
     var body: some View {
         ZStack {
             if !showSignInView {
                 NavigationView {
-                    EmptyView()
+                    Button("Logout"){
+                        do{
+                            try authUser.signOut()
+                            self.showSignInView = authUser.currentUser.profile == nil
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
                 }
             }
         }
         .onAppear {
-            let authUser = try? AuthManagerEnvironmentKey.defaultValue.currentUser
-            self.showSignInView = authUser?.profile == nil
+            self.showSignInView = authUser.currentUser.profile == nil
         }
         .fullScreenCover(isPresented: $showSignInView, content: {
             NavigationView {

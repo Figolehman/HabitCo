@@ -18,14 +18,18 @@ struct FirebaseAuthProvider: AuthProvider {
         }
     }
     
+    // Will be used to listen to any authStateChanges as long as the app runs
     @MainActor
     func authenticationDidChangeStream() -> AsyncStream<UserAuthInfo?> {
         AsyncStream { continuation in
-            Auth.auth().addStateDidChangeListener { _, currentUser in
+            Auth.auth().addStateDidChangeListener { auth, currentUser in
+                
                 if let currentUser {
                     let user = UserAuthInfo(user: currentUser)
+                    print(user)
                     continuation.yield(user)
                 } else {
+                    print("kosong")
                     continuation.yield(nil)
                 }
             }

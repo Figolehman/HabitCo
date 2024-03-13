@@ -19,7 +19,6 @@
 		1BBC952B2B7286D900FF9353 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952A2B7286D900FF9353 /* Assets.xcassets */; };
 		1BBC952E2B7286D900FF9353 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952D2B7286D900FF9353 /* Preview Assets.xcassets */; };
 		1BC115B02B73466600738AD9 /* SignInWithAppleButtonViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115AF2B73466600738AD9 /* SignInWithAppleButtonViewRepresentable.swift */; };
-		1BC115B42B73529700738AD9 /* AuthDataResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115B32B73529700738AD9 /* AuthDataResultModel.swift */; };
 		1BC115B62B73563A00738AD9 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115B52B73563A00738AD9 /* AuthManager.swift */; };
 		1BC115B82B7373C800738AD9 /* AppleAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115B72B7373C800738AD9 /* AppleAuthModel.swift */; };
 		1BC115BB2B73887800738AD9 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115BA2B73887800738AD9 /* Utilities.swift */; };
@@ -40,7 +39,6 @@
 		1BBC952A2B7286D900FF9353 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BBC952D2B7286D900FF9353 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1BC115AF2B73466600738AD9 /* SignInWithAppleButtonViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleButtonViewRepresentable.swift; sourceTree = "<group>"; };
-		1BC115B32B73529700738AD9 /* AuthDataResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthDataResultModel.swift; sourceTree = "<group>"; };
 		1BC115B52B73563A00738AD9 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		1BC115B72B7373C800738AD9 /* AppleAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleAuthModel.swift; sourceTree = "<group>"; };
 		1BC115BA2B73887800738AD9 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -102,7 +100,6 @@
 				1BC115AF2B73466600738AD9 /* SignInWithAppleButtonViewRepresentable.swift */,
 				1BBC952A2B7286D900FF9353 /* Assets.xcassets */,
 				1BBC952C2B7286D900FF9353 /* Preview Content */,
-				1BC115B32B73529700738AD9 /* AuthDataResultModel.swift */,
 				1BC115B72B7373C800738AD9 /* AppleAuthModel.swift */,
 			);
 			path = HabitCo;
@@ -247,7 +244,6 @@
 				1BC115C72B739E8100738AD9 /* UIApplication+Extension.swift in Sources */,
 				1BC115BB2B73887800738AD9 /* Utilities.swift in Sources */,
 				1BC115C92B739EC600738AD9 /* SignInWithApple.swift in Sources */,
-				1BC115B42B73529700738AD9 /* AuthDataResultModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

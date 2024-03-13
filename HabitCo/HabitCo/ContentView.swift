@@ -10,6 +10,7 @@ import AuthenticationServices
 
 struct ContentView: View {
     
+    @Environment(\.auth) var userAuth
     @Binding var showSignInView: Bool
     
     var body: some View {
@@ -23,7 +24,7 @@ struct ContentView: View {
                 Task{
                     do {
 //                        try await authVM.signInApple()
-                        let (userAuthInfo, isNewUser) = try await AuthManagerEnvironmentKey.defaultValue.signInApple()
+                        let (userAuthInfo, isNewUser) = try await userAuth.signInApple()
                         if userAuthInfo != nil {
                             showSignInView = false
                         }

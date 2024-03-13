@@ -66,8 +66,7 @@ public final class AuthManager {
     
     private func streamSignInChangesIfNeeded() {
         // Only stream changes if a user is signed in
-        // This is mainly for if their auth gets removed via Firebase Console or another application, we can automatically sign user out
-        // However, we don't want to stream user signing in, since the signIn() methods should confirm sign in success
+        // To listen to the changes of auth state (logged in, logged out)
         guard currentUser.isSignedIn else { return }
         
         self.task = Task {
