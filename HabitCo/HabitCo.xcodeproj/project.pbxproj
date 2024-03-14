@@ -14,6 +14,12 @@
 		1B4B25882B73295E0081929F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 1B4B25872B73295E0081929F /* FirebaseAuth */; };
 		1B4B25942B73295E0081929F /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1B4B25932B73295E0081929F /* FirebaseFirestore */; };
 		1B4B25982B73295E0081929F /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1B4B25972B73295E0081929F /* FirebaseFirestoreSwift */; };
+		1B560C7E2BA2028C00CE2DC6 /* AppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */; };
+		1B560C822BA222BE00CE2DC6 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C812BA222BE00CE2DC6 /* Color+Extension.swift */; };
+		1B560C842BA2C25E00CE2DC6 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C832BA2C25E00CE2DC6 /* ControlButton.swift */; };
+		1B560C862BA2F6F500CE2DC6 /* SortButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C852BA2F6F500CE2DC6 /* SortButton.swift */; };
+		1B560C8B2BA3130500CE2DC6 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C8A2BA3130500CE2DC6 /* FilterButton.swift */; };
+		1B560C8D2BA317F400CE2DC6 /* RepeatButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C8C2BA317F400CE2DC6 /* RepeatButton.swift */; };
 		1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBC95262B7286D800FF9353 /* HabitCoApp.swift */; };
 		1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBC95282B7286D800FF9353 /* ContentView.swift */; };
 		1BBC952B2B7286D900FF9353 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952A2B7286D900FF9353 /* Assets.xcassets */; };
@@ -22,6 +28,12 @@
 
 /* Begin PBXFileReference section */
 		1B4B25782B7320B70081929F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppButton.swift; path = HabitCo/AppButton.swift; sourceTree = SOURCE_ROOT; };
+		1B560C812BA222BE00CE2DC6 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
+		1B560C832BA2C25E00CE2DC6 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
+		1B560C852BA2F6F500CE2DC6 /* SortButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortButton.swift; sourceTree = "<group>"; };
+		1B560C8A2BA3130500CE2DC6 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
+		1B560C8C2BA317F400CE2DC6 /* RepeatButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatButton.swift; sourceTree = "<group>"; };
 		1BBC95232B7286D800FF9353 /* HabitCo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HabitCo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BBC95262B7286D800FF9353 /* HabitCoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCoApp.swift; sourceTree = "<group>"; };
 		1BBC95282B7286D800FF9353 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -46,6 +58,76 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B560C772BA2022600CE2DC6 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				1B560C7A2BA2023800CE2DC6 /* ViewModel */,
+				1B560C792BA2023300CE2DC6 /* Model */,
+				1B560C782BA2022D00CE2DC6 /* View */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		1B560C782BA2022D00CE2DC6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1B560C7C2BA2027600CE2DC6 /* Component */,
+				1BBC95282B7286D800FF9353 /* ContentView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1B560C792BA2023300CE2DC6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1B560C7A2BA2023800CE2DC6 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		1B560C7B2BA2025400CE2DC6 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				1B4B25782B7320B70081929F /* GoogleService-Info.plist */,
+				1BBC952A2B7286D900FF9353 /* Assets.xcassets */,
+				1BBC95262B7286D800FF9353 /* HabitCoApp.swift */,
+			);
+			name = Files;
+			sourceTree = "<group>";
+		};
+		1B560C7C2BA2027600CE2DC6 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */,
+				1B560C832BA2C25E00CE2DC6 /* ControlButton.swift */,
+				1B560C852BA2F6F500CE2DC6 /* SortButton.swift */,
+				1B560C8A2BA3130500CE2DC6 /* FilterButton.swift */,
+				1B560C8C2BA317F400CE2DC6 /* RepeatButton.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		1B560C7F2BA2226A00CE2DC6 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		1B560C802BA222A900CE2DC6 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				1B560C812BA222BE00CE2DC6 /* Color+Extension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		1BBC951A2B7286D800FF9353 = {
 			isa = PBXGroup;
 			children = (
@@ -65,10 +147,10 @@
 		1BBC95252B7286D800FF9353 /* HabitCo */ = {
 			isa = PBXGroup;
 			children = (
-				1B4B25782B7320B70081929F /* GoogleService-Info.plist */,
-				1BBC95262B7286D800FF9353 /* HabitCoApp.swift */,
-				1BBC95282B7286D800FF9353 /* ContentView.swift */,
-				1BBC952A2B7286D900FF9353 /* Assets.xcassets */,
+				1B560C802BA222A900CE2DC6 /* Extension */,
+				1B560C7F2BA2226A00CE2DC6 /* Utility */,
+				1B560C7B2BA2025400CE2DC6 /* Files */,
+				1B560C772BA2022600CE2DC6 /* Features */,
 				1BBC952C2B7286D900FF9353 /* Preview Content */,
 			);
 			path = HabitCo;
@@ -164,8 +246,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B560C7E2BA2028C00CE2DC6 /* AppButton.swift in Sources */,
+				1B560C862BA2F6F500CE2DC6 /* SortButton.swift in Sources */,
+				1B560C8D2BA317F400CE2DC6 /* RepeatButton.swift in Sources */,
 				1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */,
 				1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */,
+				1B560C822BA222BE00CE2DC6 /* Color+Extension.swift in Sources */,
+				1B560C842BA2C25E00CE2DC6 /* ControlButton.swift in Sources */,
+				1B560C8B2BA3130500CE2DC6 /* FilterButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
