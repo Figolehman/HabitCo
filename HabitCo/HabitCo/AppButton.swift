@@ -11,6 +11,7 @@ enum AppButtonSize{
     case submit
     case share
     case select
+    case control
     
     var width: CGFloat {
         get {
@@ -21,7 +22,10 @@ enum AppButtonSize{
                 return 310
             case .select:
                 return 124
+            case .control:
+                return .nan
             }
+            
         }
     }
     
@@ -34,6 +38,8 @@ enum AppButtonSize{
                 return 48
             case .select:
                 return 46
+            case .control:
+                return 38
             }
         }
     }
@@ -54,6 +60,7 @@ struct AppButton: View {
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
         })
+        .padding(12)
         .frame(width: sizeType.width, height: sizeType.height)
         .background(color)
         .cornerRadius(12)
@@ -62,5 +69,5 @@ struct AppButton: View {
 }
 
 #Preview {
-    AppButton(color: .appColor, label: "Logout", sizeType: .submit) {}
+    AppButton(color: .appColor, label: "Logout", sizeType: .control) {}
 }
