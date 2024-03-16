@@ -12,6 +12,7 @@ enum AppButtonSize{
     case share
     case select
     case control
+    case undo
     
     var width: CGFloat {
         get {
@@ -24,8 +25,9 @@ enum AppButtonSize{
                 return 124
             case .control:
                 return .nan
+            case .undo:
+                return 116
             }
-            
         }
     }
     
@@ -40,6 +42,25 @@ enum AppButtonSize{
                 return 46
             case .control:
                 return 38
+            case .undo:
+                return 80
+            }
+        }
+    }
+    
+    var color: Color {
+        get {
+            switch self {
+            case .submit:
+                return .appColor
+            case .share:
+                return .appColor
+            case .select:
+                return .appColor
+            case .control:
+                return .appColor
+            case .undo:
+                return .gray
             }
         }
     }
