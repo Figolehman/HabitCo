@@ -17,10 +17,6 @@ struct PomodoroTimer: View {
     
     @State var duration: Int = 70
     
-    init() {
-        
-    }
-    
     var body: some View {
         ZStack {
             Circle()

@@ -34,6 +34,7 @@ struct CalendarView: View {
             VStack {
                 HStack {
                     Text("\(getMonthName(currentMonth)) " + String(currentYear))
+                        .font(.body)
                     
                     Spacer()
                     
@@ -42,6 +43,8 @@ struct CalendarView: View {
                         
                     } label: {
                         Image(systemName: "chevron.left")
+                            .foregroundColor(.black)
+                            .font(.title2)
                     }
                     
                     Button {
@@ -49,6 +52,8 @@ struct CalendarView: View {
                         
                     } label: {
                         Image(systemName: "chevron.right")
+                            .foregroundColor(.black)
+                            .padding(.horizontal, 10)
                     }
 
 
@@ -60,6 +65,8 @@ struct CalendarView: View {
                     ForEach(days, id: \.self) { day in
                         Text(day)
                             .frame(maxWidth: .infinity)
+                            .font(.footnote)
+                            .foregroundColor(Color(UIColor.tertiaryLabel))
                     }
                 }
                 
@@ -73,6 +80,8 @@ struct CalendarView: View {
                     }
                     ForEach(days, id: \.self) { day in
                         Text("\(day.get(.day))")
+                            .font(.title3)
+                            .modifier(DateMarking(0.6))
                     }
                 })
             }
@@ -119,6 +128,34 @@ extension CalendarView {
         default:
             return "Month"
         }
+    }
+}
+
+// MARK: - Date Marking
+struct DateMarking: ViewModifier {
+    let fraction: CGFloat
+    let midPoint: CGFloat = 0.5
+    let startPoint: CGFloat
+    let endPoint: CGFloat
+    
+    init(_ fraction: CGFloat = 1) {
+        self.fraction = fraction
+        
+        // Calculate start and end point
+        let halfFraction = fraction/2
+        self.startPoint = midPoint - halfFraction
+        self.endPoint = midPoint + halfFraction
+    }
+    
+    func body(content: Content) -> some View {
+        content
+            .background(
+                Circle()
+                    .trim(from: startPoint, to: endPoint)
+                    .rotation(.degrees(-90))
+                    .foregroundColor(Color(red: 0.58, green: 0.89, blue: 0.99))
+                    .frame(width: 35, height: 35)
+            )
     }
 }
 
