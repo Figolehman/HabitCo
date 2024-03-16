@@ -8,6 +8,8 @@
 import Foundation
 
 extension Date {
+    static public let nameOfDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+    
     var startOfMonth: Date {
         Calendar.current.dateInterval(of: .month, for: self)!.start
     }
@@ -35,33 +37,36 @@ extension Date {
     
     var sundayBeforeStart: Date {
         let startOfMonthWeekday = Calendar.current.component(.weekday, from: self.startOfMonth)
-        let numberFromPreviousMonth = startOfMonthWeekday - 1
-        return Calendar.current.date(byAdding: .day, value: -numberFromPreviousMonth, to: self.startOfMonth)!
+        return Calendar.current.date(byAdding: .day, value: -(startOfMonthWeekday - 1), to: self.startOfMonth)!
     }
     
     var calendarDisplayDate: [Date] {
         var dates: [Date] = []
         
-//        let saturdayBeforeStart = Calendar.current.date(byAdding: .day, value: 0, to: self.sundayBeforeStart)!
-//        let dateOfSundayBeforeStart = saturdayBeforeStart.get(.day)
-//        
-//        for dayOffset in dateOfSundayBeforeStart...self.startOfPreviousMonth.numberOfDaysInMonth {
-//            let newDay = Calendar.current.date(byAdding: .day, value: dayOffset, to: self.startOfPreviousMonth)
-//            dates.append(newDay!)
-//        }
-        
         for dayOffset in 0...self.numberOfDaysInMonth - 1 {
             let newDay = Calendar.current.date(byAdding: .day, value: dayOffset, to: self.startOfMonth)
             dates.append(newDay!)
         }
-//        for dayOffset in 0...self.startOfPreviousMonth.numberOfDaysInMonth - 1 {
-//            let newDay = Calendar.current.date(byAdding: .day, value: dayOffset, to: self.startOfPreviousMonth)
-//            dates.append(newDay!)
-//        }
+
         return dates
-//        return dates.filter{
-//            $0 >= sundayBeforeStart && $0 <= endOfMonth
-//        }.sorted(by: <)
+
+    }
+    
+    var sundayBeforeToday: Date {
+        let day = self.get(.weekday)
+        return Calendar.current.date(byAdding: .day, value: -(day - 1), to: self)!
+    }
+    
+    var weeklyDisplayDate: [Date] {
+        let sundayThisWeek = self.sundayBeforeToday
+        
+        var days = [Date]()
+        
+        for dayOffset in 0..<7 {
+            days.append(Calendar.current.date(byAdding: .day, value: dayOffset, to: sundayThisWeek)!)
+        }
+        
+        return days
     }
     
     func get(_ components: Calendar.Component..., calendar: Calendar = Calendar.current) -> DateComponents {
