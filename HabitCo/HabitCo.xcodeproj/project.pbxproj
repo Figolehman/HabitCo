@@ -28,6 +28,7 @@
 		1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBC95282B7286D800FF9353 /* ContentView.swift */; };
 		1BBC952B2B7286D900FF9353 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952A2B7286D900FF9353 /* Assets.xcassets */; };
 		1BBC952E2B7286D900FF9353 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952D2B7286D900FF9353 /* Preview Assets.xcassets */; };
+		1BD50F0F2BA5688000FC7BCF /* WeeklyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F0E2BA5688000FC7BCF /* WeeklyView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		1BBC95282B7286D800FF9353 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1BBC952A2B7286D900FF9353 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BBC952D2B7286D900FF9353 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1BD50F0E2BA5688000FC7BCF /* WeeklyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +122,7 @@
 				1B560C8E2BA3627D00CE2DC6 /* PomodoroTimer.swift */,
 				1B897F392BA420250018BEAA /* LabelButton.swift */,
 				1B897F3B2BA424800018BEAA /* CalendarView.swift */,
+				1BD50F0E2BA5688000FC7BCF /* WeeklyView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -261,6 +264,7 @@
 				1B897F3C2BA424800018BEAA /* CalendarView.swift in Sources */,
 				1B897F3E2BA4279B0018BEAA /* Date+Extension.swift in Sources */,
 				1B560C7E2BA2028C00CE2DC6 /* AppButton.swift in Sources */,
+				1BD50F0F2BA5688000FC7BCF /* WeeklyView.swift in Sources */,
 				1B560C862BA2F6F500CE2DC6 /* SortButton.swift in Sources */,
 				1B560C8D2BA317F400CE2DC6 /* RepeatButton.swift in Sources */,
 				1B560C8F2BA3627D00CE2DC6 /* PomodoroTimer.swift in Sources */,
