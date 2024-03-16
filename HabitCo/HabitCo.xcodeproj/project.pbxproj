@@ -33,11 +33,13 @@
 		1BD50F162BA5BB2500FC7BCF /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F152BA5BB2500FC7BCF /* CardView.swift */; };
 		1BD50F192BA5D21500FC7BCF /* EditableCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F182BA5D21500FC7BCF /* EditableCardView.swift */; };
 		1BD50F1B2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F1A2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift */; };
+		1BD50F1E2BA61F8D00FC7BCF /* SettingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F1D2BA61F8D00FC7BCF /* SettingButton.swift */; };
+		1BD50F202BA6210000FC7BCF /* HabitItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F1F2BA6210000FC7BCF /* HabitItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1B4B25782B7320B70081929F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppButton.swift; path = HabitCo/AppButton.swift; sourceTree = SOURCE_ROOT; };
+		1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppButton.swift; path = HabitCo/Features/View/Component/Button/AppButton.swift; sourceTree = SOURCE_ROOT; };
 		1B560C812BA222BE00CE2DC6 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		1B560C832BA2C25E00CE2DC6 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
 		1B560C852BA2F6F500CE2DC6 /* SortButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortButton.swift; sourceTree = "<group>"; };
@@ -57,6 +59,8 @@
 		1BD50F152BA5BB2500FC7BCF /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		1BD50F182BA5D21500FC7BCF /* EditableCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableCardView.swift; sourceTree = "<group>"; };
 		1BD50F1A2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditorWithPlaceholder.swift; sourceTree = "<group>"; };
+		1BD50F1D2BA61F8D00FC7BCF /* SettingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingButton.swift; sourceTree = "<group>"; };
+		1BD50F1F2BA6210000FC7BCF /* HabitItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,16 +126,13 @@
 		1B560C7C2BA2027600CE2DC6 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				1BD50F1C2BA61F7C00FC7BCF /* Button */,
 				1BD50F172BA5D20800FC7BCF /* Card */,
 				1BD50F132BA5B54F00FC7BCF /* Calendar */,
 				1BD50F122BA5B54600FC7BCF /* Filter */,
-				1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */,
-				1B560C832BA2C25E00CE2DC6 /* ControlButton.swift */,
-				1B560C852BA2F6F500CE2DC6 /* SortButton.swift */,
-				1B560C8C2BA317F400CE2DC6 /* RepeatButton.swift */,
 				1B560C8E2BA3627D00CE2DC6 /* PomodoroTimer.swift */,
-				1B897F392BA420250018BEAA /* LabelButton.swift */,
 				1BD50F1A2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift */,
+				1BD50F1F2BA6210000FC7BCF /* HabitItem.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -213,6 +214,19 @@
 				1BD50F182BA5D21500FC7BCF /* EditableCardView.swift */,
 			);
 			path = Card;
+			sourceTree = "<group>";
+		};
+		1BD50F1C2BA61F7C00FC7BCF /* Button */ = {
+			isa = PBXGroup;
+			children = (
+				1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */,
+				1B560C832BA2C25E00CE2DC6 /* ControlButton.swift */,
+				1B560C852BA2F6F500CE2DC6 /* SortButton.swift */,
+				1B560C8C2BA317F400CE2DC6 /* RepeatButton.swift */,
+				1B897F392BA420250018BEAA /* LabelButton.swift */,
+				1BD50F1D2BA61F8D00FC7BCF /* SettingButton.swift */,
+			);
+			path = Button;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -297,8 +311,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BD50F202BA6210000FC7BCF /* HabitItem.swift in Sources */,
 				1BD50F112BA5B3A300FC7BCF /* FilterLabel.swift in Sources */,
 				1B897F3C2BA424800018BEAA /* CalendarView.swift in Sources */,
+				1BD50F1E2BA61F8D00FC7BCF /* SettingButton.swift in Sources */,
 				1B897F3E2BA4279B0018BEAA /* Date+Extension.swift in Sources */,
 				1B560C7E2BA2028C00CE2DC6 /* AppButton.swift in Sources */,
 				1BD50F0F2BA5688000FC7BCF /* WeeklyView.swift in Sources */,
