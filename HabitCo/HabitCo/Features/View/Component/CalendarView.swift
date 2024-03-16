@@ -30,69 +30,75 @@ struct CalendarView: View {
     
     
     var body: some View {
-        Group {
-            VStack {
-                HStack {
-                    Text("\(getMonthName(currentMonth)) " + String(currentYear))
-                        .font(.body)
-                    
-                    Spacer()
-                    
-                    Button {
-                        currentDate = currentDate.startOfPreviousMonth
-                        
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.black)
-                            .font(.title2)
-                    }
-                    
-                    Button {
-                        currentDate = currentDate.startOfNextMonth
-                        
-                    } label: {
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.black)
-                            .padding(.horizontal, 10)
-                    }
-
-
-                }
-                .padding(.vertical, 7)
+        
+        VStack {
+            HStack {
+                Text("\(getMonthName(currentMonth)) " + String(currentYear))
+                    .font(.body)
                 
-                HStack {
-                    let days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
-                    ForEach(days, id: \.self) { day in
-                        Text(day)
-                            .frame(maxWidth: .infinity)
-                            .font(.footnote)
-                            .foregroundColor(Color(UIColor.tertiaryLabel))
-                    }
+                Spacer()
+                
+                Button {
+                    currentDate = currentDate.startOfPreviousMonth
+                    
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.black)
+                        .font(.title2)
                 }
                 
-                let columns = Array(repeating: GridItem(.flexible()), count: 7)
+                Button {
+                    currentDate = currentDate.startOfNextMonth
+                    
+                } label: {
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 10)
+                }
                 
-                let emptyDays = currentDate.startOfMonth.get(.weekday) - 1
-
-                LazyVGrid(columns: columns, spacing: 20, content: {
-                    ForEach((-10..<emptyDays-10), id: \.self) { i in
-                        Text("")
-                    }
-                    ForEach(days, id: \.self) { day in
-                        Text("\(day.get(.day))")
-                            .font(.title3)
-                            .modifier(DateMarking(0.6))
-                    }
-                })
+                
             }
-            .padding()
+            .padding(.vertical, 7)
+            
+            HStack {
+                ForEach(Date.nameOfDays, id: \.self) { day in
+                    Text(day)
+                        .frame(maxWidth: .infinity)
+                        .font(.footnote.weight(.semibold))
+                        .foregroundColor(Color(UIColor.tertiaryLabel))
+                }
+            }
+            
+            calendarView()
         }
+        .padding()
         .onChange(of: currentDate, perform: { _ in
             days = currentDate.calendarDisplayDate
         })
         .background(Color.white)
         .cornerRadius(13)
         .shadow(color: Color(red: 0.09, green: 0.09, blue: 0.09).opacity(0.1), radius: 3, x: 0, y: 2)
+    }
+}
+
+// MARK: - View Builder
+extension CalendarView {
+    @ViewBuilder
+    func calendarView() -> some View {
+        let columns = Array(repeating: GridItem(.flexible()), count: 7)
+        
+        let emptyDays = currentDate.startOfMonth.get(.weekday) - 1
+        
+        LazyVGrid(columns: columns, spacing: 20, content: {
+            ForEach((-10..<emptyDays-10), id: \.self) { i in
+                Text("")
+            }
+            ForEach(days, id: \.self) { day in
+                Text("\(day.get(.day))")
+                    .font(.title3)
+                    .modifier(DateMarking(0.6))
+            }
+        })
     }
 }
 
