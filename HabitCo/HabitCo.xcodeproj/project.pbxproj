@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B2457C42BA6C7EF00E19459 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2457C32BA6C7EF00E19459 /* View+Extension.swift */; };
 		1B4B25792B7320B70081929F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B4B25782B7320B70081929F /* GoogleService-Info.plist */; };
 		1B4B257C2B73295E0081929F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1B4B257B2B73295E0081929F /* FirebaseAnalytics */; };
 		1B4B257E2B73295E0081929F /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 1B4B257D2B73295E0081929F /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -38,6 +39,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B2457C32BA6C7EF00E19459 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		1B4B25782B7320B70081929F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppButton.swift; path = HabitCo/Features/View/Component/Button/AppButton.swift; sourceTree = SOURCE_ROOT; };
 		1B560C812BA222BE00CE2DC6 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 			children = (
 				1B560C812BA222BE00CE2DC6 /* Color+Extension.swift */,
 				1B897F3D2BA4279B0018BEAA /* Date+Extension.swift */,
+				1B2457C32BA6C7EF00E19459 /* View+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 				1B897F3C2BA424800018BEAA /* CalendarView.swift in Sources */,
 				1BD50F1E2BA61F8D00FC7BCF /* SettingButton.swift in Sources */,
 				1B897F3E2BA4279B0018BEAA /* Date+Extension.swift in Sources */,
+				1B2457C42BA6C7EF00E19459 /* View+Extension.swift in Sources */,
 				1B560C7E2BA2028C00CE2DC6 /* AppButton.swift in Sources */,
 				1BD50F0F2BA5688000FC7BCF /* WeeklyView.swift in Sources */,
 				1BD50F1B2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift in Sources */,

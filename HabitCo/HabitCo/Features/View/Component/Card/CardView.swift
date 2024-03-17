@@ -13,7 +13,7 @@ struct CardView<Content: View>: View {
     
     init(color: Color = .white, content: @escaping () -> Content) {
         self.color = color
-        self.content = content as! () -> Content
+        self.content = content
     }
     
     var body: some View {

@@ -12,6 +12,7 @@ struct CalendarView: View {
     
     @State var currentDate = Date()
     @State var days = [Date]()
+    @State var selectedDate: Int?
     
     var currentMonth: Int {
         get {
@@ -93,9 +94,13 @@ extension CalendarView {
                 Text("")
             }
             ForEach(days, id: \.self) { day in
-                Text("\(day.get(.day))")
+                let dayDate = day.get(.day)
+                Text("\(dayDate)")
                     .font(.title3)
-                    .modifier(DateMarking(0.6))
+                    .modifier(DateMarking(fraction: 0.6, isSelected: selectedDate == dayDate))
+                    .onTapGesture {
+                        selectedDate = dayDate
+                    }
             }
         })
     }
@@ -142,24 +147,35 @@ struct DateMarking: ViewModifier {
     let midPoint: CGFloat = 0.5
     let startPoint: CGFloat
     let endPoint: CGFloat
+    let isSelected: Bool
     
-    init(_ fraction: CGFloat = 1) {
+    init(fraction: CGFloat = 1, isSelected: Bool) {
         self.fraction = fraction
         
         // Calculate start and end point
         let halfFraction = fraction/2
         self.startPoint = midPoint - halfFraction
         self.endPoint = midPoint + halfFraction
+        
+        self.isSelected = isSelected
     }
     
     func body(content: Content) -> some View {
         content
             .background(
-                Circle()
-                    .trim(from: startPoint, to: endPoint)
-                    .rotation(.degrees(-90))
-                    .foregroundColor(Color(red: 0.58, green: 0.89, blue: 0.99))
-                    .frame(width: 35, height: 35)
+                ZStack {
+                    Circle()
+                        .trim(from: startPoint, to: endPoint)
+                        .rotation(.degrees(-90))
+                        .foregroundColor(Color(red: 0.58, green: 0.89, blue: 0.99))
+                        .frame(width: 35, height: 35)
+                    
+                    if isSelected {
+                        Circle()
+                            .stroke(Color.black, lineWidth: 1)
+                            .frame(width: 35, height: 35)
+                    }
+                }
             )
     }
 }

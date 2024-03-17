@@ -33,18 +33,17 @@ struct PomodoroTimer: View {
                 .stroke(Color(UIColor.systemGray), lineWidth: 15)
                 .frame(width: width, height: height)
                 .rotationEffect(.degrees(-90))
-               
             
-            VStack {
-                Text("\(formatTime(duration))")
-                    .fontWeight(.bold)
-                    .foregroundColor(Color.white)
-            }
-            .onReceive(timer) { _ in
-                if duration > 0 {
-                    duration = duration - 1
+            
+            Text("\(formatTime(duration))")
+                .fontWeight(.bold)
+                .foregroundColor(Color.white)
+                .onReceive(timer) { _ in
+                    if duration > 0 {
+                        duration = duration - 1
+                    }
                 }
-            }
+            
         }
     }
 }

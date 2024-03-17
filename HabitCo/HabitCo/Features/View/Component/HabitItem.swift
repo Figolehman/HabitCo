@@ -7,7 +7,24 @@
 
 import SwiftUI
 
+enum HabitType {
+    case type1
+    case type2
+}
+
 struct HabitItem: View {
+    let progressSize: CGFloat = 50
+    
+    let habitType: HabitType
+    let fraction: Double
+    let progress: Int
+    
+    init(habitType: HabitType, fraction: Double = 1, progress: Int = 2) {
+        self.habitType = habitType
+        self.fraction = fraction
+        self.progress = progress
+    }
+    
     var body: some View {
         HStack {
             Image(systemName: "square.dashed")
@@ -20,15 +37,40 @@ struct HabitItem: View {
             Divider()
                 .frame(height: 70, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             
-            VStack {
-                Image(systemName: "timer")
-                    .font(.title3)
-                    .padding(2)
-            
-                Text("5 Session")
-                    .font(.caption2)
+            switch habitType {
+            case .type1:
+                VStack {
+                    Image(systemName: "timer")
+                        .font(.title3)
+                        .padding(2)
+                
+                    Text("5 Session")
+                        .font(.caption2)
+                }
+                .padding(6)
+            case .type2:
+                ZStack {
+                    
+                    Circle()
+                        .foregroundColor(.black)
+                        .frame(width: progressSize, height: progressSize)
+                    
+                    Circle()
+                        .stroke(Color(UIColor.systemGray2), lineWidth: 8)
+                        .frame(width: progressSize, height: progressSize)
+                    
+                    
+                    Circle()
+                        .trim(from: 0.0, to: CGFloat(fraction))
+                        .stroke(Color(UIColor.systemGray), lineWidth: 8)
+                        .frame(width: progressSize, height: progressSize)
+                        .rotationEffect(.degrees(-90))
+                    
+                    Text("\(progress)")
+                        .foregroundColor(.white)
+                }
             }
-            .padding(6)
+            
             
         }
         .padding(.horizontal, 12)
@@ -40,5 +82,5 @@ struct HabitItem: View {
 }
 
 #Preview {
-    HabitItem()
+    HabitItem(habitType: .type2)
 }
