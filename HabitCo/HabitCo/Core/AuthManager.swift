@@ -79,6 +79,10 @@ public final class AuthManager {
     public func signInApple() async throws -> (user: UserAuthInfo, isNewUser: Bool) {
         let value = try await provider.authenticateUser_Apple()
         currentUser = AuthInfo(profile: value.user)
+        
+        // Save user to firestore
+        let user = UserDB(user: currentUser.profile ?? UserAuthInfo(uid: currentUser.userId ?? ""))
+        try await UserManager.shared.createNewUser(user: user)
 
         defer {
             streamSignInChangesIfNeeded()

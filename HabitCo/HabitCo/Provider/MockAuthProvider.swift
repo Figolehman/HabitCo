@@ -16,8 +16,8 @@ final class MockAuthProvider: AuthProvider {
             email: "mock123@mock.com",
             isAnonymous: false,
             authProviders: [.mock],
-            displayName: "Mock User",
-            phoneNumber: "1-234-5678"
+            displayName: "Mock User"
+            //phoneNumber: "1-234-5678"
         )
     }
     

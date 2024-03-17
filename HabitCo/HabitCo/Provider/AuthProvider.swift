@@ -24,7 +24,7 @@ public struct UserAuthInfo: Codable {
     public let displayName: String?
     public var firstName: String? = nil
     public var lastName: String? = nil
-    public let phoneNumber: String?
+    //public let phoneNumber: String?
     public let photoURL: URL?
     public let creationDate: Date?
     public let lastSignInDate: Date?
@@ -37,7 +37,7 @@ public struct UserAuthInfo: Codable {
         displayName: String? = nil,
         firstName: String? = nil,
         lastName: String? = nil,
-        phoneNumber: String? = nil,
+        //phoneNumber: String? = nil,
         photoURL: URL? = nil,
         creationDate: Date? = nil,
         lastSignInDate: Date? = nil
@@ -49,7 +49,7 @@ public struct UserAuthInfo: Codable {
         self.displayName = displayName
         self.firstName = firstName
         self.lastName = lastName
-        self.phoneNumber = phoneNumber
+        //self.phoneNumber = phoneNumber
         self.photoURL = photoURL
         self.creationDate = creationDate
         self.lastSignInDate = lastSignInDate
@@ -63,7 +63,7 @@ public struct UserAuthInfo: Codable {
         self.displayName = user.displayName
         self.firstName = UserDefaults.auth.firstName
         self.lastName = UserDefaults.auth.lastName
-        self.phoneNumber = user.phoneNumber
+        //self.phoneNumber = user.phoneNumber
         self.photoURL = user.photoURL
         self.creationDate = user.metadata.creationDate
         self.lastSignInDate = user.metadata.lastSignInDate
@@ -77,7 +77,7 @@ public struct UserAuthInfo: Codable {
         case displayName = "display_name"
         case firstName = "first_name"
         case lastName = "last_name"
-        case phoneNumber = "phone_number"
+        //case phoneNumber = "phone_number"
         case photoURL = "photo_url"
         case creationDate = "creation_date"
         case lastSignInDate = "last_sign_in_date"

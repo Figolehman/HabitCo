@@ -9,20 +9,36 @@ import SwiftUI
 
 struct RootView: View {
     @State private var showSignInView = false
+    @StateObject private var viewModel = ProfileViewModel()
     @Environment(\.auth) var authUser
     var body: some View {
         ZStack {
             if !showSignInView {
                 NavigationView {
-                    Button("Logout"){
-                        do{
-                            try authUser.signOut()
-                            self.showSignInView = authUser.currentUser.profile == nil
-                        } catch {
-                            print(error.localizedDescription)
+                    VStack{
+                        List{
+                            if let user = viewModel.user {
+                                Text("UserId: \(user.id)")
+                                Text("DisplayName: \(user.fullName ?? "")")
+                            }
+                        }
+                        Button("Logout"){
+                            do{
+                                try authUser.signOut()
+                                self.showSignInView = authUser.currentUser.profile == nil
+                            } catch {
+                                print(error.localizedDescription)
+                            }
                         }
                     }
                 }
+            }
+        }
+        .task {
+            do {
+                try await viewModel.getCurrentUserData()
+            } catch {
+                print("NO DATA")
             }
         }
         .onAppear {

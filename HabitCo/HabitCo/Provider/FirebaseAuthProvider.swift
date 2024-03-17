@@ -26,10 +26,10 @@ struct FirebaseAuthProvider: AuthProvider {
                 
                 if let currentUser {
                     let user = UserAuthInfo(user: currentUser)
-                    print(user)
+                    //print(user)
                     continuation.yield(user)
                 } else {
-                    print("kosong")
+                    print("User Logged Out")
                     continuation.yield(nil)
                 }
             }
@@ -53,7 +53,7 @@ struct FirebaseAuthProvider: AuthProvider {
             // Sign in to Firebase
             let authDataResult = try await signIn(credential: credential)
 
-            var firebaserUser = authDataResult.user
+            var firebaseUser = authDataResult.user
             
             // Determines if this is the first time this user is being authenticated
             let isNewUser = authDataResult.additionalUserInfo?.isNewUser ?? true
@@ -66,13 +66,12 @@ struct FirebaseAuthProvider: AuthProvider {
                     lastName: appleResponse.lastName,
                     photoUrl: nil
                 ) {
-                    firebaserUser = updatedUser
+                    firebaseUser = updatedUser
                 }
             }
             
             // Convert to generic type
-            let user = UserAuthInfo(user: firebaserUser)
-            
+            let user = UserAuthInfo(user: firebaseUser)
             return (user, isNewUser)
         }
         

@@ -28,6 +28,10 @@
 		1BC115CC2B739F0D00738AD9 /* FirebaseAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115CB2B739F0D00738AD9 /* FirebaseAuthProvider.swift */; };
 		1BC115CE2B739F2800738AD9 /* AuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115CD2B739F2800738AD9 /* AuthProvider.swift */; };
 		1BC115D02B73A19A00738AD9 /* MockAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC115CF2B73A19A00738AD9 /* MockAuthProvider.swift */; };
+		3FAC601C2BA6D44C00448C21 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC601B2BA6D44C00448C21 /* ProfileView.swift */; };
+		3FAC601E2BA6EBAB00448C21 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC601D2BA6EBAB00448C21 /* ProfileViewModel.swift */; };
+		3FEA55472BA421800072F5B7 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEA55462BA421800072F5B7 /* UserManager.swift */; };
+		3FEA554A2BA4229A0072F5B7 /* UserDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEA55492BA4229A0072F5B7 /* UserDB.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +52,10 @@
 		1BC115CD2B739F2800738AD9 /* AuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProvider.swift; sourceTree = "<group>"; };
 		1BC115CF2B73A19A00738AD9 /* MockAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthProvider.swift; sourceTree = "<group>"; };
 		1BD84F852B733D09001B9C2F /* HabitCo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitCo.entitlements; sourceTree = "<group>"; };
+		3FAC601B2BA6D44C00448C21 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		3FAC601D2BA6EBAB00448C21 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileViewModel.swift; path = HabitCo/Features/View/Profile/ProfileViewModel.swift; sourceTree = SOURCE_ROOT; };
+		3FEA55462BA421800072F5B7 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		3FEA55492BA4229A0072F5B7 /* UserDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDB.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +125,7 @@
 		1BC115C02B739DAB00738AD9 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				3FAC601F2BA6F27800448C21 /* User */,
 				1BC115B52B73563A00738AD9 /* AuthManager.swift */,
 				1BC115C12B739DC000738AD9 /* AuthManagerEnvironmentKey.swift */,
 			);
@@ -154,6 +163,7 @@
 		1BCBC58E2BA19D840065DF81 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				3FAC601A2BA6D43900448C21 /* Profile */,
 				1BCBC5912BA19DB80065DF81 /* Component */,
 				1BC115BE2B7395A500738AD9 /* RootView.swift */,
 				1BBC95282B7286D800FF9353 /* ContentView.swift */,
@@ -164,6 +174,7 @@
 		1BCBC58F2BA19D8A0065DF81 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3FEA55482BA4228B0072F5B7 /* Database */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -171,6 +182,7 @@
 		1BCBC5902BA19D8E0065DF81 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				3FAC601D2BA6EBAB00448C21 /* ProfileViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -192,6 +204,30 @@
 				1BBC952A2B7286D900FF9353 /* Assets.xcassets */,
 			);
 			name = Files;
+			sourceTree = "<group>";
+		};
+		3FAC601A2BA6D43900448C21 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				3FAC601B2BA6D44C00448C21 /* ProfileView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		3FAC601F2BA6F27800448C21 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				3FEA55462BA421800072F5B7 /* UserManager.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
+		3FEA55482BA4228B0072F5B7 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				3FEA55492BA4229A0072F5B7 /* UserDB.swift */,
+			);
+			path = Database;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,14 +315,18 @@
 				1BC115D02B73A19A00738AD9 /* MockAuthProvider.swift in Sources */,
 				1BC115B02B73466600738AD9 /* SignInWithAppleButtonViewRepresentable.swift in Sources */,
 				1BC115CC2B739F0D00738AD9 /* FirebaseAuthProvider.swift in Sources */,
+				3FEA55472BA421800072F5B7 /* UserManager.swift in Sources */,
 				1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */,
 				1BC115CE2B739F2800738AD9 /* AuthProvider.swift in Sources */,
 				1BC115C22B739DC000738AD9 /* AuthManagerEnvironmentKey.swift in Sources */,
+				3FAC601C2BA6D44C00448C21 /* ProfileView.swift in Sources */,
 				1BC115B62B73563A00738AD9 /* AuthManager.swift in Sources */,
 				1BC115BF2B7395A500738AD9 /* RootView.swift in Sources */,
 				1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */,
+				3FEA554A2BA4229A0072F5B7 /* UserDB.swift in Sources */,
 				1BC115C72B739E8100738AD9 /* UIApplication+Extension.swift in Sources */,
 				1BC115BB2B73887800738AD9 /* Utilities.swift in Sources */,
+				3FAC601E2BA6EBAB00448C21 /* ProfileViewModel.swift in Sources */,
 				1BC115C92B739EC600738AD9 /* SignInWithApple.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
