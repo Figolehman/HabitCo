@@ -89,5 +89,5 @@ struct AppButton: View {
 }
 
 #Preview {
-    AppButton(label: "Logout", sizeType: .undo) {}
+    AppButton(label: "+5 minute", sizeType: .share) {}
 }

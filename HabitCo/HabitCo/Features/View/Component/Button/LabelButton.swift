@@ -8,15 +8,19 @@
 import SwiftUI
 
 struct LabelButton: View {
-    var withMark: Bool
+    @State var isSelected: Bool
+    let action: () -> ()
     
     var body: some View {
         Button(action: {
-            
+            isSelected.toggle()
+            action()
         }, label: {
-            if withMark {
-                Image(systemName: "square.dashed")
+            if isSelected {
+                Image(systemName: "checkmark")
                     .foregroundColor(.black)
+            } else {
+                Color.clear
             }
         })
         .frame(width: 40, height: 40)
@@ -25,7 +29,7 @@ struct LabelButton: View {
                 Circle()
                     .foregroundColor(.purple.opacity(0.5))
                 
-                if withMark {
+                if isSelected {
                     Circle()
                         .stroke(lineWidth: 2)
                 }
@@ -35,5 +39,7 @@ struct LabelButton: View {
 }
 
 #Preview {
-    LabelButton(withMark: true)
+    LabelButton(isSelected: false){
+        
+    }
 }

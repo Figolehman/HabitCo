@@ -11,7 +11,7 @@ struct ContentView: View {
     @State var pomodoroView = PomodoroTimer()
     @State var mark = true
     var body: some View {
-        CalendarView()
+        ScrollableCalendarView(hasHabit: [Date()])
 //        VStack {
 //            pomodoroView
 //            AppButton(color: .appColor, label: "Pause/Resume", sizeType: .submit) {

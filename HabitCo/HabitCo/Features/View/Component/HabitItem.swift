@@ -35,7 +35,11 @@ struct HabitItem: View {
             Spacer()
             
             Divider()
-                .frame(height: 70, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                .frame(height: 62, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                .background(
+                    Color.black
+                )
+            
             
             switch habitType {
             case .type1:
@@ -44,7 +48,7 @@ struct HabitItem: View {
                         .font(.title3)
                         .padding(2)
                 
-                    Text("5 Session")
+                    Text("\(progress) Session")
                         .font(.caption2)
                 }
                 .padding(6)
@@ -69,6 +73,7 @@ struct HabitItem: View {
                     Text("\(progress)")
                         .foregroundColor(.white)
                 }
+                .padding(.leading, 12)
             }
             
             
@@ -82,5 +87,5 @@ struct HabitItem: View {
 }
 
 #Preview {
-    HabitItem(habitType: .type2)
+    HabitItem(habitType: .type1)
 }

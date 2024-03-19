@@ -37,12 +37,13 @@ enum RepeatDay {
 }
 
 struct RepeatButton: View {
-    var color: Color
-    var day: RepeatDay
-    var action: () -> ()
+    @State var isSelected: Bool
+    let day: RepeatDay
+    let action: () -> ()
     
     var body: some View {
         Button(action: {
+            isSelected.toggle()
             action()
         }, label: {
             Text(day.initial)
@@ -50,14 +51,14 @@ struct RepeatButton: View {
                 .foregroundColor(.white)
         })
         .frame(width: 40, height: 40)
-        .background(color)
+        .background(isSelected ? Color.black : Color.yellow)
         .clipShape(Circle())
         .shadow(color: Color(red: 0.09, green: 0.09, blue: 0.09).opacity(0.1), radius: 8, x: 0, y: 4)
     }
 }
 
 #Preview {
-    RepeatButton(color: .appColor, day: .sunday) {
+    RepeatButton(isSelected: false, day: .sunday) {
         
     }
 }

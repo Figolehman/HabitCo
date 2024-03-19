@@ -5,9 +5,11 @@
 //  Created by Figo Alessandro Lehman on 15/03/24.
 //
 
+
 import SwiftUI
 
 struct CalendarView: View {
+    let today = Date()
     let dummyDays = 1..<32
     
     @State var currentDate = Date()
@@ -96,6 +98,9 @@ extension CalendarView {
             ForEach(days, id: \.self) { day in
                 let dayDate = day.get(.day)
                 Text("\(dayDate)")
+                    .if(day.isSameDay(today), transform: { text in
+                        text.font(.title3.bold())
+                    })
                     .font(.title3)
                     .modifier(DateMarking(fraction: 0.6, isSelected: selectedDate == dayDate))
                     .onTapGesture {
@@ -143,6 +148,9 @@ extension CalendarView {
 
 // MARK: - Date Marking
 struct DateMarking: ViewModifier {
+    
+    let size: CGFloat = 40
+    
     let fraction: CGFloat
     let midPoint: CGFloat = 0.5
     let startPoint: CGFloat
@@ -168,12 +176,12 @@ struct DateMarking: ViewModifier {
                         .trim(from: startPoint, to: endPoint)
                         .rotation(.degrees(-90))
                         .foregroundColor(Color(red: 0.58, green: 0.89, blue: 0.99))
-                        .frame(width: 35, height: 35)
+                        .frame(width: size, height: size)
                     
                     if isSelected {
                         Circle()
                             .stroke(Color.black, lineWidth: 1)
-                            .frame(width: 35, height: 35)
+                            .frame(width: size, height: size)
                     }
                 }
             )
