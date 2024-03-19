@@ -70,5 +70,18 @@ struct HabitCo_Widget_Previews: PreviewProvider {
     static var previews: some View {
         HabitCo_WidgetEntryView(entry: SimpleEntry(date: Date(), emoji: "💦"))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
+            .widgetBackground(.yellow)
+    }
+}
+//
+
+// MARK: - Widget Preview Compatibility
+extension View {
+    func widgetBackground(_ color: Color) -> some View {
+        if #available(iOSApplicationExtension 17.0, macOSApplicationExtension 14.0, *) {
+            return  containerBackground(color, for: .widget)
+        } else {
+            return background(color)
+        }
     }
 }
