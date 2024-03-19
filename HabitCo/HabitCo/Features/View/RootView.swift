@@ -21,7 +21,58 @@ struct RootView: View {
                                 Text("UserId: \(user.id)")
                                 Text("DisplayName: \(user.fullName ?? "")")
                             }
+                            
+                            if let journals = viewModel.journals {
+                                Text(journals[0].id ?? "No id")
+                            } else {
+                                Text("sdfdsfsdfsdfsdfsdfsd")
+                            }
+                            
+                            if let habit = viewModel.habit {
+                                Text("Habit: \(habit.habitName ?? "")")
+                            }
+                            
                         }
+                        
+                        Button {
+                            viewModel.deleteHabit()
+                        } label: {
+                            Text("Delete habit")
+                        }
+                        
+                        Button {
+                            viewModel.getHabitDetail()
+                        } label: {
+                            Text("Get Habit Detail")
+                        }
+                        
+                        Button {
+                            if viewModel.user?.streak == nil {
+                                viewModel.createStreak()
+                            }
+                        } label: {
+                            Text("Create streak")
+                        }
+                        
+                        Button {
+                            viewModel.createJournal()
+                        } label: {
+                            Text("Create journal")
+                        }
+                        
+                        Button {
+                            viewModel.createHabit()
+                        } label: {
+                            Text("Create Habit")
+                        }
+                        
+                        Button {
+                            viewModel.getAllJournal()
+                        } label: {
+                            Text("get journal")
+                        }
+                        
+                        
                         Button("Logout"){
                             do{
                                 try authUser.signOut()
