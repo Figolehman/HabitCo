@@ -34,6 +34,9 @@
 		3FAC60262BA8D78700448C21 /* UserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC60252BA8D78700448C21 /* UserUseCase.swift */; };
 		3FAC602A2BA8D7A100448C21 /* Habit+PomodoroUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC60292BA8D7A100448C21 /* Habit+PomodoroUseCase.swift */; };
 		3FAC60312BA9427500448C21 /* Query+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC60302BA9427500448C21 /* Query+extension.swift */; };
+		3FAC60332BAA302F00448C21 /* HabitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC60322BAA302F00448C21 /* HabitViewModel.swift */; };
+		3FAC60352BAA4E1000448C21 /* DateFormatUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC60342BAA4E1000448C21 /* DateFormatUtil.swift */; };
+		3FAC60372BAA53BF00448C21 /* CollectionReference+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC60362BAA53BF00448C21 /* CollectionReference+Extension.swift */; };
 		3FEA55472BA421800072F5B7 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEA55462BA421800072F5B7 /* UserManager.swift */; };
 		3FEA554A2BA4229A0072F5B7 /* UserDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEA55492BA4229A0072F5B7 /* UserDB.swift */; };
 /* End PBXBuildFile section */
@@ -62,6 +65,9 @@
 		3FAC60252BA8D78700448C21 /* UserUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUseCase.swift; sourceTree = "<group>"; };
 		3FAC60292BA8D7A100448C21 /* Habit+PomodoroUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Habit+PomodoroUseCase.swift"; sourceTree = "<group>"; };
 		3FAC60302BA9427500448C21 /* Query+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Query+extension.swift"; sourceTree = "<group>"; };
+		3FAC60322BAA302F00448C21 /* HabitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HabitViewModel.swift; path = HabitCo/Extensions/HabitViewModel.swift; sourceTree = SOURCE_ROOT; };
+		3FAC60342BAA4E1000448C21 /* DateFormatUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatUtil.swift; sourceTree = "<group>"; };
+		3FAC60362BAA53BF00448C21 /* CollectionReference+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionReference+Extension.swift"; sourceTree = "<group>"; };
 		3FEA55462BA421800072F5B7 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		3FEA55492BA4229A0072F5B7 /* UserDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDB.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -124,6 +130,7 @@
 		1BC115B92B7385F500738AD9 /* Utlities */ = {
 			isa = PBXGroup;
 			children = (
+				3FAC60342BAA4E1000448C21 /* DateFormatUtil.swift */,
 				1BC115BA2B73887800738AD9 /* Utilities.swift */,
 				1BC115C82B739EC600738AD9 /* SignInWithApple.swift */,
 			);
@@ -145,6 +152,7 @@
 			children = (
 				1BC115C62B739E8100738AD9 /* UIApplication+Extension.swift */,
 				3FAC60302BA9427500448C21 /* Query+extension.swift */,
+				3FAC60362BAA53BF00448C21 /* CollectionReference+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -193,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				3FAC601D2BA6EBAB00448C21 /* ProfileViewModel.swift */,
+				3FAC60322BAA302F00448C21 /* HabitViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -338,15 +347,18 @@
 				1BC115CC2B739F0D00738AD9 /* FirebaseAuthProvider.swift in Sources */,
 				3FEA55472BA421800072F5B7 /* UserManager.swift in Sources */,
 				1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */,
+				3FAC60372BAA53BF00448C21 /* CollectionReference+Extension.swift in Sources */,
 				1BC115CE2B739F2800738AD9 /* AuthProvider.swift in Sources */,
 				1BC115C22B739DC000738AD9 /* AuthManagerEnvironmentKey.swift in Sources */,
 				3FAC60232BA6FC0700448C21 /* StreakDB.swift in Sources */,
+				3FAC60332BAA302F00448C21 /* HabitViewModel.swift in Sources */,
 				1BC115B62B73563A00738AD9 /* AuthManager.swift in Sources */,
 				3FAC60312BA9427500448C21 /* Query+extension.swift in Sources */,
 				3FAC60212BA6FA5D00448C21 /* JournalDB.swift in Sources */,
 				3FAC602A2BA8D7A100448C21 /* Habit+PomodoroUseCase.swift in Sources */,
 				1BC115BF2B7395A500738AD9 /* RootView.swift in Sources */,
 				1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */,
+				3FAC60352BAA4E1000448C21 /* DateFormatUtil.swift in Sources */,
 				3FEA554A2BA4229A0072F5B7 /* UserDB.swift in Sources */,
 				1BC115C72B739E8100738AD9 /* UIApplication+Extension.swift in Sources */,
 				1BC115BB2B73887800738AD9 /* Utilities.swift in Sources */,

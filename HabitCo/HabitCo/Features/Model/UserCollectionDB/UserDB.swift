@@ -28,7 +28,7 @@ struct UserDB: Codable{
         email: String?,
         photoUrl: String?,
         dateCreated: Date?,
-        streak: Streak?
+        streak: Streak? = nil
     ) {
         self.id = id
         self.fullName = fullName
