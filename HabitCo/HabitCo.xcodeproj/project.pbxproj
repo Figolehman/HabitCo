@@ -38,7 +38,6 @@
 		1BD50F202BA6210000FC7BCF /* HabitItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F1F2BA6210000FC7BCF /* HabitItem.swift */; };
 		1BE028AD2BA97A9D0042CAC3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BE028AC2BA97A9D0042CAC3 /* WidgetKit.framework */; };
 		1BE028AE2BA97A9D0042CAC3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BAA2EBB2BA772BF00235B3D /* SwiftUI.framework */; };
-		1BE028B12BA97A9D0042CAC3 /* HabitCo_WidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE028B02BA97A9D0042CAC3 /* HabitCo_WidgetBundle.swift */; };
 		1BE028B32BA97A9D0042CAC3 /* HabitCo_Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */; };
 		1BE028B52BA97A9F0042CAC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */; };
 		1BE028B92BA97A9F0042CAC3 /* HabitCo WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1BE028AB2BA97A9D0042CAC3 /* HabitCo WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -97,7 +96,6 @@
 		1BD50F1F2BA6210000FC7BCF /* HabitItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitItem.swift; sourceTree = "<group>"; };
 		1BE028AB2BA97A9D0042CAC3 /* HabitCo WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "HabitCo WidgetExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BE028AC2BA97A9D0042CAC3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
-		1BE028B02BA97A9D0042CAC3 /* HabitCo_WidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCo_WidgetBundle.swift; sourceTree = "<group>"; };
 		1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCo_Widget.swift; sourceTree = "<group>"; };
 		1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BE028B62BA97A9F0042CAC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -295,7 +293,6 @@
 		1BE028AF2BA97A9D0042CAC3 /* HabitCo Widget */ = {
 			isa = PBXGroup;
 			children = (
-				1BE028B02BA97A9D0042CAC3 /* HabitCo_WidgetBundle.swift */,
 				1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */,
 				1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */,
 				1BE028B62BA97A9F0042CAC3 /* Info.plist */,
@@ -444,7 +441,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BE028B32BA97A9D0042CAC3 /* HabitCo_Widget.swift in Sources */,
-				1BE028B12BA97A9D0042CAC3 /* HabitCo_WidgetBundle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
