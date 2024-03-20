@@ -84,27 +84,14 @@ extension ProfileViewModel{
         }
     }
     
-//    func createHabit(){
-//        Task {
-//            guard let user = self.user else { return }
-//            try await userManager.createNewHabit(userId: user.id, journalId: "")
-//        }
-//    }
+    func deleteStreak(){
+        Task{
+            guard let user = self.user else { return }
+            guard let isStreak = user.streak?.isStreak else { return }
+            if !isStreak{
+                try await userManager.deleteStreak(userId: user.id)
+            }
+        }
+    }
     
-//    func getHabitDetail(){
-//        Task{
-//            guard let user = self.user else { return }
-//            if let habit = try? await userManager.getHabitDetail(userId: user.id, date: Date()) {
-//                self.habit = habit
-//            }
-//        }
-//    }
-//    
-//    func deleteHabit(){
-//        Task{
-//            // Still dummy
-//            guard let user = self.user else { return }
-//            try? await userManager.deleteHabit(userId: user.id, journalId: "", habitId: "")
-//        }
-//    }
 }

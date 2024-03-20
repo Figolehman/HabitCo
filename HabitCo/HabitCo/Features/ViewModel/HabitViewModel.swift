@@ -45,35 +45,35 @@ extension HabitViewModel {
     public func createnewHabit(){
         Task {
             guard let user = self.user else { return }
-            guard let journal = self.journal else { return }
-            try await userManager.createNewHabit(userId: user.id, journalId: journal.id ?? "NO ID")
+            try await userManager.createNewHabit(userId: user.id)
         }
     }
     
     public func getAllHabit(){
         Task{
             guard let user = self.user else { return }
-            guard let journal = self.journal else { return }
-            self.habits = try await userManager.getAllHabitByDate(userId: user.id, journalId: journal.id ?? "NO ID")
+            self.habits = try await userManager.getAllHabit(userId: user.id)
         }
     }
     
-    public func getHabitDetail(){
+    public func getHabitDetail(habitId: String){
         Task{
             guard let user = self.user else { return }
-            guard let journal = self.journal else { return }
-            guard let habit = self.habit else { return }
-            if let habit = try? await userManager.getHabitDetail(userId: user.id, journalId: journal.id ?? "NO ID", habitId: habit.id ?? "") {
-                self.habit = habit
+            guard let habits = self.habits else { return }
+            for i in habits.indices {
+                if habits[i].id == habitId {
+                    if let habit = try? await userManager.getHabitDetail(userId: user.id, habitId: habits[i].id ?? "") {
+                        self.habit = habit
+                    }
+                }
             }
         }
     }
     
-    public func deleteHabit(){
+    public func deleteHabit(habitId: String){
         Task{
             guard let user = self.user else { return }
-            guard let journal = self.journal else { return }
-            try? await userManager.deleteHabit(userId: user.id, journalId: journal.id ?? "NO ID", habitId: "")
+            try? await userManager.deleteHabit(userId: user.id, habitId: habitId)
         }
     }
 }

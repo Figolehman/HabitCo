@@ -29,7 +29,6 @@
 		1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBC95282B7286D800FF9353 /* ContentView.swift */; };
 		1BBC952B2B7286D900FF9353 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952A2B7286D900FF9353 /* Assets.xcassets */; };
 		1BBC952E2B7286D900FF9353 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952D2B7286D900FF9353 /* Preview Assets.xcassets */; };
-		1BC23AE02BAB510C00133C27 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23ADF2BAB510C00133C27 /* UserData.swift */; };
 		1BC23AE22BAB512200133C27 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23AE12BAB512200133C27 /* UserManager.swift */; };
 		1BC23AE42BAB513600133C27 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23AE32BAB513600133C27 /* AuthManager.swift */; };
 		1BC23AE62BAB514C00133C27 /* AuthManagerEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23AE52BAB514C00133C27 /* AuthManagerEnvironmentKey.swift */; };
@@ -64,6 +63,7 @@
 		1BE028B32BA97A9D0042CAC3 /* HabitCo_Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */; };
 		1BE028B52BA97A9F0042CAC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */; };
 		1BE028B92BA97A9F0042CAC3 /* HabitCo WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1BE028AB2BA97A9D0042CAC3 /* HabitCo WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3FAC603B2BAB8C0900448C21 /* Habit+PomodoroDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC603A2BAB8C0900448C21 /* Habit+PomodoroDB.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,7 +110,6 @@
 		1BBC95282B7286D800FF9353 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1BBC952A2B7286D900FF9353 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BBC952D2B7286D900FF9353 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		1BC23ADF2BAB510C00133C27 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		1BC23AE12BAB512200133C27 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		1BC23AE32BAB513600133C27 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		1BC23AE52BAB514C00133C27 /* AuthManagerEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManagerEnvironmentKey.swift; sourceTree = "<group>"; };
@@ -145,6 +144,7 @@
 		1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCo_Widget.swift; sourceTree = "<group>"; };
 		1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BE028B62BA97A9F0042CAC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3FAC603A2BAB8C0900448C21 /* Habit+PomodoroDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Habit+PomodoroDB.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -266,8 +266,8 @@
 				1BC23AFB2BAB558100133C27 /* Provider */,
 				1BC23ADC2BAB50D300133C27 /* Core */,
 				1B560C802BA222A900CE2DC6 /* Extensions */,
-				1B560C7B2BA2025400CE2DC6 /* Files */,
 				1B560C772BA2022600CE2DC6 /* Features */,
+				1B560C7B2BA2025400CE2DC6 /* Files */,
 				1BBC952C2B7286D900FF9353 /* Preview Content */,
 				1BC23B032BAB64EB00133C27 /* AuthDataResultModel.swift */,
 			);
@@ -285,20 +285,11 @@
 		1BC23ADC2BAB50D300133C27 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				1BC23ADD2BAB50EA00133C27 /* Model */,
 				1BC23ADE2BAB50F100133C27 /* User */,
 				1BC23AE32BAB513600133C27 /* AuthManager.swift */,
 				1BC23AE52BAB514C00133C27 /* AuthManagerEnvironmentKey.swift */,
 			);
 			path = Core;
-			sourceTree = "<group>";
-		};
-		1BC23ADD2BAB50EA00133C27 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				1BC23ADF2BAB510C00133C27 /* UserData.swift */,
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		1BC23ADE2BAB50F100133C27 /* User */ = {
@@ -386,6 +377,7 @@
 				1BC23AED2BAB535E00133C27 /* JournalDB.swift */,
 				1BC23AEF2BAB53C000133C27 /* StreakDB.swift */,
 				1BC23AF12BAB53CC00133C27 /* UserDB.swift */,
+				3FAC603A2BAB8C0900448C21 /* Habit+PomodoroDB.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -542,11 +534,11 @@
 				1BC23AFE2BAB5A1800133C27 /* DateFormatUtil.swift in Sources */,
 				1BC23AF82BAB54EF00133C27 /* ProfileViewModel.swift in Sources */,
 				1BD50F1B2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift in Sources */,
-				1BC23AE02BAB510C00133C27 /* UserData.swift in Sources */,
 				1BC23AF02BAB53C000133C27 /* StreakDB.swift in Sources */,
 				1BC23B042BAB64EB00133C27 /* AuthDataResultModel.swift in Sources */,
 				1B560C862BA2F6F500CE2DC6 /* SortButton.swift in Sources */,
 				1BC23B002BAB623100133C27 /* SignInWithApple.swift in Sources */,
+				3FAC603B2BAB8C0900448C21 /* Habit+PomodoroDB.swift in Sources */,
 				1B560C8D2BA317F400CE2DC6 /* RepeatButton.swift in Sources */,
 				1BC23B092BAB654C00133C27 /* UserUseCase.swift in Sources */,
 				1BD50F162BA5BB2500FC7BCF /* CardView.swift in Sources */,
