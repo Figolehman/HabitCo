@@ -20,38 +20,20 @@ struct RootView: View {
                             if let user = viewModel.user {
                                 Text("UserId: \(user.id)")
                                 Text("DisplayName: \(user.fullName ?? "")")
+                                Text("Streak: \(user.streak?.id ?? "")")
                             }
                             
                             if let journals = viewModel.journals {
-                                Text(journals[0].id ?? "No id")
-                            } else {
-                                Text("sdfdsfsdfsdfsdfsdfsd")
+                                ForEach(journals, id: \.id) { journal in
+                                    Text("Journal id: \(journal.id ?? "")")
+                                }
                             }
                             
-                            if let habit = viewModel.habit {
-                                Text("Habit: \(habit.habitName ?? "")")
+                            if let journal = viewModel.journal {
+                                Text("Detail Journal: \(journal.id ?? "") \(journal.date ?? Date())")
                             }
                             
-                        }
-                        
-                        Button {
-                            viewModel.deleteHabit()
-                        } label: {
-                            Text("Delete habit")
-                        }
-                        
-                        Button {
-                            viewModel.getHabitDetail()
-                        } label: {
-                            Text("Get Habit Detail")
-                        }
-                        
-                        Button {
-                            if viewModel.user?.streak == nil {
-                                viewModel.createStreak()
-                            }
-                        } label: {
-                            Text("Create streak")
+                            
                         }
                         
                         Button {
@@ -61,16 +43,51 @@ struct RootView: View {
                         }
                         
                         Button {
-                            viewModel.createHabit()
+                            viewModel.getAllJournal()
                         } label: {
-                            Text("Create Habit")
+                            Text("Get journal")
                         }
                         
                         Button {
-                            viewModel.getAllJournal()
+                            viewModel.getDetailJournal(from: Date())
                         } label: {
-                            Text("get journal")
+                            Text("Get Detail Journal By Date")
                         }
+                        
+//
+//                        Button {
+//                            viewModel.deleteHabit()
+//                        } label: {
+//                            Text("Delete habit")
+//                        }
+//                        
+//                        Button {
+//                            viewModel.getDetailJournal()
+//                        } label: {
+//                            Text("Get Detail Journal")
+//                        }
+                        
+//                        Button {
+//                            viewModel.getHabitDetail()
+//                        } label: {
+//                            Text("Get Habit Detail")
+//                        }
+                        
+                        Button {
+                            if viewModel.user?.streak == nil {
+                                viewModel.createStreak()
+                            }
+                        } label: {
+                            Text("Create streak")
+                        }
+//
+//                        
+//                        Button {
+//                            viewModel.createHabit()
+//                        } label: {
+//                            Text("Create Habit")
+//                        }
+//
                         
                         
                         Button("Logout"){
@@ -86,11 +103,7 @@ struct RootView: View {
             }
         }
         .task {
-            do {
-                try await viewModel.getCurrentUserData()
-            } catch {
-                print("NO DATA")
-            }
+            viewModel.getCurrentUserData()
         }
         .onAppear {
             self.showSignInView = authUser.currentUser.profile == nil

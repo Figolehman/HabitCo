@@ -16,12 +16,11 @@ protocol UserUseCase {
 protocol JournalUseCase{
     func createJournal(userId: String) async throws
     func getAllJournal(userId: String) async throws -> [Journal]?
-    func getDetailJournal(UserId: String, from date: Date) async throws -> Journal?
+    func getDetailJournal(userId: String, from date: Date) async throws -> Journal?
 }
 
 protocol StreakUseCase{
-    func createStreak(userId: String) async throws
-    func getStreak(userId: String) async throws -> Streak?
+    func createStreak(userId: String, description: String) async throws
     func deleteStreak(userId: String) async throws
     func updateCountStreak(userId: String) async throws -> UserDB?
 }
