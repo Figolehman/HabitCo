@@ -6,30 +6,44 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 
 struct ContentView: View {
-    @State var pomodoroView = PomodoroTimer()
-    @State var mark = true
+    
+    @Environment(\.auth) var userAuth
+    @Binding var showSignInView: Bool
+    
     var body: some View {
-        ScrollableCalendarView(hasHabit: [Date()])
-//        VStack {
-//            pomodoroView
-//            AppButton(color: .appColor, label: "Pause/Resume", sizeType: .submit) {
-//                if !mark {
-//                    pomodoroView.startTimer()
-//                    print("Starting")
-//                    mark.toggle()
-//                } else {
-//                    pomodoroView.pauseTimer()
-//                    print("Pausing")
-//                    mark.toggle()
-//                }
-//            }
-//        }
-//        .padding()
+        VStack {
+            Image(systemName: "globe")
+                .imageScale(.large)
+                .foregroundColor(.accentColor)
+            Text("Hello, world!")
+            
+            Button(action: {
+                Task{
+                    do {
+//                        try await authVM.signInApple()
+                        let (userAuthInfo, _) = try await userAuth.signInApple()
+                        if userAuthInfo != nil {
+                            showSignInView = false
+                        }
+                    } catch {
+                        print(error)
+                    }
+                }
+                
+            }, label: {
+                SignInWithAppleButtonViewRepresentable(type: .default, style: .black)
+                    .allowsHitTesting(false)
+            })
+            .frame(height: 55)
+
+        }
+        .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(showSignInView: .constant(false))
 }
