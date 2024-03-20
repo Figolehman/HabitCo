@@ -130,8 +130,8 @@
 		1B560C772BA2022600CE2DC6 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				1B560C7A2BA2023800CE2DC6 /* ViewModel */,
-				1B560C792BA2023300CE2DC6 /* Model */,
+				1BD8C6E62BAB37E30053CBC3 /* ViewModel */,
+				1BD8C6E52BAB37DD0053CBC3 /* Model */,
 				1B560C782BA2022D00CE2DC6 /* View */,
 			);
 			path = Features;
@@ -144,20 +144,6 @@
 				1BBC95282B7286D800FF9353 /* ContentView.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		1B560C792BA2023300CE2DC6 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		1B560C7A2BA2023800CE2DC6 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		1B560C7B2BA2025400CE2DC6 /* Files */ = {
@@ -182,13 +168,6 @@
 				1BD50F1F2BA6210000FC7BCF /* HabitItem.swift */,
 			);
 			path = Component;
-			sourceTree = "<group>";
-		};
-		1B560C7F2BA2226A00CE2DC6 /* Utility */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Utility;
 			sourceTree = "<group>";
 		};
 		1B560C802BA222A900CE2DC6 /* Extension */ = {
@@ -234,7 +213,7 @@
 			children = (
 				1BAA2F902BA777E500235B3D /* Info.plist */,
 				1B560C802BA222A900CE2DC6 /* Extension */,
-				1B560C7F2BA2226A00CE2DC6 /* Utility */,
+				1BD8C6E72BAB3BA60053CBC3 /* Utility */,
 				1B560C7B2BA2025400CE2DC6 /* Files */,
 				1B560C772BA2022600CE2DC6 /* Features */,
 				1BBC952C2B7286D900FF9353 /* Preview Content */,
@@ -288,6 +267,27 @@
 				1BD50F1D2BA61F8D00FC7BCF /* SettingButton.swift */,
 			);
 			path = Button;
+			sourceTree = "<group>";
+		};
+		1BD8C6E52BAB37DD0053CBC3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1BD8C6E62BAB37E30053CBC3 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		1BD8C6E72BAB3BA60053CBC3 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Utility;
 			sourceTree = "<group>";
 		};
 		1BE028AF2BA97A9D0042CAC3 /* HabitCo Widget */ = {
