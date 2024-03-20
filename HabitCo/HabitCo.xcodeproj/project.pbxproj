@@ -59,13 +59,13 @@
 		1BC115CD2B739F2800738AD9 /* AuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProvider.swift; sourceTree = "<group>"; };
 		1BC115CF2B73A19A00738AD9 /* MockAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthProvider.swift; sourceTree = "<group>"; };
 		1BD84F852B733D09001B9C2F /* HabitCo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitCo.entitlements; sourceTree = "<group>"; };
-		3FAC601D2BA6EBAB00448C21 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileViewModel.swift; path = HabitCo/Features/View/Profile/ProfileViewModel.swift; sourceTree = SOURCE_ROOT; };
+		3FAC601D2BA6EBAB00448C21 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileViewModel.swift; path = HabitCo/Features/ViewModel/ProfileViewModel.swift; sourceTree = SOURCE_ROOT; };
 		3FAC60202BA6FA5D00448C21 /* JournalDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalDB.swift; sourceTree = "<group>"; };
 		3FAC60222BA6FC0700448C21 /* StreakDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakDB.swift; sourceTree = "<group>"; };
 		3FAC60252BA8D78700448C21 /* UserUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUseCase.swift; sourceTree = "<group>"; };
 		3FAC60292BA8D7A100448C21 /* Habit+PomodoroUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Habit+PomodoroUseCase.swift"; sourceTree = "<group>"; };
 		3FAC60302BA9427500448C21 /* Query+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Query+extension.swift"; sourceTree = "<group>"; };
-		3FAC60322BAA302F00448C21 /* HabitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HabitViewModel.swift; path = HabitCo/Extensions/HabitViewModel.swift; sourceTree = SOURCE_ROOT; };
+		3FAC60322BAA302F00448C21 /* HabitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HabitViewModel.swift; path = HabitCo/Features/ViewModel/HabitViewModel.swift; sourceTree = SOURCE_ROOT; };
 		3FAC60342BAA4E1000448C21 /* DateFormatUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatUtil.swift; sourceTree = "<group>"; };
 		3FAC60362BAA53BF00448C21 /* CollectionReference+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionReference+Extension.swift"; sourceTree = "<group>"; };
 		3FEA55462BA421800072F5B7 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
