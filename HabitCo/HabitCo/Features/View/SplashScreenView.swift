@@ -9,7 +9,17 @@ import SwiftUI
 
 struct SplashScreenView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack (spacing: 24) {
+            
+            Image(systemName: "square.dashed")
+                .font(.system(size: 110))
+                .foregroundColor(.getAppColor(.primary))
+            
+            Text("HabitCo")
+                .font(.largeTitle)
+                .foregroundColor(.getAppColor(.neutral))
+            
+        }
     }
 }
 

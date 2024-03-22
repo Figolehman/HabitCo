@@ -6,13 +6,24 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 
 struct SignInButton: View {
+    let type: ASAuthorizationAppleIDButton.ButtonType
+    let style: ASAuthorizationAppleIDButton.Style
+    let action: () -> ()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Button {
+            action()
+        } label: {
+            SignInWithAppleButtonViewRepresentable(type: type, style: style)
+        }
+        .frame(width: AppButtonSize.submit.width, height: AppButtonSize.submit.height)
+        
     }
 }
 
 #Preview {
-    SignInButton()
+    SignInButton(type: .continue, style: .black, action: {})
 }

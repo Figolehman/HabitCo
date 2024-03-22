@@ -15,6 +15,11 @@
 		1B4B25882B73295E0081929F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 1B4B25872B73295E0081929F /* FirebaseAuth */; };
 		1B4B25942B73295E0081929F /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1B4B25932B73295E0081929F /* FirebaseFirestore */; };
 		1B4B25982B73295E0081929F /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1B4B25972B73295E0081929F /* FirebaseFirestoreSwift */; };
+		1B4B2A352BAD90170059559F /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B2A342BAD90170059559F /* SplashScreenView.swift */; };
+		1B4B2A372BAD91EC0059559F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B2A362BAD91EC0059559F /* OnboardingView.swift */; };
+		1B4B2A392BAD95980059559F /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B2A382BAD95980059559F /* ScreenSize.swift */; };
+		1B4B2A3B2BADAE770059559F /* SignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B2A3A2BADAE770059559F /* SignInButton.swift */; };
+		1B4B2A3D2BADEE3E0059559F /* CGFloat+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B2A3C2BADEE3E0059559F /* CGFloat+Extension.swift */; };
 		1B560C7E2BA2028C00CE2DC6 /* AppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */; };
 		1B560C822BA222BE00CE2DC6 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C812BA222BE00CE2DC6 /* Color+Extension.swift */; };
 		1B560C842BA2C25E00CE2DC6 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C832BA2C25E00CE2DC6 /* ControlButton.swift */; };
@@ -52,6 +57,7 @@
 		1BC23B0D2BAB659000133C27 /* FirebaseAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23B0C2BAB659000133C27 /* FirebaseAuthProvider.swift */; };
 		1BC23B0F2BAB659F00133C27 /* MockAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23B0E2BAB659F00133C27 /* MockAuthProvider.swift */; };
 		1BC23B112BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23B102BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift */; };
+		1BC8681C2BAE047D00B348FE /* CustomPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC8681B2BAE047D00B348FE /* CustomPageControl.swift */; };
 		1BD50F0F2BA5688000FC7BCF /* ScrollableCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F0E2BA5688000FC7BCF /* ScrollableCalendarView.swift */; };
 		1BD50F112BA5B3A300FC7BCF /* FilterLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F102BA5B3A300FC7BCF /* FilterLabel.swift */; };
 		1BD50F162BA5BB2500FC7BCF /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F152BA5BB2500FC7BCF /* CardView.swift */; };
@@ -93,6 +99,11 @@
 /* Begin PBXFileReference section */
 		1B2457C32BA6C7EF00E19459 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		1B4B25782B7320B70081929F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1B4B2A342BAD90170059559F /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
+		1B4B2A362BAD91EC0059559F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		1B4B2A382BAD95980059559F /* ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSize.swift; sourceTree = "<group>"; };
+		1B4B2A3A2BADAE770059559F /* SignInButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInButton.swift; sourceTree = "<group>"; };
+		1B4B2A3C2BADEE3E0059559F /* CGFloat+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extension.swift"; sourceTree = "<group>"; };
 		1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppButton.swift; path = HabitCo/Features/View/Component/Button/AppButton.swift; sourceTree = SOURCE_ROOT; };
 		1B560C812BA222BE00CE2DC6 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		1B560C832BA2C25E00CE2DC6 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
@@ -133,6 +144,7 @@
 		1BC23B0C2BAB659000133C27 /* FirebaseAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthProvider.swift; sourceTree = "<group>"; };
 		1BC23B0E2BAB659F00133C27 /* MockAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthProvider.swift; sourceTree = "<group>"; };
 		1BC23B102BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleButtonViewRepresentable.swift; sourceTree = "<group>"; };
+		1BC8681B2BAE047D00B348FE /* CustomPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		1BD50F0E2BA5688000FC7BCF /* ScrollableCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableCalendarView.swift; sourceTree = "<group>"; };
 		1BD50F102BA5B3A300FC7BCF /* FilterLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLabel.swift; sourceTree = "<group>"; };
 		1BD50F152BA5BB2500FC7BCF /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
@@ -189,6 +201,8 @@
 				1B560C7C2BA2027600CE2DC6 /* Component */,
 				1BBC95282B7286D800FF9353 /* ContentView.swift */,
 				1BC23AF32BAB54C000133C27 /* RootView.swift */,
+				1B4B2A342BAD90170059559F /* SplashScreenView.swift */,
+				1B4B2A362BAD91EC0059559F /* OnboardingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -214,6 +228,7 @@
 				1B560C8E2BA3627D00CE2DC6 /* PomodoroTimer.swift */,
 				1BD50F1A2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift */,
 				1BD50F1F2BA6210000FC7BCF /* HabitItem.swift */,
+				1BC8681B2BAE047D00B348FE /* CustomPageControl.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -227,6 +242,7 @@
 				1BC23AE72BAB518200133C27 /* CollectionReference+Extension.swift */,
 				1BC23AE92BAB519400133C27 /* Query+extension.swift */,
 				1BC23AEB2BAB51A700133C27 /* UIApplication+Extension.swift */,
+				1B4B2A3C2BADEE3E0059559F /* CGFloat+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -326,6 +342,7 @@
 				1BC23AFD2BAB5A1800133C27 /* DateFormatUtil.swift */,
 				1BC23AFF2BAB623100133C27 /* SignInWithApple.swift */,
 				1BC23B012BAB624600133C27 /* Utlities.swift */,
+				1B4B2A382BAD95980059559F /* ScreenSize.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -376,6 +393,7 @@
 				1B897F392BA420250018BEAA /* LabelButton.swift */,
 				1BD50F1D2BA61F8D00FC7BCF /* SettingButton.swift */,
 				1BC23B102BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift */,
+				1B4B2A3A2BADAE770059559F /* SignInButton.swift */,
 			);
 			path = Button;
 			sourceTree = "<group>";
@@ -525,6 +543,8 @@
 				1BC23B0F2BAB659F00133C27 /* MockAuthProvider.swift in Sources */,
 				1BD50F202BA6210000FC7BCF /* HabitItem.swift in Sources */,
 				1BC23AE42BAB513600133C27 /* AuthManager.swift in Sources */,
+				1B4B2A3B2BADAE770059559F /* SignInButton.swift in Sources */,
+				1B4B2A372BAD91EC0059559F /* OnboardingView.swift in Sources */,
 				1BC23B0B2BAB658200133C27 /* AuthProvider.swift in Sources */,
 				1BD50F112BA5B3A300FC7BCF /* FilterLabel.swift in Sources */,
 				1BC23AEE2BAB535E00133C27 /* JournalDB.swift in Sources */,
@@ -537,6 +557,7 @@
 				1B897F3E2BA4279B0018BEAA /* Date+Extension.swift in Sources */,
 				1B2457C42BA6C7EF00E19459 /* View+Extension.swift in Sources */,
 				1B560C7E2BA2028C00CE2DC6 /* AppButton.swift in Sources */,
+				1B4B2A352BAD90170059559F /* SplashScreenView.swift in Sources */,
 				1BD50F0F2BA5688000FC7BCF /* ScrollableCalendarView.swift in Sources */,
 				1BC23B112BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift in Sources */,
 				1BC23AFE2BAB5A1800133C27 /* DateFormatUtil.swift in Sources */,
@@ -545,7 +566,9 @@
 				1BC23AE02BAB510C00133C27 /* UserData.swift in Sources */,
 				1BC23AF02BAB53C000133C27 /* StreakDB.swift in Sources */,
 				1BC23B042BAB64EB00133C27 /* AuthDataResultModel.swift in Sources */,
+				1B4B2A3D2BADEE3E0059559F /* CGFloat+Extension.swift in Sources */,
 				1B560C862BA2F6F500CE2DC6 /* SortButton.swift in Sources */,
+				1B4B2A392BAD95980059559F /* ScreenSize.swift in Sources */,
 				1BC23B002BAB623100133C27 /* SignInWithApple.swift in Sources */,
 				1B560C8D2BA317F400CE2DC6 /* RepeatButton.swift in Sources */,
 				1BC23B092BAB654C00133C27 /* UserUseCase.swift in Sources */,
@@ -556,6 +579,7 @@
 				1BC23AEA2BAB519400133C27 /* Query+extension.swift in Sources */,
 				1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */,
 				1BC23AF42BAB54C000133C27 /* RootView.swift in Sources */,
+				1BC8681C2BAE047D00B348FE /* CustomPageControl.swift in Sources */,
 				1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */,
 				1BC23AFA2BAB54F800133C27 /* HabitViewModel.swift in Sources */,
 				1B897F3A2BA420250018BEAA /* LabelButton.swift in Sources */,

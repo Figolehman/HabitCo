@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+extension CGFloat {
+    static func getResponsiveWidth(_ width: CGFloat) -> CGFloat {
+        return width * ScreenSize.width / ScreenSize.baseWidth
+    }
+    
+    static func getResponsiveHeight(_ height: CGFloat) -> CGFloat {
+        return height * ScreenSize.height / ScreenSize.baseHeight
+    }
+}
