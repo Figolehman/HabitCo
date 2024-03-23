@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @State var index = 0
+    @State var index = 1
     
     init () {
         setupPageTabIndicator()
@@ -27,7 +27,8 @@ struct OnboardingView: View {
                     
                     ZStack {
                         Image("plant")
-                            
+                            .frame(width: .getResponsiveWidth(456), height: .getResponsiveHeight(623.57574))
+                            .offset(x: .getResponsiveWidth(-180), y: .getResponsiveHeight(-65))
                         
                         VStack (spacing: 24) {
                             Spacer(minLength: .getResponsiveHeight(376 - 24))
@@ -48,6 +49,8 @@ struct OnboardingView: View {
                     .tag(0)
                     ZStack {
                         Image("hourglass")
+                            .frame(width: .getResponsiveWidth(312), height: .getResponsiveHeight(342))
+                            .offset(x: .getResponsiveWidth(180), y: .getResponsiveHeight(-320))
                         
                         VStack (spacing: 24) {
                             Spacer(minLength: .getResponsiveHeight(376 - 24))
