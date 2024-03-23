@@ -39,7 +39,19 @@ struct JournalView: View {
                         }
                     }
                     
-                    Text("TES")
+//                    VStack (spacing: .getResponsiveHeight(16)) {
+//                        Image(systemName: "leaf")
+//                            .font(.largeTitle)
+//                        Text("There’s no habit recorded yet.")
+//                    }
+//                    .foregroundColor(.getAppColor(.neutral))
+//                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
+                    
+                    VStack (spacing: .getResponsiveHeight(24)) {
+                        HabitItem(habitType: .type1)
+                        
+                        HabitItem(habitType: .type2)
+                    }
                 }
                 
                 Spacer()

@@ -27,7 +27,10 @@ struct HabitItem: View {
     
     var body: some View {
         HStack {
-            Image(systemName: "square.dashed")
+            Rectangle()
+                .foregroundColor(.yellow)
+                .frame(width: 20, height: 20)
+                .cornerRadius(4)
                 .padding(.trailing, 16)
             
             Text("Habit Name")
@@ -35,9 +38,9 @@ struct HabitItem: View {
             Spacer()
             
             Divider()
-                .frame(height: 62, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                .background(
-                    Color.black
+                .frame(width: 1, height: .getResponsiveHeight(62))
+                .overlay (
+                    Color.getAppColor(.neutral3)
                 )
             
             
@@ -56,36 +59,37 @@ struct HabitItem: View {
                 ZStack {
                     
                     Circle()
-                        .foregroundColor(.black)
+                        .foregroundColor(.getAppColor(.primary))
                         .frame(width: progressSize, height: progressSize)
                     
                     Circle()
-                        .stroke(Color(UIColor.systemGray2), lineWidth: 8)
+                        .stroke(Color.getAppColor(.primary2), lineWidth: 8)
                         .frame(width: progressSize, height: progressSize)
                     
                     
                     Circle()
                         .trim(from: 0.0, to: CGFloat(fraction))
-                        .stroke(Color(UIColor.systemGray), lineWidth: 8)
+                        .stroke(Color.getAppColor(.neutral), lineWidth: 8)
                         .frame(width: progressSize, height: progressSize)
                         .rotationEffect(.degrees(-90))
                     
                     Text("\(progress)")
-                        .foregroundColor(.white)
+                        .foregroundColor(.getAppColor(.neutral3))
                 }
                 .padding(.leading, 12)
             }
             
             
         }
+        .foregroundColor(.getAppColor(.neutral3))
         .padding(.horizontal, 12)
-        .frame(width: 345, height: 80, alignment: .center)
-        .background(Color(red: 0.78, green: 0.78, blue: 0.8))
+        .frame(width: .getResponsiveWidth(345), height: .getResponsiveHeight(80), alignment: .center)
+        .background(Color.getAppColor(.primary))
         .cornerRadius(12)
         .shadow(color: Color(red: 0.09, green: 0.09, blue: 0.09).opacity(0.1), radius: 8, x: 0, y: 4)
     }
 }
 
 #Preview {
-    HabitItem(habitType: .type1)
+    HabitItem(habitType: .type2, fraction: 0.5)
 }
