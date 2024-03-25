@@ -22,7 +22,8 @@ enum AppButtonSize{
             case .share:
                 return 310
             case .select:
-                return 124
+//                return 124
+                return .nan
             case .control:
                 return .nan
             case .undo:
@@ -67,7 +68,7 @@ enum AppButtonSize{
 }
 
 struct AppButton: View {
-    var label: String
+    let label: String
     var sizeType: AppButtonSize
     var action: () -> ()
 

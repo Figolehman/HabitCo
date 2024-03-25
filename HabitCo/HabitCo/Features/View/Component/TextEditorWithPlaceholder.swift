@@ -13,26 +13,29 @@ struct TextEditorWithPlaceholder: View {
      
      var body: some View {
          ZStack(alignment: .leading) {
-             if text.isEmpty {
-                VStack {
-                     Text(placeholder)
-                         .padding(.top, 10)
-                         .padding(.leading, 6)
-                         .opacity(0.6)
-                     Spacer()
-                 }
-             }
+             
              
              VStack {
                  TextEditor(text: $text)
                      .frame(minHeight: 150, maxHeight: 300)
-                     .opacity(text.isEmpty ? 0.85 : 1)
+//                     .opacity(text.isEmpty ? 0.85 : 1)
                  Spacer()
+             }
+             
+             if text.isEmpty {
+                VStack {
+                     Text(placeholder)
+                        .foregroundColor(.getAppColor(.primary2))
+                         .padding(.top, 10)
+                         .padding(.leading, 3)
+                         
+                     Spacer()
+                 }
              }
          }
      }
  }
 
 #Preview {
-    TextEditorWithPlaceholder(placeholder: "Insert...", text: .constant("Hello World"))
+    TextEditorWithPlaceholder(placeholder: "Insert...", text: .constant(""))
 }

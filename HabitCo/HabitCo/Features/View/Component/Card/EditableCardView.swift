@@ -45,10 +45,13 @@ struct EditableCardView: View {
         CardView {
             HStack{
                 if cardType == .name {
-                    TextField(cardType.placeholder, text: $text)
+                    TextField("", text: $text)
                         .placeholder(when: text.isEmpty) {
                             Text("\(cardType.placeholder)")
+                                .foregroundColor(.getAppColor(.primary2))
+                                
                         }
+                        .padding(.leading, 4)
                 } else {
                     TextEditorWithPlaceholder(placeholder: cardType.placeholder, text: $text)
                         .frame(height: 122)
@@ -61,5 +64,8 @@ struct EditableCardView: View {
 }
 
 #Preview {
-    EditableCardView(cardType: .description)
+    VStack {
+        EditableCardView(cardType: .name)
+        EditableCardView(cardType: .description)
+    }
 }

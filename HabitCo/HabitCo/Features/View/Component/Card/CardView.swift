@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct CardView<Content: View>: View {
-    let color: Color
     var content: () -> Content
     
-    init(color: Color = .white, content: @escaping () -> Content) {
-        self.color = color
+    init(content: @escaping () -> Content) {
         self.content = content
     }
     

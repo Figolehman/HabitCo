@@ -8,13 +8,20 @@
 import SwiftUI
 
 struct LabelButton: View {
-    @State var isSelected: Bool
-    let action: () -> ()
+    @Binding var isSelected: Bool
+    let color: Color
+    
+    init(tag: Color.FilterColors, selection: Binding<Color.FilterColors?>, color: Color) {
+        self._isSelected = Binding(
+            get: { selection.wrappedValue == tag },
+            set: { _ in selection.wrappedValue = tag }
+        )
+        self.color = color
+    }
     
     var body: some View {
         Button(action: {
-            isSelected.toggle()
-            action()
+            isSelected = true
         }, label: {
             if isSelected {
                 Image(systemName: "checkmark")
@@ -27,7 +34,7 @@ struct LabelButton: View {
         .background(
             ZStack{
                 Circle()
-                    .foregroundColor(.purple.opacity(0.5))
+                    .foregroundColor(color)
                 
                 if isSelected {
                     Circle()
@@ -39,7 +46,5 @@ struct LabelButton: View {
 }
 
 #Preview {
-    LabelButton(isSelected: false){
-        
-    }
+    LabelButton(tag: Color.FilterColors.aluminium, selection: .constant(Color.FilterColors.aluminium), color: Color.aluminium)
 }

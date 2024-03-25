@@ -56,8 +56,11 @@ struct ScrollableCalendarView: View {
                 }
                 .onAppear {
                     value.scrollTo(currentDate, anchor: .center)
+                    
+                    UIScrollView.appearance().showsHorizontalScrollIndicator = false
                 }
             }
+            
             
         }
         .frame(height: 80)

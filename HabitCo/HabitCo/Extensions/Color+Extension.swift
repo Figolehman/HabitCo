@@ -33,7 +33,7 @@ extension Color {
 
 // MARK: - Filter Colors
 extension Color {
-    enum FilterColors: String {
+    enum FilterColors: String, CaseIterable {
         case aluminium
         case lavender
         case mushroom
