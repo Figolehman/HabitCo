@@ -44,7 +44,7 @@
 		1BC23AF02BAB53C000133C27 /* StreakDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23AEF2BAB53C000133C27 /* StreakDB.swift */; };
 		1BC23AF22BAB53CC00133C27 /* UserDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23AF12BAB53CC00133C27 /* UserDB.swift */; };
 		1BC23AF42BAB54C000133C27 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23AF32BAB54C000133C27 /* RootView.swift */; };
-		1BC23AF82BAB54EF00133C27 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23AF72BAB54EF00133C27 /* ProfileViewModel.swift */; };
+		1BC23AF82BAB54EF00133C27 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23AF72BAB54EF00133C27 /* UserViewModel.swift */; };
 		1BC23AFA2BAB54F800133C27 /* HabitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23AF92BAB54F800133C27 /* HabitViewModel.swift */; };
 		1BC23AFE2BAB5A1800133C27 /* DateFormatUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23AFD2BAB5A1800133C27 /* DateFormatUtil.swift */; };
 		1BC23B002BAB623100133C27 /* SignInWithApple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23AFF2BAB623100133C27 /* SignInWithApple.swift */; };
@@ -136,7 +136,7 @@
 		1BC23AEF2BAB53C000133C27 /* StreakDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakDB.swift; sourceTree = "<group>"; };
 		1BC23AF12BAB53CC00133C27 /* UserDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDB.swift; sourceTree = "<group>"; };
 		1BC23AF32BAB54C000133C27 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		1BC23AF72BAB54EF00133C27 /* ProfileViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		1BC23AF72BAB54EF00133C27 /* UserViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		1BC23AF92BAB54F800133C27 /* HabitViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HabitViewModel.swift; sourceTree = "<group>"; };
 		1BC23AFD2BAB5A1800133C27 /* DateFormatUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatUtil.swift; sourceTree = "<group>"; };
 		1BC23AFF2BAB623100133C27 /* SignInWithApple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithApple.swift; sourceTree = "<group>"; };
@@ -420,7 +420,7 @@
 			isa = PBXGroup;
 			children = (
 				1BC23AF92BAB54F800133C27 /* HabitViewModel.swift */,
-				1BC23AF72BAB54EF00133C27 /* ProfileViewModel.swift */,
+				1BC23AF72BAB54EF00133C27 /* UserViewModel.swift */,
 				3FAC604F2BB12E7400448C21 /* PomodoroViewModel.swift */,
 			);
 			path = ViewModel;
@@ -571,7 +571,7 @@
 				1BD50F0F2BA5688000FC7BCF /* ScrollableCalendarView.swift in Sources */,
 				1BC23B112BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift in Sources */,
 				1BC23AFE2BAB5A1800133C27 /* DateFormatUtil.swift in Sources */,
-				1BC23AF82BAB54EF00133C27 /* ProfileViewModel.swift in Sources */,
+				1BC23AF82BAB54EF00133C27 /* UserViewModel.swift in Sources */,
 				1BC868282BB1424D00B348FE /* CreateHabitView.swift in Sources */,
 				1BD50F1B2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift in Sources */,
 				1BC23AF02BAB53C000133C27 /* StreakDB.swift in Sources */,

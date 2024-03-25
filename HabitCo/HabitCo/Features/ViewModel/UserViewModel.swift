@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-final class ProfileViewModel: ObservableObject{
+final class UserViewModel: ObservableObject{
     
     @Published private(set) var user: UserDB? = nil
     @Published private(set) var journals: [Journal]? = nil
@@ -24,7 +24,7 @@ final class ProfileViewModel: ObservableObject{
     
 }
 
-extension ProfileViewModel{
+extension UserViewModel{
     func getCurrentUserData() {
         Task{
             guard let userAuthInfo = firebaseProvider.getAuthenticatedUser() else { return }

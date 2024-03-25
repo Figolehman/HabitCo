@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RootView: View {
     @State private var showSignInView = false
-    @StateObject private var viewModel = ProfileViewModel()
+    @StateObject private var viewModel = UserViewModel()
     @StateObject private var habitViewModel = HabitViewModel()
     @Environment(\.auth) var authUser
     var body: some View {

@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct OnboardingView: View {
+    
+    @StateObject private var userViewModel = UserViewModel()
     @State var index = 0
+    @Environment(\.auth) var userAuth
     
     init () {
         setupPageTabIndicator()
@@ -85,7 +88,9 @@ struct OnboardingView: View {
                     
                     VStack (spacing: .getResponsiveHeight(36)) {
                         SignInButton(type: .continue, style: .black) {
-                            
+                            Task {
+                                userAuth.signInApple
+                            }
                         }
                         
                         Group {
