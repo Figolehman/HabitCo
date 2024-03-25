@@ -30,14 +30,15 @@ struct SortButton: View {
             action()
         }
         .font(.body)
-        .foregroundColor(Color.black)
+        .foregroundColor(.getAppColor(.neutral3))
         .frame(height: 38)
         .padding(.horizontal, 12)
-        .background(Color.gray.opacity(0.5))
+        .background(isDisabled ? Color.getAppColor(.primary3) : Color.getAppColor(.primary))
         .cornerRadius(12)
+        .disabled(isDisabled)
     }
 }
 
 #Preview {
-    SortButton(label: "Progress", isDisabled: .constant(true), imageType: .unsort) {}
+    SortButton(label: "Progress", isDisabled: .constant(false), imageType: .unsort) {}
 }

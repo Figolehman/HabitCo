@@ -41,7 +41,7 @@ struct ControlButton: View {
 }
 
 #Preview {
-    ControlButton(color: .appColor, buttonSize: .mainControl, buttonImage: .play) {
+    ControlButton(color: .getAppColor(.danger), buttonSize: .mainControl, buttonImage: .play) {
         
     }
 }

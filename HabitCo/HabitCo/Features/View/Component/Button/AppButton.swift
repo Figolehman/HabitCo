@@ -52,13 +52,13 @@ enum AppButtonSize{
         get {
             switch self {
             case .submit:
-                return .appColor
+                return .getAppColor(.primary)
             case .share:
-                return .appColor
+                return .getAppColor(.primary)
             case .select:
-                return .appColor
+                return .getAppColor(.primary)
             case .control:
-                return .appColor
+                return .getAppColor(.primary)
             case .undo:
                 return .gray
             }

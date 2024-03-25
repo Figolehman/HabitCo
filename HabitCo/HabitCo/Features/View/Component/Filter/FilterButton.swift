@@ -16,11 +16,12 @@ struct FilterButton: View {
         Button("Filter", systemImage: "slider.horizontal.3") {
             action()
         }
-        .foregroundColor(Color.black)
+        .foregroundColor(.getAppColor(.neutral3))
         .frame(height: 38)
         .padding(.horizontal, 12)
-        .background(Color.gray.opacity(0.5))
+        .background(isDisabled ? Color.getAppColor(.primary3) : Color.getAppColor(.primary))
         .cornerRadius(12)
+        .disabled(isDisabled)
     }
 }
 
