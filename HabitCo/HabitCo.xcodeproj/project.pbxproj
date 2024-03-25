@@ -64,6 +64,7 @@
 		1BE028B52BA97A9F0042CAC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */; };
 		1BE028B92BA97A9F0042CAC3 /* HabitCo WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1BE028AB2BA97A9D0042CAC3 /* HabitCo WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3FAC603B2BAB8C0900448C21 /* Habit+PomodoroDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC603A2BAB8C0900448C21 /* Habit+PomodoroDB.swift */; };
+		3FAC60502BB12E7400448C21 /* PomodoroViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC604F2BB12E7400448C21 /* PomodoroViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,6 +146,8 @@
 		1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BE028B62BA97A9F0042CAC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3FAC603A2BAB8C0900448C21 /* Habit+PomodoroDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Habit+PomodoroDB.swift"; sourceTree = "<group>"; };
+		3FAC604F2BB12E7400448C21 /* PomodoroViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroViewModel.swift; sourceTree = "<group>"; };
+		3FAC60512BB14C6700448C21 /* HabitCo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitCo.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,6 +265,7 @@
 		1BBC95252B7286D800FF9353 /* HabitCo */ = {
 			isa = PBXGroup;
 			children = (
+				3FAC60512BB14C6700448C21 /* HabitCo.entitlements */,
 				1BC23AFC2BAB5A0200133C27 /* Utilities */,
 				1BC23AFB2BAB558100133C27 /* Provider */,
 				1BC23ADC2BAB50D300133C27 /* Core */,
@@ -387,6 +391,7 @@
 			children = (
 				1BC23AF92BAB54F800133C27 /* HabitViewModel.swift */,
 				1BC23AF72BAB54EF00133C27 /* ProfileViewModel.swift */,
+				3FAC604F2BB12E7400448C21 /* PomodoroViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -539,6 +544,7 @@
 				1B560C862BA2F6F500CE2DC6 /* SortButton.swift in Sources */,
 				1BC23B002BAB623100133C27 /* SignInWithApple.swift in Sources */,
 				3FAC603B2BAB8C0900448C21 /* Habit+PomodoroDB.swift in Sources */,
+				3FAC60502BB12E7400448C21 /* PomodoroViewModel.swift in Sources */,
 				1B560C8D2BA317F400CE2DC6 /* RepeatButton.swift in Sources */,
 				1BC23B092BAB654C00133C27 /* UserUseCase.swift in Sources */,
 				1BD50F162BA5BB2500FC7BCF /* CardView.swift in Sources */,
@@ -704,10 +710,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HabitCo/HabitCo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HabitCo/Preview Content\"";
-				DEVELOPMENT_TEAM = JGSV4C4BP3;
+				DEVELOPMENT_TEAM = UKUGHUS3M8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HabitCo/Info.plist;
@@ -740,10 +747,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HabitCo/HabitCo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HabitCo/Preview Content\"";
-				DEVELOPMENT_TEAM = JGSV4C4BP3;
+				DEVELOPMENT_TEAM = UKUGHUS3M8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HabitCo/Info.plist;
@@ -777,7 +785,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JGSV4C4BP3;
+				DEVELOPMENT_TEAM = UKUGHUS3M8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "HabitCo Widget/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "HabitCo Widget";
@@ -805,7 +813,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JGSV4C4BP3;
+				DEVELOPMENT_TEAM = UKUGHUS3M8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "HabitCo Widget/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "HabitCo Widget";

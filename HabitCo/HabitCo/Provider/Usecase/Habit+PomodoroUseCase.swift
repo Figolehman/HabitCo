@@ -18,8 +18,7 @@ protocol HabitUseCase{
 protocol PomodoroUseCase{
     func createNewPomodoro(userId: String) async throws
     func getAllPomodoroByDate(userId: String, date: Date) async throws -> [Pomodoro]?
-    func getAllPomodoro(userId: String, date: Date) async throws -> [Pomodoro]?
-    func getPomodoroDetail(userId: String, habitId: String) async throws -> Pomodoro?
+    func getPomodoroDetail(userId: String, pomodoroId: String) async throws -> Pomodoro?
     func editPomodoro(userId: String, pomodoroId: String) async throws -> Pomodoro?
     func deletePomodoro(userId: String, pomodoroId: String) async throws
 }

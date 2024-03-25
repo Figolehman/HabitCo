@@ -13,7 +13,6 @@ final class ProfileViewModel: ObservableObject{
     @Published private(set) var user: UserDB? = nil
     @Published private(set) var journals: [Journal]? = nil
     @Published private(set) var journal: Journal? = nil
-    //@Published private(set) var habit: Habit? = nil
     
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
@@ -40,10 +39,10 @@ extension ProfileViewModel{
         }
     }
     
-    func createJournal() {
+    func createJournal(habitId: String?, pomodoroId: String?) {
         Task {
             guard let user = self.user else { return }
-            try await userManager.createJournal(userId: user.id)
+            try await userManager.createJournal(userId: user.id, habitId: habitId, pomodoroId: pomodoroId)
         }
     }
     
@@ -61,9 +60,6 @@ extension ProfileViewModel{
             guard let user = self.user else { return }
             if let journal = try await userManager.getDetailJournal(userId: user.id, from: date) {
                 self.journal = journal
-                print(journal.id ?? "NO ID" as String , journal.date ?? Date() as Date)
-            } else {
-                print("ELSE")
             }
         }
     }

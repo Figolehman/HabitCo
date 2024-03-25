@@ -104,15 +104,16 @@ extension UserManager: UserUseCase{
 
 // MARK: - For Journal Use Case
 extension UserManager: JournalUseCase {
-    func createJournal(userId: String) async throws {
+    func createJournal(userId: String, habitId: String?, pomodoroId: String?) async throws {
         let (document, id) = generateDocumentID(userId: userId, type: nil)
-        let journal = Journal(id: id, date: Date(), dateCreated: Date())
+        let journal = Journal(id: id, habitId: (habitId != nil) ? habitId : "", pomodoroId: (pomodoroId != nil) ? pomodoroId : "", date: Date(), dateCreated: Date())
         try document.setData(from: journal, merge: false)
     }
     
     // Use for calendar
     func getAllJournal(userId: String) async throws -> [Journal]? {
-        try await userJournalCollection(userId: userId).getAllDocuments(as: Journal.self)
+        let journals = try await userJournalCollection(userId: userId).getAllDocuments(as: Journal.self)
+        return journals
     }
     
     func getDetailJournal(userId: String, from date: Date) async throws -> Journal? {
@@ -165,12 +166,6 @@ extension UserManager: HabitUseCase {
 
 extension UserManager: PomodoroUseCase {
     
-    func getAllPomodoro(userId: String, date: Date) async throws -> [Pomodoro]? {
-        try await userPomodoroCollection(userId: userId)
-            .whereField(Habit.CodingKeys.repeatHabit.rawValue, isEqualTo: date)
-            .getAllDocuments(as: Pomodoro.self)
-    }
-    
     func createNewPomodoro(userId: String) async throws {
         let (document, id) = generateDocumentID(userId: userId, type: .pomodoro)
         let pomodoro = Pomodoro(id: id, pomodoroName: "Pomodoro 1", description: "Ini pomodoro pagi", label: "Red Label", session: 1, focusTime: 2, breakTime: 3, repeatPomodoro: [Date()], reminderPomodoro: Date(), doneDate: [Date()], dateCreated: Date())
@@ -184,8 +179,8 @@ extension UserManager: PomodoroUseCase {
             .getAllDocuments(as: Pomodoro.self)
     }
     
-    func getPomodoroDetail(userId: String, habitId: String) async throws -> Pomodoro? {
-        return try await userPomodoroDocument(userId: userId, pomodoroId: habitId).getDocument(as: Pomodoro.self)
+    func getPomodoroDetail(userId: String, pomodoroId: String) async throws -> Pomodoro? {
+        return try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).getDocument(as: Pomodoro.self)
     }
     
     func editPomodoro(userId: String, pomodoroId: String) async throws -> Pomodoro? {
@@ -193,7 +188,7 @@ extension UserManager: PomodoroUseCase {
             : // need more context about the flow
         ]
         try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).updateData(data)
-        return try await getPomodoroDetail(userId: userId, habitId: pomodoroId)
+        return try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
     }
     
     func deletePomodoro(userId: String, pomodoroId: String) async throws {

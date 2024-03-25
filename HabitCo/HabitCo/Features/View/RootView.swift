@@ -38,8 +38,10 @@ struct RootView: View {
                                 ForEach(habit, id: \.id) { habit in
                                     Button {
                                         habitViewModel.getHabitDetail(habitId: habit.id ?? "No Value")
+                                        viewModel.createJournal(habitId: habit.id, pomodoroId: nil)
                                     } label: {
-                                        Text("Habit name: \(habit.habitName ?? "")")                                    }
+                                        Text("Habit name: \(habit.habitName ?? "")")
+                                    }
                                 }
                             }
                     
@@ -48,13 +50,6 @@ struct RootView: View {
                                 Text("Habit name: \(habit.habitName ?? "")")
                                 Text("Habit Label: \(habit.label ?? "")")
                             }
-                            
-                        }
-                        
-                        Button {
-                            viewModel.createJournal()
-                        } label: {
-                            Text("Create journal")
                         }
                         
                         Button {
@@ -87,25 +82,6 @@ struct RootView: View {
                             Text("Delete Habit")
                         }
                         
-                        //
-                        //                        Button {
-                        //                            viewModel.deleteHabit()
-                        //                        } label: {
-                        //                            Text("Delete habit")
-                        //                        }
-                        //
-                        //                        Button {
-                        //                            viewModel.getDetailJournal()
-                        //                        } label: {
-                        //                            Text("Get Detail Journal")
-                        //                        }
-                        
-                        //                        Button {
-                        //                            viewModel.getHabitDetail()
-                        //                        } label: {
-                        //                            Text("Get Habit Detail")
-                        //                        }
-                        
                         Button {
                             if viewModel.user?.streak == nil {
                                 viewModel.createStreak()
@@ -126,9 +102,6 @@ struct RootView: View {
                 }
             }
         }
-        //        .task {
-        //            viewModel.getCurrentUserData()
-        //        }
         .onAppear {
             Task{
                 viewModel.getCurrentUserData()

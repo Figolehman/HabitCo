@@ -14,7 +14,7 @@ protocol UserUseCase {
 }
 
 protocol JournalUseCase{
-    func createJournal(userId: String) async throws
+    func createJournal(userId: String, habitId: String?, pomodoroId: String?) async throws
     func getAllJournal(userId: String) async throws -> [Journal]?
     func getDetailJournal(userId: String, from date: Date) async throws -> Journal?
 }

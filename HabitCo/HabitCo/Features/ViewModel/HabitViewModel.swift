@@ -13,7 +13,6 @@ final class HabitViewModel: ObservableObject {
     @Published private(set) var habits: [Habit]? = []
     @Published private(set) var habit: Habit? = nil
     
-    private var journal: Journal? = nil
     private var user: UserDB? = nil
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
@@ -31,14 +30,6 @@ extension HabitViewModel {
         Task{
             guard let userAuthInfo = firebaseProvider.getAuthenticatedUser() else { return }
             self.user = try await userManager.getUserDB(userId: userAuthInfo.uid)
-        }
-        initJournal()
-    }
-    
-    private func initJournal(){
-        Task{
-            guard let user = self.user else { return }
-            self.journal = try await userManager.getDetailJournal(userId: user.id, from: Date())
         }
     }
    
@@ -60,9 +51,9 @@ extension HabitViewModel {
         Task{
             guard let user = self.user else { return }
             guard let habits = self.habits else { return }
-            for i in habits.indices {
-                if habits[i].id == habitId {
-                    if let habit = try? await userManager.getHabitDetail(userId: user.id, habitId: habits[i].id ?? "") {
+            for habit in habits {
+                if habit.id == habitId {
+                    if let habit = try? await userManager.getHabitDetail(userId: user.id, habitId: habit.id ?? "") {
                         self.habit = habit
                     }
                 }
