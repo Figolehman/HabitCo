@@ -17,7 +17,7 @@ struct HabitCoApp: App {
     
     var body: some Scene {
         WindowGroup {
-            OnboardingView()
+            RootView()
         }
     }
 }

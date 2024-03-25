@@ -76,7 +76,7 @@ struct HabitItem: View {
                     Text("\(progress)")
                         .foregroundColor(.getAppColor(.neutral3))
                 }
-                .padding(.leading, 12)
+                .padding(.horizontal, 6)
             }
             
             

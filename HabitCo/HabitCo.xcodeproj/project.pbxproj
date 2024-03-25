@@ -59,6 +59,9 @@
 		1BC23B112BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC23B102BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift */; };
 		1BC8681C2BAE047D00B348FE /* CustomPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC8681B2BAE047D00B348FE /* CustomPageControl.swift */; };
 		1BC8681E2BAE9E6F00B348FE /* JournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC8681D2BAE9E6F00B348FE /* JournalView.swift */; };
+		1BC868222BB0794600B348FE /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868212BB0794600B348FE /* LoadingView.swift */; };
+		1BC868262BB13ABA00B348FE /* CreateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868252BB13ABA00B348FE /* CreateButton.swift */; };
+		1BC868282BB1424D00B348FE /* CreateHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868272BB1424D00B348FE /* CreateHabitView.swift */; };
 		1BD50F0F2BA5688000FC7BCF /* ScrollableCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F0E2BA5688000FC7BCF /* ScrollableCalendarView.swift */; };
 		1BD50F112BA5B3A300FC7BCF /* FilterLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F102BA5B3A300FC7BCF /* FilterLabel.swift */; };
 		1BD50F162BA5BB2500FC7BCF /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F152BA5BB2500FC7BCF /* CardView.swift */; };
@@ -147,6 +150,9 @@
 		1BC23B102BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAppleButtonViewRepresentable.swift; sourceTree = "<group>"; };
 		1BC8681B2BAE047D00B348FE /* CustomPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		1BC8681D2BAE9E6F00B348FE /* JournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalView.swift; sourceTree = "<group>"; };
+		1BC868212BB0794600B348FE /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		1BC868252BB13ABA00B348FE /* CreateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButton.swift; sourceTree = "<group>"; };
+		1BC868272BB1424D00B348FE /* CreateHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitView.swift; sourceTree = "<group>"; };
 		1BD50F0E2BA5688000FC7BCF /* ScrollableCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableCalendarView.swift; sourceTree = "<group>"; };
 		1BD50F102BA5B3A300FC7BCF /* FilterLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLabel.swift; sourceTree = "<group>"; };
 		1BD50F152BA5BB2500FC7BCF /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
@@ -206,6 +212,7 @@
 				1B4B2A342BAD90170059559F /* SplashScreenView.swift */,
 				1B4B2A362BAD91EC0059559F /* OnboardingView.swift */,
 				1BC8681D2BAE9E6F00B348FE /* JournalView.swift */,
+				1BC868272BB1424D00B348FE /* CreateHabitView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -232,6 +239,7 @@
 				1BD50F1A2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift */,
 				1BD50F1F2BA6210000FC7BCF /* HabitItem.swift */,
 				1BC8681B2BAE047D00B348FE /* CustomPageControl.swift */,
+				1BC868212BB0794600B348FE /* LoadingView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -397,6 +405,7 @@
 				1BD50F1D2BA61F8D00FC7BCF /* SettingButton.swift */,
 				1BC23B102BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift */,
 				1B4B2A3A2BADAE770059559F /* SignInButton.swift */,
+				1BC868252BB13ABA00B348FE /* CreateButton.swift */,
 			);
 			path = Button;
 			sourceTree = "<group>";
@@ -566,6 +575,7 @@
 				1BC23B112BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift in Sources */,
 				1BC23AFE2BAB5A1800133C27 /* DateFormatUtil.swift in Sources */,
 				1BC23AF82BAB54EF00133C27 /* ProfileViewModel.swift in Sources */,
+				1BC868282BB1424D00B348FE /* CreateHabitView.swift in Sources */,
 				1BD50F1B2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift in Sources */,
 				1BC23AE02BAB510C00133C27 /* UserData.swift in Sources */,
 				1BC23AF02BAB53C000133C27 /* StreakDB.swift in Sources */,
@@ -581,8 +591,10 @@
 				1BC23B022BAB624600133C27 /* Utlities.swift in Sources */,
 				1B560C8F2BA3627D00CE2DC6 /* PomodoroTimer.swift in Sources */,
 				1BC23AEA2BAB519400133C27 /* Query+extension.swift in Sources */,
+				1BC868222BB0794600B348FE /* LoadingView.swift in Sources */,
 				1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */,
 				1BC23AF42BAB54C000133C27 /* RootView.swift in Sources */,
+				1BC868262BB13ABA00B348FE /* CreateButton.swift in Sources */,
 				1BC8681C2BAE047D00B348FE /* CustomPageControl.swift in Sources */,
 				1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */,
 				1BC23AFA2BAB54F800133C27 /* HabitViewModel.swift in Sources */,

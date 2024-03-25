@@ -10,6 +10,7 @@ import SwiftUI
 struct JournalView: View {
     
     @State var showSheet = false
+    @State var showCreateHabit = false
     
     var body: some View {
         NavigationView {
@@ -32,7 +33,7 @@ struct JournalView: View {
                         Spacer()
                         
                         Button {
-                            
+                            showCreateHabit = true
                         } label: {
                             Image(systemName: "plus")
                                 .foregroundColor(.getAppColor(.primary))
@@ -47,10 +48,12 @@ struct JournalView: View {
 //                    .foregroundColor(.getAppColor(.neutral))
 //                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
                     
-                    VStack (spacing: .getResponsiveHeight(24)) {
-                        HabitItem(habitType: .type1)
-                        
-                        HabitItem(habitType: .type2)
+                    ScrollView {
+                        VStack (spacing: .getResponsiveHeight(24)) {
+                            HabitItem(habitType: .type1)
+                            
+                            HabitItem(habitType: .type2)
+                        }
                     }
                 }
                 
@@ -58,22 +61,34 @@ struct JournalView: View {
             }
             .padding(.horizontal, 24)
             .toolbar {
-                HStack {
-                    Text("March, 2024")
-                        .foregroundColor(.getAppColor(.neutral))
-                        .font(.largeTitle.weight(.bold))
+                VStack {
+                    HStack {
+                        Text("March, 2024")
+                            .foregroundColor(.getAppColor(.neutral))
+                            .font(.largeTitle.weight(.bold))
+                        
+                        Spacer()
+                        
+                        Button {
+                            showSheet = true
+                        } label: {
+                            Image(systemName: "gearshape.fill")
+                                .foregroundColor(.getAppColor(.primary))
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .frame(width: ScreenSize.width)
                     
-                    Spacer()
-                    
-                    Button {
-                        showSheet = true
-                    } label: {
-                        Image(systemName: "gearshape.fill")
-                            .foregroundColor(.getAppColor(.primary))
+                    HStack {
+                        Image(systemName: "flame")
+                            .font(.caption)
+                        Text("1 Day Streak!")
+                            .font(.caption)
+                        
+                        Spacer()
                     }
                 }
-                .padding(.horizontal, 16)
-                .frame(width: ScreenSize.width)
+                .padding(.top, 25)
             }
             .background(
                 Image("blobsJournal")
@@ -81,6 +96,16 @@ struct JournalView: View {
                     .offset(y: .getResponsiveHeight(-530))
             )
         }
+        .alertOverlay($showCreateHabit, closeOnTap: true, content: {
+            VStack (spacing: 24) {
+                CreateButton(type: .habit) {
+                    
+                }
+                CreateButton(type: .pomodoro) {
+                    
+                }
+            }
+        })
         .sheet(isPresented: $showSheet, content: {
             
         })

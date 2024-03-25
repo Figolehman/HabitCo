@@ -46,6 +46,9 @@ struct EditableCardView: View {
             HStack{
                 if cardType == .name {
                     TextField(cardType.placeholder, text: $text)
+                        .placeholder(when: text.isEmpty) {
+                            Text("\(cardType.placeholder)")
+                        }
                 } else {
                     TextEditorWithPlaceholder(placeholder: cardType.placeholder, text: $text)
                         .frame(height: 122)
