@@ -32,6 +32,7 @@ struct SplashScreenView: View {
         .onAppear{
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 withAnimation {
+                    UserDefaultManager.hasSplashScreen = true
                     self.showSplashScreen = true
                 }
             }

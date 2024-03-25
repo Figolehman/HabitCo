@@ -11,6 +11,8 @@ struct JournalView: View {
     
     @State var showSheet = false
     @State var showCreateHabit = false
+    @Environment(\.auth) var auth
+    @Environment(\.appRootManager) var appRootManager
     
     var body: some View {
         NavigationView {
@@ -70,7 +72,13 @@ struct JournalView: View {
                         Spacer()
                         
                         Button {
-                            showSheet = true
+                            //showSheet = true
+                            do {
+                                try auth.signOut()
+                                appRootManager.currentRoot = .onBoardingView
+                            } catch {
+                                print(error)
+                            }
                         } label: {
                             Image(systemName: "gearshape.fill")
                                 .foregroundColor(.getAppColor(.primary))

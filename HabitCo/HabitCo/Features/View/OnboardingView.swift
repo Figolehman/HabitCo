@@ -10,8 +10,10 @@ import SwiftUI
 struct OnboardingView: View {
     
     @StateObject private var userViewModel = UserViewModel()
+    @State private var showSignInView: Bool = false
     @State var index = 0
-    @Environment(\.auth) var userAuth
+    @Environment(\.auth) private var userAuth
+    @Environment(\.appRootManager) private var appRootManager
     
     init () {
         setupPageTabIndicator()
@@ -89,7 +91,8 @@ struct OnboardingView: View {
                     VStack (spacing: .getResponsiveHeight(36)) {
                         SignInButton(type: .continue, style: .black) {
                             Task {
-                                userAuth.signInApple
+                                let (_, _) = try await userAuth.signInApple()
+                                appRootManager.currentRoot = .journalView
                             }
                         }
                         
