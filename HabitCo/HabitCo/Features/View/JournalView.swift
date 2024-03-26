@@ -9,10 +9,13 @@ import SwiftUI
 
 struct JournalView: View {
     
+    @StateObject private var userViewModel = UserViewModel()
+    @StateObject private var habitViewModel = HabitViewModel()
     @State var showSheet = false
     @State var showCreateHabit = false
+    @State private var isDataLoaded = false
     @Environment(\.auth) var auth
-    @Environment(\.appRootManager) var appRootManager
+    @EnvironmentObject var appRootManager: AppRootManager
     
     var body: some View {
         NavigationView {
@@ -42,13 +45,19 @@ struct JournalView: View {
                         }
                     }
                     
-//                    VStack (spacing: .getResponsiveHeight(16)) {
-//                        Image(systemName: "leaf")
-//                            .font(.largeTitle)
-//                        Text("There’s no habit recorded yet.")
-//                    }
-//                    .foregroundColor(.getAppColor(.neutral))
-//                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
+                    //                    VStack (spacing: .getResponsiveHeight(16)) {
+                    //                        Image(systemName: "leaf")
+                    //                            .font(.largeTitle)
+                    //                        Text("There’s no habit recorded yet.")
+                    //                    }
+                    //                    .foregroundColor(.getAppColor(.neutral))
+                    //                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
+                    
+                    if let journals = userViewModel.journals {
+                        ForEach(journals, id: \.id) { journal in
+                            Text("Journal id: \(journal.id ?? "")")
+                        }
+                    }
                     
                     ScrollView {
                         VStack (spacing: .getResponsiveHeight(24)) {
@@ -123,6 +132,18 @@ struct JournalView: View {
             customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             
             UINavigationBar.appearance().standardAppearance = customNavigation
+            
+            do {
+                try userViewModel.getCurrentUserData { [self] in
+                    do {
+                        try userViewModel.getAllJournal()
+                    } catch {
+                        print("No Journal")
+                    }
+                }
+            } catch {
+                print("No Authenticated User")
+            }
         }
     }
 }

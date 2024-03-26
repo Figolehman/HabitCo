@@ -52,11 +52,11 @@ struct RootView: View {
                             }
                         }
                         
-                        Button {
-                            viewModel.getAllJournal()
-                        } label: {
-                            Text("Get journal")
-                        }
+//                        Button {
+//                            await viewModel.getAllJournal()
+//                        } label: {
+//                            Text("Get journal")
+//                        }
                         
                         Button {
                             viewModel.getDetailJournal(from: Date())
@@ -103,9 +103,7 @@ struct RootView: View {
             }
         }
         .onAppear {
-            Task{
-                viewModel.getCurrentUserData()
-            }
+            //viewModel.getCurrentUserData()
             self.showSignInView = authUser.currentUser.profile == nil
         }
         .fullScreenCover(isPresented: $showSignInView, content: {

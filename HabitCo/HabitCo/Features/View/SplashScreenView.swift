@@ -9,31 +9,28 @@ import SwiftUI
 
 struct SplashScreenView: View {
     
-    @State private var showSplashScreen: Bool = false
+    @EnvironmentObject private var appRootManager: AppRootManager
     
     var body: some View {
         ZStack{
-            if self.showSplashScreen {
-                OnboardingView()
-            } else {
-                VStack (spacing: 24) {
-                    
-                    Image(systemName: "square.dashed")
-                        .font(.system(size: 110))
-                        .foregroundColor(.getAppColor(.primary))
-                    
-                    Text("HabitCo")
-                        .font(.largeTitle)
-                        .foregroundColor(.getAppColor(.neutral))
-                    
-                }
+            VStack (spacing: 24) {
+                
+                Image(systemName: "square.dashed")
+                    .font(.system(size: 110))
+                    .foregroundColor(.getAppColor(.primary))
+                
+                Text("HabitCo")
+                    .font(.largeTitle)
+                    .foregroundColor(.getAppColor(.neutral))
+                
             }
         }
         .onAppear{
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                withAnimation {
-                    UserDefaultManager.hasSplashScreen = true
-                    self.showSplashScreen = true
+                if UserDefaultManager.isLogin {
+                    appRootManager.currentRoot = .journalView
+                } else {
+                    appRootManager.currentRoot = .onBoardingView
                 }
             }
         }

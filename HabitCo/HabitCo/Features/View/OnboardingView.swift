@@ -13,7 +13,7 @@ struct OnboardingView: View {
     @State private var showSignInView: Bool = false
     @State var index = 0
     @Environment(\.auth) private var userAuth
-    @Environment(\.appRootManager) private var appRootManager
+    @EnvironmentObject var appRootManager: AppRootManager
     
     init () {
         setupPageTabIndicator()
@@ -113,6 +113,9 @@ struct OnboardingView: View {
                 }
             }
             .frame(width: .getResponsiveWidth(345))
+        }
+        .onAppear {
+            print(UserDefaultManager.isLogin)
         }
     }
 }

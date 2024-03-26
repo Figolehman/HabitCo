@@ -25,10 +25,15 @@ final class UserViewModel: ObservableObject{
 }
 
 extension UserViewModel{
-    func getCurrentUserData() {
-        Task{
+    func getCurrentUserData(completion: @escaping () -> ()) throws {
+        Task {
             guard let userAuthInfo = firebaseProvider.getAuthenticatedUser() else { return }
-            self.user = try await userManager.getUserDB(userId: userAuthInfo.uid )
+            do {
+                self.user = try await userManager.getUserDB(userId: userAuthInfo.uid)
+                completion()
+            } catch {
+                print("Error fetching user data: \(error)")
+            }
         }
     }
     
@@ -46,11 +51,15 @@ extension UserViewModel{
         }
     }
     
-    func getAllJournal() {
-        Task{
+    func getAllJournal() throws {
+        Task {
             guard let user = self.user else { return }
-            if let userJournals = try? await userManager.getAllJournal(userId: user.id) {
-                self.journals = userJournals
+            do {
+                if let userJournals = try await userManager.getAllJournal(userId: user.id) {
+                    self.journals = userJournals
+                }
+            } catch {
+                print("Error fetching journals: \(error)")
             }
         }
     }

@@ -17,20 +17,20 @@ struct HabitCoApp: App {
     init() {
         FirebaseApp.configure()
     }
-    
+        
     var body: some Scene {
         WindowGroup {
             switch appRootManager.currentRoot {
             case .splashView:
-                UserDefaultManager.hasSplashScreen ? AnyView(OnboardingView()) : AnyView(SplashScreenView())
+                SplashScreenView()
+                    .environmentObject(appRootManager)
             case .onBoardingView:
                 OnboardingView()
-                    .transition(.slide)
+                    .environmentObject(appRootManager)
             case .journalView:
                 JournalView()
-                    .transition(.slide)
+                    .environmentObject(appRootManager)
             }
         }
-        .environment(\.appRootManager, appRootManager)
     }
 }

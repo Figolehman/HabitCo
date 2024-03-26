@@ -83,10 +83,10 @@ extension UserManager: UserUseCase{
     
     // Create new user to firestroe
     func createNewUser(user: UserDB) async throws{
-        try userDocument(userId: user.id).setData(from: user, merge: false)
+        try userDocument(userId: user.id).setData(from: user, merge: true)
     }
     
-    // Get user from firestroe
+    // Get user from firestore
     func getUserDB(userId: String) async throws -> UserDB {
         try await userDocument(userId: userId).getDocument(as: UserDB.self)
     }

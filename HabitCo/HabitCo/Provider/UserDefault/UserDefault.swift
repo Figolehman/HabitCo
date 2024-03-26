@@ -10,13 +10,12 @@ import Foundation
 final class UserDefaultManager {
     
     private enum Keys: String {
-        case hasSplashScreen
+        case isLogin
     }
-    
-    
-    static var hasSplashScreen: Bool {
-        get { UserDefaults.standard.bool(forKey: Keys.hasSplashScreen.rawValue) }
-        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.hasSplashScreen.rawValue)}
+
+    static var isLogin: Bool {
+        get { UserDefaults.standard.bool(forKey: Keys.isLogin.rawValue) }
+        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.isLogin.rawValue)}
     }
     
 }

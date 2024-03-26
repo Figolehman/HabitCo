@@ -81,7 +81,7 @@ public final class AuthManager {
         currentUser = AuthInfo(profile: value.user)
         
         // Save user to firestore
-        let user = UserDB(user: currentUser.profile ?? UserAuthInfo(uid: currentUser.userId ?? ""))
+        let user = UserDB(user: currentUser.profile ?? UserAuthInfo(uid: currentUser.userId ?? "NO ID"))
         try await UserManager.shared.createNewUser(user: user)
 
         defer {

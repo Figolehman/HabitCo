@@ -76,7 +76,6 @@
 		3FAC603B2BAB8C0900448C21 /* Habit+PomodoroDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC603A2BAB8C0900448C21 /* Habit+PomodoroDB.swift */; };
 		3FAC60502BB12E7400448C21 /* PomodoroViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC604F2BB12E7400448C21 /* PomodoroViewModel.swift */; };
 		3FBCEAF02BB186560057E204 /* AppRootManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEAEF2BB186560057E204 /* AppRootManager.swift */; };
-		3FBCEB0D2BB1A85E0057E204 /* AppRootManagerEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEB0C2BB1A85E0057E204 /* AppRootManagerEnvironmentKey.swift */; };
 		3FBCEB0F2BB1AB7F0057E204 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEB0E2BB1AB7F0057E204 /* UserDefault.swift */; };
 /* End PBXBuildFile section */
 
@@ -172,7 +171,6 @@
 		3FAC604F2BB12E7400448C21 /* PomodoroViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroViewModel.swift; sourceTree = "<group>"; };
 		3FAC60512BB14C6700448C21 /* HabitCo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitCo.entitlements; sourceTree = "<group>"; };
 		3FBCEAEF2BB186560057E204 /* AppRootManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootManager.swift; sourceTree = "<group>"; };
-		3FBCEB0C2BB1A85E0057E204 /* AppRootManagerEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootManagerEnvironmentKey.swift; sourceTree = "<group>"; };
 		3FBCEB0E2BB1AB7F0057E204 /* UserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -448,7 +446,6 @@
 			isa = PBXGroup;
 			children = (
 				3FBCEAEF2BB186560057E204 /* AppRootManager.swift */,
-				3FBCEB0C2BB1A85E0057E204 /* AppRootManagerEnvironmentKey.swift */,
 			);
 			path = AppRoot;
 			sourceTree = "<group>";
@@ -581,7 +578,6 @@
 				1B4B2A372BAD91EC0059559F /* OnboardingView.swift in Sources */,
 				1BC23B0B2BAB658200133C27 /* AuthProvider.swift in Sources */,
 				1BD50F112BA5B3A300FC7BCF /* FilterLabel.swift in Sources */,
-				3FBCEB0D2BB1A85E0057E204 /* AppRootManagerEnvironmentKey.swift in Sources */,
 				1BC23AEE2BAB535E00133C27 /* JournalDB.swift in Sources */,
 				1BC23AE82BAB518200133C27 /* CollectionReference+Extension.swift in Sources */,
 				1BC23AEC2BAB51A700133C27 /* UIApplication+Extension.swift in Sources */,
