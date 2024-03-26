@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum RepeatDay {
+enum RepeatDay: CaseIterable {
     case sunday
     case monday
     case tuesday
@@ -37,9 +37,23 @@ enum RepeatDay {
 }
 
 struct RepeatButton: View {
-    @State var isSelected: Bool
+    @Binding var isSelected: Bool
     let day: RepeatDay
     let action: () -> ()
+    
+    init(repeatDays: Binding<[RepeatDay]>, day: RepeatDay, action: @escaping () -> Void = {}) {
+        self._isSelected = Binding(
+            get: { repeatDays.wrappedValue.contains(day) },
+            set: { value in
+                if value {
+                    repeatDays.wrappedValue.append(day)
+                } else {
+                    repeatDays.wrappedValue.remove(at: repeatDays.wrappedValue.firstIndex(of: day)!)
+                }
+            })
+        self.day = day
+        self.action = action
+    }
     
     var body: some View {
         Button(action: {
@@ -51,14 +65,14 @@ struct RepeatButton: View {
                 .foregroundColor(.white)
         })
         .frame(width: 40, height: 40)
-        .background(isSelected ? Color.black : Color.yellow)
+        .background(isSelected ? Color.getAppColor(.primary) : Color.getAppColor(.primary2))
         .clipShape(Circle())
         .shadow(color: Color(red: 0.09, green: 0.09, blue: 0.09).opacity(0.1), radius: 8, x: 0, y: 4)
     }
 }
 
-#Preview {
-    RepeatButton(isSelected: false, day: .sunday) {
-        
-    }
-}
+//#Preview {
+//    RepeatButton(isSelected: false, day: .sunday) {
+//        
+//    }
+//}

@@ -27,15 +27,20 @@ struct HabitItem: View {
     
     var body: some View {
         HStack {
-            Rectangle()
-                .foregroundColor(.yellow)
-                .frame(width: 20, height: 20)
-                .cornerRadius(4)
-                .padding(.trailing, 16)
-            
-            Text("Habit Name")
-            
-            Spacer()
+            Group {
+                Rectangle()
+                    .foregroundColor(.yellow)
+                    .frame(width: 20, height: 20)
+                    .cornerRadius(4)
+                    .padding(.trailing, 16)
+                
+                Text("Habit Name")
+                
+                Spacer()
+            }
+            .onTapGesture {
+                // view habit detail
+            }
             
             Divider()
                 .frame(width: 1, height: .getResponsiveHeight(62))
@@ -63,13 +68,13 @@ struct HabitItem: View {
                         .frame(width: progressSize, height: progressSize)
                     
                     Circle()
-                        .stroke(Color.getAppColor(.primary2), lineWidth: 8)
+                        .stroke(Color.getAppColor(.primary2), lineWidth: 5)
                         .frame(width: progressSize, height: progressSize)
                     
                     
                     Circle()
                         .trim(from: 0.0, to: CGFloat(fraction))
-                        .stroke(Color.getAppColor(.neutral), lineWidth: 8)
+                        .stroke(Color.getAppColor(.neutral), lineWidth: 5)
                         .frame(width: progressSize, height: progressSize)
                         .rotationEffect(.degrees(-90))
                     
@@ -77,6 +82,9 @@ struct HabitItem: View {
                         .foregroundColor(.getAppColor(.neutral3))
                 }
                 .padding(.horizontal, 6)
+                .onTapGesture {
+                    
+                }
             }
             
             
@@ -91,5 +99,8 @@ struct HabitItem: View {
 }
 
 #Preview {
-    HabitItem(habitType: .type2, fraction: 0.5)
+    VStack {
+        HabitItem(habitType: .type1, fraction: 0.5)
+        HabitItem(habitType: .type2, fraction: 0.5)
+    }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+//import SwiftUI
 
 extension Date {
     static public let nameOfDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
@@ -114,9 +115,20 @@ extension Date {
         return calendar.component(component, from: self)
     }
     
+    func getFormattedTime() -> String {
+        // Extract time from date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeStyle = .short
+        dateFormatter.locale = Locale(identifier: "en")
+        
+        return dateFormatter.string(from: self)
+    }
+    
     func isSameDay(_ date: Date) -> Bool {
         let a = self.get(.day, .month, .year)
         let b = date.get(.day, .month, .year)
         return a == b
     }
+    
 }

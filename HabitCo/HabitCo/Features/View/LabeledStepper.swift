@@ -12,7 +12,7 @@ struct LabeledStepper: View {
     var body: some View {
         HStack {
             Button {
-                if frequency > 0 {
+                if frequency > 1 {
                     frequency = frequency - 1
                 }
             } label: {

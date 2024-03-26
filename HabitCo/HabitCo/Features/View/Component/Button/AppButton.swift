@@ -83,9 +83,10 @@ struct AppButton: View {
         })
         .padding(12)
         .frame(width: sizeType.width, height: sizeType.height)
+        .frame(minWidth: 124)
         .background(sizeType.color)
         .cornerRadius(12)
-        .shadow(color: Color(red: 0.09, green: 0.09, blue: 0.09).opacity(0.1), radius: 12, x: 0, y: 10)
+        .elevate3()
     }
 }
 

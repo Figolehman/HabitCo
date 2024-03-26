@@ -27,6 +27,8 @@
 		1B560C8B2BA3130500CE2DC6 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C8A2BA3130500CE2DC6 /* FilterButton.swift */; };
 		1B560C8D2BA317F400CE2DC6 /* RepeatButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C8C2BA317F400CE2DC6 /* RepeatButton.swift */; };
 		1B560C8F2BA3627D00CE2DC6 /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C8E2BA3627D00CE2DC6 /* PomodoroTimer.swift */; };
+		1B793AA02BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B793A9F2BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift */; };
+		1B793AA22BB3311600B6BFC9 /* CreatePomodoroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B793AA12BB3311600B6BFC9 /* CreatePomodoroView.swift */; };
 		1B897F3A2BA420250018BEAA /* LabelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B897F392BA420250018BEAA /* LabelButton.swift */; };
 		1B897F3C2BA424800018BEAA /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B897F3B2BA424800018BEAA /* CalendarView.swift */; };
 		1B897F3E2BA4279B0018BEAA /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B897F3D2BA4279B0018BEAA /* Date+Extension.swift */; };
@@ -116,6 +118,8 @@
 		1B560C8A2BA3130500CE2DC6 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
 		1B560C8C2BA317F400CE2DC6 /* RepeatButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatButton.swift; sourceTree = "<group>"; };
 		1B560C8E2BA3627D00CE2DC6 /* PomodoroTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimer.swift; sourceTree = "<group>"; };
+		1B793A9F2BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSheetViewRepresentable.swift; sourceTree = "<group>"; };
+		1B793AA12BB3311600B6BFC9 /* CreatePomodoroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePomodoroView.swift; sourceTree = "<group>"; };
 		1B897F392BA420250018BEAA /* LabelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelButton.swift; sourceTree = "<group>"; };
 		1B897F3B2BA424800018BEAA /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		1B897F3D2BA4279B0018BEAA /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -216,6 +220,7 @@
 				1BC8681D2BAE9E6F00B348FE /* JournalView.swift */,
 				1BC868272BB1424D00B348FE /* CreateHabitView.swift */,
 				1BC868292BB17DB200B348FE /* LabeledStepper.swift */,
+				1B793AA12BB3311600B6BFC9 /* CreatePomodoroView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -243,6 +248,7 @@
 				1BD50F1F2BA6210000FC7BCF /* HabitItem.swift */,
 				1BC8681B2BAE047D00B348FE /* CustomPageControl.swift */,
 				1BC868212BB0794600B348FE /* LoadingView.swift */,
+				1B793A9F2BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -564,6 +570,7 @@
 				1BD50F112BA5B3A300FC7BCF /* FilterLabel.swift in Sources */,
 				1BC23AEE2BAB535E00133C27 /* JournalDB.swift in Sources */,
 				1BC23AE82BAB518200133C27 /* CollectionReference+Extension.swift in Sources */,
+				1B793AA22BB3311600B6BFC9 /* CreatePomodoroView.swift in Sources */,
 				1BC23AEC2BAB51A700133C27 /* UIApplication+Extension.swift in Sources */,
 				1BC23AF22BAB53CC00133C27 /* UserDB.swift in Sources */,
 				1B897F3C2BA424800018BEAA /* CalendarView.swift in Sources */,
@@ -600,6 +607,7 @@
 				1BC23AF42BAB54C000133C27 /* RootView.swift in Sources */,
 				1BC868262BB13ABA00B348FE /* CreateButton.swift in Sources */,
 				1BC8681C2BAE047D00B348FE /* CustomPageControl.swift in Sources */,
+				1B793AA02BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift in Sources */,
 				1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */,
 				1BC23AFA2BAB54F800133C27 /* HabitViewModel.swift in Sources */,
 				1B897F3A2BA420250018BEAA /* LabelButton.swift in Sources */,

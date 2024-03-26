@@ -12,6 +12,7 @@ struct OnboardingView: View {
     
     init () {
         setupPageTabIndicator()
+        
     }
     
     func setupPageTabIndicator() {
