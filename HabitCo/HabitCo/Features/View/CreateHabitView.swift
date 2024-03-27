@@ -19,7 +19,7 @@ struct CreateHabitView: View {
     @State var isReminderFolded = true
     @State var isLabelFolded = true
     
-    @State var repeatDate: [RepeatDay] = []
+    @State var repeatDate: Set<RepeatDay> = []
     @State var reminderTime: Date = Date()
     
     
@@ -43,7 +43,7 @@ struct CreateHabitView: View {
                                     .foregroundColor((selected == nil) ? .getAppColor(.primary2) : Color(selected!.rawValue))
                                     .onTapGesture {
                                         withAnimation {
-                                            isLabelFolded = false
+                                            isLabelFolded.toggle()
                                         }
                                     }
                             }
@@ -70,7 +70,7 @@ struct CreateHabitView: View {
                             HStack {
                                 Text("Repeat")
                                 Spacer()
-                                AppButton(label: "No Repeat", sizeType: .select) {
+                                AppButton(label: "\(repeatDate.getRepeatLabel())", sizeType: .select) {
                                     if isRepeatFolded {
                                         withAnimation {
                                             isRepeatFolded = false
@@ -147,6 +147,8 @@ struct CreateHabitView: View {
         .navigationTitle("Create Habit Form")
     }
 }
+
+
 
 #Preview {
     NavigationView {

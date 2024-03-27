@@ -27,7 +27,7 @@ struct CreatePomodoroView: View {
     @State var isBreakTimeFolded = true
     @State var isLongBreakTimeFolded = true
     
-    @State var repeatDate: [RepeatDay] = []
+    @State var repeatDate: Set<RepeatDay> = []
     @State var reminderTime: Date = Date()
     
     @State private var currentDefaultPomodoro: DefaultPomodoro?
@@ -83,7 +83,7 @@ struct CreatePomodoroView: View {
                                     .foregroundColor((selected == nil) ? .getAppColor(.primary2) : Color(selected!.rawValue))
                                     .onTapGesture {
                                         withAnimation {
-                                            isLabelFolded = false
+                                            isLabelFolded.toggle()
                                         }
                                     }
                             }
@@ -102,7 +102,7 @@ struct CreatePomodoroView: View {
                             HStack {
                                 Text("Repeat")
                                 Spacer()
-                                AppButton(label: "No Repeat", sizeType: .select) {
+                                AppButton(label: "\(isRepeatOn ? repeatDate.getRepeatLabel() : "No Repeat")", sizeType: .select) {
                                     if isRepeatFolded {
                                         withAnimation {
                                             isRepeatFolded = false
@@ -243,16 +243,97 @@ struct CreatePomodoroView: View {
 //
                         }
                     }
+                    
+                    CardView {
+                        VStack (spacing: 12) {
+                            HStack {
+                                Text("Break Time")
+                                Spacer()
+                                AppButton(label: "\(breakTime == 0 ? "Not Set" : "\(breakTime)")", sizeType: .select) {
+                                    if isFocusTimeFolded {
+                                        withAnimation {
+                                            isBreakTimeFolded = false
+                                            if breakTime == 0 {
+                                                breakTime = 1
+                                            }
+                                        }
+                                    } else {
+                                        withAnimation {
+                                            isBreakTimeFolded = true
+                                        }
+                                    }
+                                }
+                            }
+                            if !isBreakTimeFolded {
+                                Picker("", selection: $breakTime) {
+                                    ForEach(1...180, id: \.self) { value in
+                                        Text("\(value)")
+                                    }
+                                }
+                                .pickerStyle(.wheel)
+                                .background(
+                                    Color.getAppColor(.primary3)
+                                        .cornerRadius(13)
+                                )
+                                .environment(\.colorScheme, .dark)
+                            }
+//
+                        }
+                    }
+                    
+                    CardView {
+                        VStack (spacing: 12) {
+                            HStack {
+                                Text("Long Break Time")
+                                Spacer()
+                                AppButton(label: "\(focusTime == 0 ? "Not Set" : "\(longBreakTime)")", sizeType: .select) {
+                                    if isLongBreakTimeFolded {
+                                        withAnimation {
+                                            isLongBreakTimeFolded = false
+                                            if longBreakTime == 0 {
+                                                longBreakTime = 1
+                                            }
+                                        }
+                                    } else {
+                                        withAnimation {
+                                            isLongBreakTimeFolded = true
+                                        }
+                                    }
+                                }
+                            }
+                            if !isLongBreakTimeFolded {
+                                Picker("", selection: $longBreakTime) {
+                                    ForEach(1...180, id: \.self) { value in
+                                        Text("\(value)")
+                                    }
+                                }
+                                .pickerStyle(.wheel)
+                                .background(
+                                    Color.getAppColor(.primary3)
+                                        .cornerRadius(13)
+                                )
+                                .environment(\.colorScheme, .dark)
+                            }
+//
+                        }
+                    }
                 }
                 
                 
-                AppButton(label: "Save", sizeType: .submit) {
+                AppButton(label: "\(isSavable())", sizeType: .submit, isDisabled: !isSavable()) {
                     // Save Action Here
                 }
                 .padding(.top, 4)
             }
         }
         .navigationTitle("Create Habit Form")
+    }
+}
+
+// MARK: -
+extension CreatePomodoroView {
+    func isSavable() -> Bool {
+        return isRepeatOn && isReminderOn && focusTime != 0 && breakTime != 0 && longBreakTime != 0
     }
 }
 

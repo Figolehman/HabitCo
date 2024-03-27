@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum RepeatDay: CaseIterable {
+enum RepeatDay: String, CaseIterable {
     case sunday
     case monday
     case tuesday
@@ -41,14 +41,14 @@ struct RepeatButton: View {
     let day: RepeatDay
     let action: () -> ()
     
-    init(repeatDays: Binding<[RepeatDay]>, day: RepeatDay, action: @escaping () -> Void = {}) {
+    init(repeatDays: Binding<Set<RepeatDay>>, day: RepeatDay, action: @escaping () -> Void = {}) {
         self._isSelected = Binding(
             get: { repeatDays.wrappedValue.contains(day) },
             set: { value in
                 if value {
-                    repeatDays.wrappedValue.append(day)
+                    repeatDays.wrappedValue.insert(day)
                 } else {
-                    repeatDays.wrappedValue.remove(at: repeatDays.wrappedValue.firstIndex(of: day)!)
+                    repeatDays.wrappedValue.remove(day)
                 }
             })
         self.day = day
@@ -69,6 +69,38 @@ struct RepeatButton: View {
         .clipShape(Circle())
         .shadow(color: Color(red: 0.09, green: 0.09, blue: 0.09).opacity(0.1), radius: 8, x: 0, y: 4)
     }
+}
+
+// MARK: - Extension for RepeatDay
+extension Set<RepeatDay> {
+    func contains(set: Set<RepeatDay>) -> Bool {
+        for thing in set {
+            if !self.contains(thing) {
+                return false
+            }
+        }
+        return true
+    }
+    
+    func containsWeekendOnly() -> Bool {
+        return self.contains(set: [.saturday, .sunday]) && !self.contains(.monday) && !self.contains(.tuesday) && !self.contains(.wednesday) && !self.contains(.thursday) && !self.contains(.friday)
+    }
+    
+    func containsWeekdayOnly() -> Bool {
+        return self.contains(set: [.monday, .tuesday, .wednesday, .thursday, .friday]) && !self.contains(.saturday) && !self.contains(.sunday)
+    }
+    
+    func containsEveryday() -> Bool {
+        return self.contains(set: Set(RepeatDay.allCases))
+    }
+    
+    func getRepeatLabel() -> String {
+        return "\(self.isEmpty ? "No Repeat" : self.count == 1 ?  self.first!.rawValue.capitalized : self.containsEveryday() ? "Everyday" : self.containsWeekdayOnly() ? "Weekday" : self.containsWeekendOnly() ? "Weekend" : "Custom")"
+    }
+}
+
+extension Set {
+    
 }
 
 //#Preview {

@@ -70,7 +70,15 @@ enum AppButtonSize{
 struct AppButton: View {
     let label: String
     var sizeType: AppButtonSize
+    let isDisabled: Bool
     var action: () -> ()
+    
+    init(label: String, sizeType: AppButtonSize, isDisabled: Bool = false, action: @escaping () -> Void) {
+        self.label = label
+        self.sizeType = sizeType
+        self.isDisabled = isDisabled
+        self.action = action
+    }
 
     var body: some View {
         Button (action: {
@@ -80,13 +88,15 @@ struct AppButton: View {
                 .font(.system(size: 17))
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
+                .padding(12)
+                .frame(width: sizeType.width, height: sizeType.height)
+                .frame(minWidth: 124)
+                .background(isDisabled ? Color.getAppColor(.primary2) : sizeType.color)
+                .disabled(isDisabled)
+                .cornerRadius(12)
+                .elevate3()
         })
-        .padding(12)
-        .frame(width: sizeType.width, height: sizeType.height)
-        .frame(minWidth: 124)
-        .background(sizeType.color)
-        .cornerRadius(12)
-        .elevate3()
+        
     }
 }
 
