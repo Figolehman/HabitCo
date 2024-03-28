@@ -9,26 +9,26 @@ import SwiftUI
 
 struct CreatePomodoroView: View {
     
-    @State var selected: Color.FilterColors? = nil
-    @State var session: Int = 1
+    @State private var selected: Color.FilterColors? = nil
+    @State private var session: Int = 1
     
-    @State var isRepeatOn = false
-    @State var isReminderOn = false
+    @State private var isRepeatOn = false
+    @State private var isReminderOn = false
     
-    @State var focusTime: Int = 0
-    @State var breakTime: Int = 0
-    @State var longBreakTime: Int = 0
+    @State private var focusTime: Int = 0
+    @State private var breakTime: Int = 0
+    @State private var longBreakTime: Int = 0
     
-    @State var isRepeatFolded = true
-    @State var isReminderFolded = true
-    @State var isLabelFolded = true
+    @State private var isRepeatFolded = true
+    @State private var isReminderFolded = true
+    @State private var isLabelFolded = true
     
-    @State var isFocusTimeFolded = true
-    @State var isBreakTimeFolded = true
-    @State var isLongBreakTimeFolded = true
+    @State private var isFocusTimeFolded = true
+    @State private var isBreakTimeFolded = true
+    @State private var isLongBreakTimeFolded = true
     
-    @State var repeatDate: Set<RepeatDay> = []
-    @State var reminderTime: Date = Date()
+    @State private var repeatDate: Set<RepeatDay> = []
+    @State private var reminderTime: Date = Date()
     
     @State private var currentDefaultPomodoro: DefaultPomodoro?
     
@@ -320,7 +320,7 @@ struct CreatePomodoroView: View {
                 }
                 
                 
-                AppButton(label: "\(isSavable())", sizeType: .submit, isDisabled: !isSavable()) {
+                AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     // Save Action Here
                 }
                 .padding(.top, 4)
@@ -338,5 +338,7 @@ extension CreatePomodoroView {
 }
 
 #Preview {
-    CreatePomodoroView()
+    NavigationView {
+        CreatePomodoroView()
+    }
 }

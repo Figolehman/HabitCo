@@ -9,19 +9,20 @@ import SwiftUI
 
 struct CreateHabitView: View {
 
-    @State var selected: Color.FilterColors? = nil
-    @State var frequency: Int = 1
+    @State private var selected: Color.FilterColors? = nil
+    @State private var frequency: Int = 1
     
-    @State var isRepeatOn = false
-    @State var isReminderOn = false
+    @State private var isRepeatOn = false
+    @State private var isReminderOn = false
     
-    @State var isRepeatFolded = true
-    @State var isReminderFolded = true
-    @State var isLabelFolded = true
+    @State private var isRepeatFolded = true
+    @State private var isReminderFolded = true
+    @State private var isLabelFolded = true
     
-    @State var repeatDate: Set<RepeatDay> = []
-    @State var reminderTime: Date = Date()
+    @State private var repeatDate: Set<RepeatDay> = []
+    @State private var reminderTime: Date = Date()
     
+    @ObservedObject var habitVM: HabitViewModel
     
     var body: some View {
         ScrollView (showsIndicators: false) {
@@ -140,6 +141,7 @@ struct CreateHabitView: View {
                 
                 AppButton(label: "Save", sizeType: .submit) {
                     // Save Action Here
+                    
                 }
                 .padding(.top, 4)
             }
@@ -152,6 +154,6 @@ struct CreateHabitView: View {
 
 #Preview {
     NavigationView {
-        CreateHabitView()
+        CreateHabitView(habitVM: HabitViewModel())
     }
 }

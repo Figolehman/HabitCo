@@ -29,6 +29,9 @@
 		1B560C8F2BA3627D00CE2DC6 /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C8E2BA3627D00CE2DC6 /* PomodoroTimer.swift */; };
 		1B793AA02BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B793A9F2BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift */; };
 		1B793AA22BB3311600B6BFC9 /* CreatePomodoroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B793AA12BB3311600B6BFC9 /* CreatePomodoroView.swift */; };
+		1B793AA72BB48FBE00B6BFC9 /* EditHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B793AA62BB48FBE00B6BFC9 /* EditHabitView.swift */; };
+		1B793AA92BB52E5200B6BFC9 /* FocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B793AA82BB52E5200B6BFC9 /* FocusView.swift */; };
+		1B7A24A92BB5DC280045E8D4 /* Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7A24A82BB5DC280045E8D4 /* Prompt.swift */; };
 		1B897F3A2BA420250018BEAA /* LabelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B897F392BA420250018BEAA /* LabelButton.swift */; };
 		1B897F3C2BA424800018BEAA /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B897F3B2BA424800018BEAA /* CalendarView.swift */; };
 		1B897F3E2BA4279B0018BEAA /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B897F3D2BA4279B0018BEAA /* Date+Extension.swift */; };
@@ -120,6 +123,9 @@
 		1B560C8E2BA3627D00CE2DC6 /* PomodoroTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimer.swift; sourceTree = "<group>"; };
 		1B793A9F2BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSheetViewRepresentable.swift; sourceTree = "<group>"; };
 		1B793AA12BB3311600B6BFC9 /* CreatePomodoroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePomodoroView.swift; sourceTree = "<group>"; };
+		1B793AA62BB48FBE00B6BFC9 /* EditHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditHabitView.swift; sourceTree = "<group>"; };
+		1B793AA82BB52E5200B6BFC9 /* FocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusView.swift; sourceTree = "<group>"; };
+		1B7A24A82BB5DC280045E8D4 /* Prompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prompt.swift; sourceTree = "<group>"; };
 		1B897F392BA420250018BEAA /* LabelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelButton.swift; sourceTree = "<group>"; };
 		1B897F3B2BA424800018BEAA /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		1B897F3D2BA4279B0018BEAA /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -214,13 +220,12 @@
 			children = (
 				1B560C7C2BA2027600CE2DC6 /* Component */,
 				1BBC95282B7286D800FF9353 /* ContentView.swift */,
+				1B793AA52BB48FA100B6BFC9 /* Habit Form */,
 				1BC23AF32BAB54C000133C27 /* RootView.swift */,
 				1B4B2A342BAD90170059559F /* SplashScreenView.swift */,
 				1B4B2A362BAD91EC0059559F /* OnboardingView.swift */,
 				1BC8681D2BAE9E6F00B348FE /* JournalView.swift */,
-				1BC868272BB1424D00B348FE /* CreateHabitView.swift */,
-				1BC868292BB17DB200B348FE /* LabeledStepper.swift */,
-				1B793AA12BB3311600B6BFC9 /* CreatePomodoroView.swift */,
+				1B793AA82BB52E5200B6BFC9 /* FocusView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -239,6 +244,7 @@
 		1B560C7C2BA2027600CE2DC6 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				1BC868292BB17DB200B348FE /* LabeledStepper.swift */,
 				1BD50F1C2BA61F7C00FC7BCF /* Button */,
 				1BD50F172BA5D20800FC7BCF /* Card */,
 				1BD50F132BA5B54F00FC7BCF /* Calendar */,
@@ -265,6 +271,16 @@
 				1B4B2A3C2BADEE3E0059559F /* CGFloat+Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1B793AA52BB48FA100B6BFC9 /* Habit Form */ = {
+			isa = PBXGroup;
+			children = (
+				1BC868272BB1424D00B348FE /* CreateHabitView.swift */,
+				1B793AA12BB3311600B6BFC9 /* CreatePomodoroView.swift */,
+				1B793AA62BB48FBE00B6BFC9 /* EditHabitView.swift */,
+			);
+			path = "Habit Form";
 			sourceTree = "<group>";
 		};
 		1BAA2EB82BA772BF00235B3D /* Frameworks */ = {
@@ -363,6 +379,7 @@
 				1BC23AFF2BAB623100133C27 /* SignInWithApple.swift */,
 				1BC23B012BAB624600133C27 /* Utlities.swift */,
 				1B4B2A382BAD95980059559F /* ScreenSize.swift */,
+				1B7A24A82BB5DC280045E8D4 /* Prompt.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -575,9 +592,11 @@
 				1BC23AF22BAB53CC00133C27 /* UserDB.swift in Sources */,
 				1B897F3C2BA424800018BEAA /* CalendarView.swift in Sources */,
 				1BD50F1E2BA61F8D00FC7BCF /* SettingButton.swift in Sources */,
+				1B7A24A92BB5DC280045E8D4 /* Prompt.swift in Sources */,
 				1BC23AE62BAB514C00133C27 /* AuthManagerEnvironmentKey.swift in Sources */,
 				1B897F3E2BA4279B0018BEAA /* Date+Extension.swift in Sources */,
 				1B2457C42BA6C7EF00E19459 /* View+Extension.swift in Sources */,
+				1B793AA72BB48FBE00B6BFC9 /* EditHabitView.swift in Sources */,
 				1BC8681E2BAE9E6F00B348FE /* JournalView.swift in Sources */,
 				1B560C7E2BA2028C00CE2DC6 /* AppButton.swift in Sources */,
 				1B4B2A352BAD90170059559F /* SplashScreenView.swift in Sources */,
@@ -603,6 +622,7 @@
 				1B560C8F2BA3627D00CE2DC6 /* PomodoroTimer.swift in Sources */,
 				1BC23AEA2BAB519400133C27 /* Query+extension.swift in Sources */,
 				1BC868222BB0794600B348FE /* LoadingView.swift in Sources */,
+				1B793AA92BB52E5200B6BFC9 /* FocusView.swift in Sources */,
 				1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */,
 				1BC23AF42BAB54C000133C27 /* RootView.swift in Sources */,
 				1BC868262BB13ABA00B348FE /* CreateButton.swift in Sources */,

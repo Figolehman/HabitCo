@@ -12,27 +12,32 @@ struct PomodoroTimer: View {
     let width: CGFloat = 270
     let height: CGFloat = 270
     
-    @State var totalTime = 10
+    
+    @Binding var totalTime: Int
     
     @State var isRunning = true
     
-    @State var duration: Int = 10
+    @Binding var duration: Int
+    
+    @Binding var isDone: Bool
+
+    let action: () -> ()
     
     var body: some View {
         VStack {
             ZStack {
                 Circle()
-                    .foregroundColor(.black)
+                    .foregroundColor(.getAppColor(.primary))
                     .frame(width: width, height: height)
                 
                 Circle()
-                    .stroke(Color(UIColor.systemGray3), lineWidth: 15)
+                    .stroke(Color.getAppColor(.primary2), lineWidth: 15)
                     .frame(width: width, height: height)
                 
                 
                 Circle()
                     .trim(from: 0.0, to: CGFloat(1 - Double(duration) / Double(totalTime)))
-                    .stroke(Color(UIColor.systemGray), lineWidth: 15)
+                    .stroke(Color.getAppColor(.neutral), lineWidth: 15)
                     .frame(width: width, height: height)
                     .rotationEffect(.degrees(-90))
                 
@@ -43,18 +48,21 @@ struct PomodoroTimer: View {
                     .onReceive(timer) { _ in
                         if duration > 0 {
                             duration = duration - 1
+                        } else if duration == 0 && !isDone{
+                            isDone = true
+                            action()
                         }
                     }
                 
             }
-            
-            AppButton(label: "+50 Second", sizeType: .control) {
-                duration = duration + 50
-                
-                if duration > totalTime {
-                    totalTime = duration
-                }
-            }
+//            
+//            AppButton(label: "+50 Second", sizeType: .control) {
+//                duration = duration + 50
+//                
+//                if duration > totalTime {
+//                    totalTime = duration
+//                }
+//            }
         }
     }
 }
@@ -79,11 +87,19 @@ extension PomodoroTimer {
         isRunning = false
     }
     
-    func addTimer() {
+    func addTimer(_ time: Int) {
         // add berapa detik
+        duration = duration + time
+        isDone = false
+        
+        if duration > totalTime {
+            totalTime = duration
+        }
     }
 }
 
-#Preview {
-    PomodoroTimer()
-}
+//#Preview {
+////    PomodoroTimer() {
+////        
+////    }
+//}

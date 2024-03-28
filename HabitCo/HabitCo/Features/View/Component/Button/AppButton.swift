@@ -89,8 +89,11 @@ struct AppButton: View {
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
                 .padding(12)
-                .frame(width: sizeType.width, height: sizeType.height)
-                .frame(minWidth: 124)
+                .frame(width: sizeType.width.isNaN ? nil : sizeType.width, height: sizeType.height.isNaN ? nil : sizeType.height)
+                .if(sizeType == .select, transform: { label in
+                    label
+                        .frame(minWidth: 124)
+                })
                 .background(isDisabled ? Color.getAppColor(.primary2) : sizeType.color)
                 .disabled(isDisabled)
                 .cornerRadius(12)
