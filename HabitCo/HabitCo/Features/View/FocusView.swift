@@ -13,10 +13,14 @@ enum PomodoroTime {
 
 struct FocusView: View {
     
+    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State var isRunning = true
+    
     @State var promptIndex: Int = Int.random(in: 0...3)
     
     @State var isDone = false
-    @State var currentTime: Int = 1
+    @State var currentTime: Int = 3
+    @State var totalTime: Int = 3
     
     let pomodoroTime: (Int, Int, Int) = (1, 1, 1)
     let maxSession = 5
@@ -28,23 +32,22 @@ struct FocusView: View {
         ScrollView (showsIndicators: false) {
             VStack (spacing: 40) {
                 VStack (spacing: 24) {
-                    PomodoroTimer(totalTime: Binding(get: {
-                        getCurrentPomodoroDuration(currentPomodoroTime)
-                    }, set: { value in
-                        
-                    }), duration: $currentTime, isDone: $isDone) {
-                        if currentPomodoroTime != .focusTime {
-                            if currentSession < maxSession {
+                    PomodoroTimer(timer: $timer, totalTime: $totalTime, isRunning: $isRunning, duration: $currentTime, isDone: $isDone) {
+                        if currentSession < maxSession {
+                            if currentPomodoroTime != .focusTime {
                                 currentPomodoroTime = getNextPomodoroTime(time: currentPomodoroTime, currentSession: currentSession)
                                 currentSession = currentSession + 1
                                 currentTime = getCurrentPomodoroDuration(currentPomodoroTime)
+                                totalTime = currentTime
+                            } else {
+                                currentPomodoroTime = getNextPomodoroTime(time: currentPomodoroTime, currentSession: currentSession)
+                                currentTime = getCurrentPomodoroDuration(currentPomodoroTime)
+                                totalTime = currentTime
                             }
-                        } else {
-                            currentPomodoroTime = getNextPomodoroTime(time: currentPomodoroTime, currentSession: currentSession)
-                            currentTime = getCurrentPomodoroDuration(currentPomodoroTime)
+                            
+                            promptIndex = Int.random(in: 0...3)
+                            isDone = false
                         }
-                        promptIndex = Int.random(in: 0...3)
-                        isDone = false
                     }
                         .padding(.top, .getResponsiveHeight(36))
                     
@@ -54,13 +57,19 @@ struct FocusView: View {
                     
                     HStack(alignment: .bottom, spacing: 24) {
                         ControlButton(color: .getAppColor(.primary), buttonSize: .secondaryControl, buttonImage: .backward) {
-                            
+                            currentTime = totalTime
                         }
-                        ControlButton(color: .getAppColor(.primary), buttonSize: .mainControl, buttonImage: .pause) {
-                            
+                        ControlButton(color: .getAppColor(.primary), buttonSize: .mainControl, buttonImage: isRunning ? .pause : .play) {
+                            if isRunning {
+                                timer.upstream.connect().cancel()
+                                isRunning = false
+                            } else {
+                                timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+                                isRunning = true
+                            }
                         }
                         ControlButton(color: .getAppColor(.primary), buttonSize: .secondaryControl, buttonImage: .forward) {
-                            
+                            currentTime = 0
                         }
                     }
                 }
@@ -68,13 +77,13 @@ struct FocusView: View {
                 VStack (spacing: 24) {
                     HStack {
                         AppButton(label: "+5 minute", sizeType: .control) {
-                            
+                            addTimer(300)
                         }
                         AppButton(label: "+10 minute", sizeType: .control) {
-                            
+                            addTimer(600)
                         }
                         AppButton(label: "+15 minute", sizeType: .control) {
-                            
+                            addTimer(900)
                         }
                     }
                     
@@ -149,6 +158,13 @@ extension FocusView {
             case .longBreakTime:
                 return .longBreakTime
             }
+        }
+    }
+    
+    func addTimer(_ time: Int) {
+        currentTime = currentTime + time
+        if totalTime < currentTime {
+            totalTime = currentTime
         }
     }
 }

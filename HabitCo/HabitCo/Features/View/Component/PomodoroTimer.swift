@@ -6,16 +6,17 @@
 //
 
 import SwiftUI
+import Combine
 
 struct PomodoroTimer: View {
-    var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @Binding var timer: Publishers.Autoconnect<Timer.TimerPublisher>
     let width: CGFloat = 270
     let height: CGFloat = 270
     
     
     @Binding var totalTime: Int
     
-    @State var isRunning = true
+    @Binding var isRunning: Bool
     
     @Binding var duration: Int
     
@@ -75,16 +76,6 @@ extension PomodoroTimer {
         let second = (duration - minute * 60)
         
         return (minute < 10 ? "0\(minute)" : "\(minute)") + " : " + (second < 10 ? "0\(second)" : "\(second)")
-    }
-    
-    mutating func startTimer() {
-        self.timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-        isRunning = true
-    }
-    
-    func pauseTimer() {
-        self.timer.upstream.connect().cancel()
-        isRunning = false
     }
     
     func addTimer(_ time: Int) {
