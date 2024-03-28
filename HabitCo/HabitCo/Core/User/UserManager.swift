@@ -81,9 +81,15 @@ extension UserManager{
 // MARK: CRUD For Firestore
 extension UserManager: UserUseCase{
     
-    // Create new user to firestroe
-    func createNewUser(user: UserDB) async throws{
-        try userDocument(userId: user.id).setData(from: user, merge: true)
+    // Add user to firestroe
+    func addUser(user: UserDB) async throws{
+        let document = try await userDocument(userId: user.id).getDocument()
+        if document.exists {
+            let data: [String: Any] = [ UserDB.CodingKeys.lastSignIn.rawValue: Date()]
+            try await userDocument(userId: user.id).updateData(data)
+        } else {
+            try userDocument(userId: user.id).setData(from: user, merge: true)
+        }
     }
     
     // Get user from firestore

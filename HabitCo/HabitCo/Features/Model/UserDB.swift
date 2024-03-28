@@ -12,14 +12,16 @@ struct UserDB: Codable{
     let fullName: String?
     let email: String?
     let photoUrl: String?
-    let dateCreated: Date?
+    let dateCreated: String?
+    let lastSignIn: Date?
     let streak: Streak?
-    
+
     enum CodingKeys: String, CodingKey{
         case id, email, streak
         case fullName = "full_name"
         case photoUrl = "photo_url"
         case dateCreated = "date_created"
+        case lastSignIn = "last_sign_in"
     }
     
     init(
@@ -27,7 +29,8 @@ struct UserDB: Codable{
         fullName: String?,
         email: String?,
         photoUrl: String?,
-        dateCreated: Date?,
+        dateCreated: String?,
+        lastSignIn: Date?,
         streak: Streak? = nil
     ) {
         self.id = id
@@ -35,6 +38,7 @@ struct UserDB: Codable{
         self.email = email
         self.photoUrl = photoUrl
         self.dateCreated = dateCreated
+        self.lastSignIn = lastSignIn
         self.streak = streak
     }
 }
@@ -45,7 +49,8 @@ extension UserDB{
         self.fullName = user.displayName
         self.email = user.email
         self.photoUrl = user.photoURL?.absoluteString
-        self.dateCreated = Date()
+        self.dateCreated = user.dateCreatedString
+        self.lastSignIn = Date()
         self.streak = nil
     }
     
@@ -56,7 +61,8 @@ extension UserDB{
         self.streak = try container.decodeIfPresent(Streak.self, forKey: .streak)
         self.fullName = try container.decodeIfPresent(String.self, forKey: .fullName)
         self.photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
-        self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
+        self.dateCreated = try container.decodeIfPresent(String.self, forKey: .dateCreated)
+        self.lastSignIn = try container.decodeIfPresent(Date.self, forKey: .lastSignIn)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -67,5 +73,6 @@ extension UserDB{
         try container.encodeIfPresent(self.fullName, forKey: .fullName)
         try container.encodeIfPresent(self.photoUrl, forKey: .photoUrl)
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
+        try container.encodeIfPresent(self.lastSignIn, forKey: .lastSignIn)
     }
 }

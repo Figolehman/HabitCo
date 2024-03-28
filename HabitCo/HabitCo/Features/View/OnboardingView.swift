@@ -114,9 +114,6 @@ struct OnboardingView: View {
             }
             .frame(width: .getResponsiveWidth(345))
         }
-        .onAppear {
-            print(UserDefaultManager.isLogin)
-        }
     }
 }
 

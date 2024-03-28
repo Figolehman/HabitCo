@@ -8,7 +8,7 @@
 import Foundation
 
 protocol UserUseCase {
-    func createNewUser(user: UserDB) async throws
+    func addUser(user: UserDB) async throws
     func getUserDB(userId: String) async throws -> UserDB
     func updateUserProfile(userId: String) async throws -> UserDB
 }
