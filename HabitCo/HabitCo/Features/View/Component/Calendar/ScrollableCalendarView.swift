@@ -27,7 +27,6 @@ struct ScrollableCalendarView: View {
         self._days = State(initialValue: Date.getDatesInRange(of: Calendar.current.date(byAdding: .month, value: -1, to: currentDate)!, to: lastDate))
         
         //        self._days = State(initialValue: Date.getDatesInRange(of: currentDate, to: Calendar.current.date(byAdding: .day, value: 8, to: currentDate)!))
-        
         self._selectedDate = State(initialValue: currentDate)
         
         self._lastItem = State(initialValue: lastDate)
@@ -125,6 +124,6 @@ extension ScrollableCalendarView {
     ScrollableCalendarView(hasHabit: [Date()])
 }
 
-#Preview {
-    JournalView()
-}
+//#Preview {
+//    JournalView()
+//}

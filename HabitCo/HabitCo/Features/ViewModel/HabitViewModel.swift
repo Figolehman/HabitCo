@@ -10,8 +10,8 @@ import Foundation
 @MainActor
 final class HabitViewModel: ObservableObject {
     
-    @Published private(set) var habits: [Habit]? = []
-    @Published private(set) var habit: Habit? = nil
+    @Published private(set) var habits: [HabitDB]? = []
+    @Published private(set) var habit: HabitDB? = nil
     
     private var user: UserDB? = nil
     private let firebaseProvider: FirebaseAuthProvider
@@ -33,10 +33,11 @@ extension HabitViewModel {
         }
     }
    
-    public func createnewHabit(){
+    public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date){
         Task {
             guard let user = self.user else { return }
-            try await userManager.createNewHabit(userId: user.id)
+            let timeString = DateFormatUtil.shared.dateToString(date: reminderHabit, to: "HH:mm")
+            try await userManager.createNewHabit(userId: user.id, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString, dateCreated: Date())
         }
     }
     

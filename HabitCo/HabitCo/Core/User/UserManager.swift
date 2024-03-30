@@ -31,39 +31,39 @@ final class UserManager {
 }
 
 // MARK: - For private func
-extension UserManager{
+private extension UserManager{
     
-    private func userDocument(userId: String) -> DocumentReference {
+    func userDocument(userId: String) -> DocumentReference {
         userCollection.document(userId)
     }
     
-    private func userJournalCollection(userId: String) -> CollectionReference {
+    func userJournalCollection(userId: String) -> CollectionReference {
         userDocument(userId: userId).collection("journals")
     }
     
-    private func userJournalDocument(userId: String, journalId: String) -> DocumentReference{
+    func userJournalDocument(userId: String, journalId: String) -> DocumentReference{
         userJournalCollection(userId: userId).document(journalId)
     }
     
     // HabitDB Collection
-    private func userHabitCollection(userId: String) -> CollectionReference {
+    func userHabitCollection(userId: String) -> CollectionReference {
         userDocument(userId: userId).collection("habits")
     }
     
-    private func userHabitDocument(userId: String, habitId: String) -> DocumentReference {
+    func userHabitDocument(userId: String, habitId: String) -> DocumentReference {
         userHabitCollection(userId: userId).document(habitId)
     }
     
     // Pomodoro Collection
-    private func userPomodoroCollection(userId: String) -> CollectionReference {
+    func userPomodoroCollection(userId: String) -> CollectionReference {
         userDocument(userId: userId).collection("pomodoro")
     }
     
-    private func userPomodoroDocument(userId: String, pomodoroId: String) -> DocumentReference {
+    func userPomodoroDocument(userId: String, pomodoroId: String) -> DocumentReference {
         userPomodoroCollection(userId: userId).document(pomodoroId)
     }
     
-    private func generateDocumentID(userId: String, type: JournalType?) -> (DocumentReference, String){
+    func generateDocumentID(userId: String, type: JournalType?) -> (DocumentReference, String){
         switch type {
         case .habit:
             let habitDocument = userHabitCollection(userId: userId).document()
@@ -76,12 +76,38 @@ extension UserManager{
             return (journalDocument, journalDocument.documentID)
         }
     }
+    
+    func addJournalBasedOnRepeatDay(userId: String, journalId: String?, habitId: String?, pomodoroId: String?, reminderDay: [Int]) async throws {
+        let calendar = Calendar.current
+        let currentDate = Date()
+        let startDate = calendar.startOfDay(for: currentDate)
+        if let endDate = calendar.date(byAdding: .weekday, value: 10, to: currentDate) {
+            for day in reminderDay {
+                calendar.enumerateDates(startingAfter: startDate, matching: DateComponents(weekday: day), matchingPolicy: .nextTime) { date, _, stop in
+                    guard let date else {
+                        print("NODATE")
+                        return
+                    }
+                    if date < endDate {
+                        Task {
+                            do {
+                                try await generateJournal(userId: userId, journalId: journalId, habitId: habitId ?? "", pomodoroId: pomodoroId, date: date)
+                            } catch {
+                                print("Error: \(error)")
+                            }
+                        }
+                    } else {
+                        stop = true
+                    }
+                }
+            }
+        }
+    }
 }
 
 // MARK: CRUD For Firestore
 extension UserManager: UserUseCase{
     
-    // Add user to firestroe
     func addUser(user: UserDB) async throws{
         let document = try await userDocument(userId: user.id).getDocument()
         if document.exists {
@@ -92,72 +118,87 @@ extension UserManager: UserUseCase{
         }
     }
     
-    // Get user from firestore
     func getUserDB(userId: String) async throws -> UserDB {
         try await userDocument(userId: userId).getDocument(as: UserDB.self)
-    }
-    
-    // Update user profile template
-    func updateUserProfile(userId: String /*Param: What value want to update*/) async throws -> UserDB {
-        // Must be a dictionary
-        let data: [String: Any] = [
-            UserDB.CodingKeys.fullName.rawValue: "Ayung"
-        ]
-        try await userDocument(userId: userId).updateData(data)
-        return try await getUserDB(userId: userId)
     }
 }
 
 // MARK: - For Journal Use Case
 extension UserManager: JournalUseCase {
-    func createJournal(userId: String, habitId: String?, pomodoroId: String?) async throws {
+    func generateJournal(userId: String, journalId: String?,  habitId: String, pomodoroId: String?, date: Date) async throws {
         let (document, id) = generateDocumentID(userId: userId, type: nil)
-        let journal = Journal(id: id, habitId: (habitId != nil) ? habitId : "", pomodoroId: (pomodoroId != nil) ? pomodoroId : "", date: Date(), dateCreated: Date())
-        try document.setData(from: journal, merge: false)
+        let journal = JournalDB(id: id, habitId: [habitId], pomodoroId: pomodoroId ?? "", date: date, dateName: date.getDayName)
+        print(date.getDayName)
+        let journalQuerySnapshot = try await userJournalCollection(userId: userId)
+            .whereField(JournalDB.CodingKeys.dateName.rawValue, isEqualTo:  date.getDayName)
+            .getDocuments()
+        // Check if any documents exist in the query snapshot
+        if !journalQuerySnapshot.documents.isEmpty {
+            // Update the existing document
+            let data: [String: Any] = {
+                if !habitId.isEmpty{
+                    return [JournalDB.CodingKeys.habitId.rawValue: FieldValue.arrayUnion([habitId])]
+                } else if let pomodoroId = pomodoroId {
+                    return [JournalDB.CodingKeys.pomodoroId.rawValue: pomodoroId]
+                } else {
+                    return [:]
+                }
+            }()
+            print("B")
+            for document in journalQuerySnapshot.documents {
+                try await userJournalDocument(userId: userId, journalId: document.documentID).updateData(data)
+            }
+        } else {
+            // Create a new document
+            print("A")
+            try document.setData(from: journal, merge: false)
+        }
     }
     
     // Use for calendar
-    func getAllJournal(userId: String) async throws -> [Journal]? {
-        let journals = try await userJournalCollection(userId: userId).getAllDocuments(as: Journal.self)
+    func getAllJournal(userId: String) async throws -> [JournalDB]? {
+        let journals = try await userJournalCollection(userId: userId).getAllDocuments(as: JournalDB.self)
         return journals
     }
     
-    func getDetailJournal(userId: String, from date: Date) async throws -> Journal? {
-        let snapshot = try await userJournalCollection(userId: userId).whereField(Journal.CodingKeys.date.rawValue, isDateInToday: date).getDocuments()
+    func getDetailJournal(userId: String, from date: Date) async throws -> JournalDB? {
+        let snapshot = try await userJournalCollection(userId: userId).whereField(JournalDB.CodingKeys.date.rawValue, isDateInToday: date).limit(to: 1).getDocuments()
         if let document = snapshot.documents.first {
-            let journal = try document.data(as: Journal.self)
+            let journal = try document.data(as: JournalDB.self)
             return journal
         } else {
             return nil
         }
     }
+    
 }
 
 // MARK: - For Habit Use Case
 extension UserManager: HabitUseCase {
     
-    func createNewHabit(userId: String /*habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Date]?, reminderHabit: Date?, doneDate: [Date]? = nil, dateCreated: Date?*/) async throws {
+    func createNewHabit(userId: String, habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: String, dateCreated: Date) async throws {
         let (document, id) = generateDocumentID(userId: userId, type: .habit)
-        let habit = Habit(id: id, habitName: "Lari siang", description: "Aku mau lari pagi sebanyak 6x", label: "Blue Label", frequency: 2, repeatHabit: [Date(), Date() - 1], reminderHabit: Date(), doneDate: [Date(), Date() - 1], dateCreated: Date())
+        let habit = HabitDB(id: id, habitName: "Baca buku", description: "Baca buku supaya pintar", label: "Blue Label", frequency: 2, repeatHabit: [1, 2, 6], reminderHabit: "12:00", dateCreated: Date())
         try document.setData(from: habit, merge: false)
+        try await addJournalBasedOnRepeatDay(userId: userId, journalId: nil, habitId: id, pomodoroId: nil, reminderDay: [1, 2])
     }
     
-    func getAllHabitByDate(userId: String, date: Date) async throws -> [Habit]?{
+    func getAllHabitByDate(userId: String, date: Date) async throws -> [HabitDB]?{
         try await userHabitCollection(userId: userId)
-            .whereField(Habit.CodingKeys.reminderHabit.rawValue, isDateInToday: Date())
-            .getAllDocuments(as: Habit.self)
+            .whereField(HabitDB.CodingKeys.reminderHabit.rawValue, isDateInToday: Date())
+            .getAllDocuments(as: HabitDB.self)
     }
     
-    func getAllHabit(userId: String) async throws -> [Habit]?{
+    func getAllHabit(userId: String) async throws -> [HabitDB]?{
         try await userHabitCollection(userId: userId)
-            .getAllDocuments(as: Habit.self)
+            .getAllDocuments(as: HabitDB.self)
     }
     
-    func getHabitDetail(userId: String, habitId: String) async throws -> Habit? {
-        return try await userHabitDocument(userId: userId, habitId: habitId).getDocument(as: Habit.self)
+    func getHabitDetail(userId: String, habitId: String) async throws -> HabitDB? {
+        return try await userHabitDocument(userId: userId, habitId: habitId).getDocument(as: HabitDB.self)
     }
     
-    func editHabit(userId: String, habitId: String) async throws -> Habit?{
+    func editHabit(userId: String, habitId: String) async throws -> HabitDB?{
         let data: [String: Any] = [
             : // need more context about the flow
         ]
@@ -174,22 +215,22 @@ extension UserManager: PomodoroUseCase {
     
     func createNewPomodoro(userId: String) async throws {
         let (document, id) = generateDocumentID(userId: userId, type: .pomodoro)
-        let pomodoro = Pomodoro(id: id, pomodoroName: "Pomodoro 1", description: "Ini pomodoro pagi", label: "Red Label", session: 1, focusTime: 2, breakTime: 3, repeatPomodoro: [Date()], reminderPomodoro: Date(), doneDate: [Date()], dateCreated: Date())
+        let pomodoro = PomodoroDB(id: id, pomodoroName: "Pomodoro 3", description: "Ini pomodoro malem", label: "Orange Label", session: 1, focusTime: 2, breakTime: 3, repeatPomodoro: [1, 2, 3], reminderPomodoro: "21:00", dateCreated: Date())
         try document.setData(from: pomodoro, merge: false)
     }
     
-    func getAllPomodoroByDate(userId: String, date: Date) async throws -> [Pomodoro]? {
+    func getAllPomodoroByDate(userId: String, date: Date) async throws -> [PomodoroDB]? {
         // Need change logic for integrate with apps
         return try await userPomodoroCollection(userId: userId)
-            .whereField(Pomodoro.CodingKeys.reminderPomodoro.rawValue, isDateInToday: Date())
-            .getAllDocuments(as: Pomodoro.self)
+            .whereField(PomodoroDB.CodingKeys.reminderPomodoro.rawValue, isDateInToday: Date())
+            .getAllDocuments(as: PomodoroDB.self)
     }
     
-    func getPomodoroDetail(userId: String, pomodoroId: String) async throws -> Pomodoro? {
-        return try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).getDocument(as: Pomodoro.self)
+    func getPomodoroDetail(userId: String, pomodoroId: String) async throws -> PomodoroDB? {
+        return try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).getDocument(as: PomodoroDB.self)
     }
     
-    func editPomodoro(userId: String, pomodoroId: String) async throws -> Pomodoro? {
+    func editPomodoro(userId: String, pomodoroId: String) async throws -> PomodoroDB? {
         let data: [String: Any] = [
             : // need more context about the flow
         ]
@@ -205,7 +246,7 @@ extension UserManager: PomodoroUseCase {
 extension UserManager: StreakUseCase{
     
     func createStreak(userId: String, description: String) async throws {
-        let streak = Streak(streaksCount: 1, description: description, isStreak: true, dateCreated: Date())
+        let streak = StreakDB(streaksCount: 1, description: description, isStreak: true, dateCreated: Date())
         guard let data = try? encoder.encode(streak) else { return }
         let dict: [String: Any] = [
             UserDB.CodingKeys.streak.rawValue: data

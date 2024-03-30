@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Streak: Codable {
+struct StreakDB: Codable {
     var id: String = UUID().uuidString
     let streaksCount: Int?
     let description: String?
@@ -22,7 +22,7 @@ struct Streak: Codable {
     }
 }
 
-extension Streak {
+extension StreakDB {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)

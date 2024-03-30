@@ -10,13 +10,12 @@ import Foundation
 protocol UserUseCase {
     func addUser(user: UserDB) async throws
     func getUserDB(userId: String) async throws -> UserDB
-    func updateUserProfile(userId: String) async throws -> UserDB
 }
 
 protocol JournalUseCase{
-    func createJournal(userId: String, habitId: String?, pomodoroId: String?) async throws
-    func getAllJournal(userId: String) async throws -> [Journal]?
-    func getDetailJournal(userId: String, from date: Date) async throws -> Journal?
+    func generateJournal(userId: String, journalId: String?,  habitId: String, pomodoroId: String?, date: Date) async throws
+    func getAllJournal(userId: String) async throws -> [JournalDB]?
+    func getDetailJournal(userId: String, from date: Date) async throws -> JournalDB?
 }
 
 protocol StreakUseCase{

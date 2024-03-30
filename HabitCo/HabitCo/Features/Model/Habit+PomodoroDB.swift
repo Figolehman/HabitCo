@@ -8,15 +8,14 @@
 import Foundation
 
 // MARK: Habit Database Section
-struct Habit: Codable{
+struct HabitDB: Codable{
     var id: String?
     let habitName: String?
     let description: String?
     let label: String?
     let frequency: Int?
-    let repeatHabit: [Date]?
-    let reminderHabit: Date?
-    let doneDate: [Date]?
+    let repeatHabit: [Int]?
+    let reminderHabit: String?
     let dateCreated: Date?
     
     enum CodingKeys: String, CodingKey {
@@ -24,12 +23,11 @@ struct Habit: Codable{
         case habitName = "habit_name"
         case repeatHabit = "repeat_habit"
         case reminderHabit = "reminder_habit"
-        case doneDate = "done_date"
         case dateCreated = "date_created"
     }
 }
 
-extension Habit{
+extension HabitDB{
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
@@ -37,9 +35,8 @@ extension Habit{
         self.label = try container.decodeIfPresent(String.self, forKey: .label)
         self.frequency = try container.decodeIfPresent(Int.self, forKey: .frequency)
         self.habitName = try container.decodeIfPresent(String.self, forKey: .habitName)
-        self.repeatHabit = try container.decodeIfPresent([Date].self, forKey: .repeatHabit)
-        self.reminderHabit = try container.decodeIfPresent(Date.self, forKey: .reminderHabit)
-        self.doneDate = try container.decodeIfPresent([Date].self, forKey: .doneDate)
+        self.repeatHabit = try container.decodeIfPresent([Int].self, forKey: .repeatHabit)
+        self.reminderHabit = try container.decodeIfPresent(String.self, forKey: .reminderHabit)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
     }
     
@@ -52,13 +49,12 @@ extension Habit{
         try container.encodeIfPresent(self.habitName, forKey: .habitName)
         try container.encodeIfPresent(self.repeatHabit, forKey: .repeatHabit)
         try container.encodeIfPresent(self.reminderHabit, forKey: .reminderHabit)
-        try container.encodeIfPresent(self.doneDate, forKey: .doneDate)
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
     }
 }
 
 // MARK: - Pomodoro DB Section
-struct Pomodoro: Codable {
+struct PomodoroDB: Codable {
     var id: String = UUID().uuidString
     let pomodoroName: String?
     let description: String?
@@ -66,9 +62,8 @@ struct Pomodoro: Codable {
     let session: Int?
     let focusTime: Int?
     let breakTime: Int?
-    let repeatPomodoro: [Date]?
-    let reminderPomodoro: Date?
-    let doneDate: [Date]?
+    let repeatPomodoro: [Int]?
+    let reminderPomodoro: String?
     let dateCreated: Date?
     
     enum CodingKeys: String, CodingKey {
@@ -78,12 +73,11 @@ struct Pomodoro: Codable {
         case breakTime = "break_time"
         case repeatPomodoro = "repeat_pomodoro"
         case reminderPomodoro = "reminder_pomodoro"
-        case doneDate = "done_date"
         case dateCreated = "date_created"
     }
 }
 
-extension Pomodoro {
+extension PomodoroDB {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
@@ -93,9 +87,8 @@ extension Pomodoro {
         self.pomodoroName = try container.decodeIfPresent(String.self, forKey: .pomodoroName)
         self.focusTime = try container.decodeIfPresent(Int.self, forKey: .focusTime)
         self.breakTime = try container.decodeIfPresent(Int.self, forKey: .breakTime)
-        self.repeatPomodoro = try container.decodeIfPresent([Date].self, forKey: .repeatPomodoro)
-        self.reminderPomodoro = try container.decodeIfPresent(Date.self, forKey: .reminderPomodoro)
-        self.doneDate = try container.decodeIfPresent([Date].self, forKey: .doneDate)
+        self.repeatPomodoro = try container.decodeIfPresent([Int].self, forKey: .repeatPomodoro)
+        self.reminderPomodoro = try container.decodeIfPresent(String.self, forKey: .reminderPomodoro)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
     }
     
@@ -110,7 +103,6 @@ extension Pomodoro {
         try container.encodeIfPresent(self.breakTime, forKey: .breakTime)
         try container.encodeIfPresent(self.repeatPomodoro, forKey: .repeatPomodoro)
         try container.encodeIfPresent(self.reminderPomodoro, forKey: .reminderPomodoro)
-        try container.encodeIfPresent(self.doneDate, forKey: .doneDate)
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
     }
 }

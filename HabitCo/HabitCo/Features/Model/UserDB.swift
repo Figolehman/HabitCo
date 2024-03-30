@@ -14,7 +14,7 @@ struct UserDB: Codable{
     let photoUrl: String?
     let dateCreated: String?
     let lastSignIn: Date?
-    let streak: Streak?
+    let streak: StreakDB?
 
     enum CodingKeys: String, CodingKey{
         case id, email, streak
@@ -31,7 +31,7 @@ struct UserDB: Codable{
         photoUrl: String?,
         dateCreated: String?,
         lastSignIn: Date?,
-        streak: Streak? = nil
+        streak: StreakDB? = nil
     ) {
         self.id = id
         self.fullName = fullName
@@ -58,7 +58,7 @@ extension UserDB{
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
         self.email = try container.decodeIfPresent(String.self, forKey: .email)
-        self.streak = try container.decodeIfPresent(Streak.self, forKey: .streak)
+        self.streak = try container.decodeIfPresent(StreakDB.self, forKey: .streak)
         self.fullName = try container.decodeIfPresent(String.self, forKey: .fullName)
         self.photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
         self.dateCreated = try container.decodeIfPresent(String.self, forKey: .dateCreated)

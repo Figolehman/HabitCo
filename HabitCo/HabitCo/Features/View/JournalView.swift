@@ -53,12 +53,6 @@ struct JournalView: View {
                     //                    .foregroundColor(.getAppColor(.neutral))
                     //                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
                     
-                    if let journals = userViewModel.journals {
-                        ForEach(journals, id: \.id) { journal in
-                            Text("Journal id: \(journal.id ?? "")")
-                        }
-                    }
-                    
                     ScrollView {
                         VStack (spacing: .getResponsiveHeight(24)) {
                             HabitItem(habitType: .type1)
@@ -74,7 +68,7 @@ struct JournalView: View {
             .toolbar {
                 VStack {
                     HStack {
-                        Text("March, 2024")
+                        Text(userViewModel.getMonthAndYear(date: Date()))
                             .foregroundColor(.getAppColor(.neutral))
                             .font(.largeTitle.weight(.bold))
                         
@@ -82,12 +76,14 @@ struct JournalView: View {
                         
                         Button {
                             //showSheet = true
-                            do {
-                                try auth.signOut()
-                                appRootManager.currentRoot = .onBoardingView
-                            } catch {
-                                print(error)
-                            }
+                            //userViewModel.getJournalByDate()
+                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 1, repeatHabit: [], reminderHabit: Date())
+//                                                        do {
+//                                                            try auth.signOut()
+//                                                            appRootManager.currentRoot = .onBoardingView
+//                                                        } catch {
+//                                                            print(error)
+//                                                        }
                         } label: {
                             Image(systemName: "gearshape.fill")
                                 .foregroundColor(.getAppColor(.primary))

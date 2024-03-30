@@ -11,8 +11,8 @@ import Foundation
 final class UserViewModel: ObservableObject{
     
     @Published private(set) var user: UserDB? = nil
-    @Published private(set) var journals: [Journal]? = nil
-    @Published private(set) var journal: Journal? = nil
+    @Published private(set) var journals: [JournalDB]? = nil
+    @Published private(set) var journal: JournalDB? = nil
     
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
@@ -37,17 +37,10 @@ extension UserViewModel{
         }
     }
     
-    func updateName() {
-        Task{
-            guard let user = self.user else { return }
-            self.user = try await userManager.updateUserProfile(userId: user.id)
-        }
-    }
-    
     func createJournal(habitId: String?, pomodoroId: String?) {
         Task {
             guard let user = self.user else { return }
-            try await userManager.createJournal(userId: user.id, habitId: habitId, pomodoroId: pomodoroId)
+            try await userManager.generateJournal(userId: user.id, journalId: "", habitId: habitId ?? "", pomodoroId: pomodoroId, date: Date())
         }
     }
     
@@ -85,7 +78,6 @@ extension UserViewModel{
         Task {
             guard let user = self.user else { return }
             try await userManager.createStreak(userId: user.id, description: "")
-            print("trigger streak")
         }
     }
     
@@ -99,4 +91,20 @@ extension UserViewModel{
         }
     }
     
+//    func getJournalByDate(){
+//        Task{
+//            guard let user = self.user else { return }
+//            let a = try await userManager.getJournalByDay(userId: user.id, days: [1, 2])
+//        }
+//    }
+    
+    func getMonthAndYear(date: Date) -> String {
+        var dateString = ""
+        
+        let calendar = Calendar.current
+        if let todayMonthYear = calendar.date(byAdding: .month, value: 0, to: date) {
+            dateString = DateFormatUtil().dateToString(date: todayMonthYear, to: "MMMM, yyyy")
+        }
+        return dateString
+    }
 }

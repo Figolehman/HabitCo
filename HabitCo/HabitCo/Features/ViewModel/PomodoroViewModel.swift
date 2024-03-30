@@ -10,8 +10,8 @@ import Foundation
 @MainActor
 final class PomodoroViewModel: ObservableObject {
     
-    @Published private(set) var pomodoros: [Pomodoro]? = []
-    @Published private(set) var pomodoro: Pomodoro? = nil
+    @Published private(set) var pomodoros: [PomodoroDB]? = []
+    @Published private(set) var pomodoro: PomodoroDB? = nil
     
     private var user: UserDB? = nil
     private let firebaseProvider: FirebaseAuthProvider

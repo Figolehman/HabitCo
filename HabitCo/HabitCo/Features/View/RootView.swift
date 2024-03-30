@@ -65,7 +65,7 @@ struct RootView: View {
                         }
                         
                         Button {
-                            habitViewModel.createnewHabit()
+                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 0, repeatHabit: [], reminderHabit: Date())
                         } label: {
                             Text("Create Habit")
                         }

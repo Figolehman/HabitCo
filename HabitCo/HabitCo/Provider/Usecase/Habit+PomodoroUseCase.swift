@@ -8,17 +8,17 @@
 import Foundation
 
 protocol HabitUseCase{
-    func createNewHabit(userId: String /*,habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Date]?, reminderHabit: Date?, doneDate: [Date]?, dateCreated: Date? */)  async throws
-    func getHabitDetail(userId: String, habitId: String) async throws -> Habit?
-    func getAllHabitByDate(userId: String, date: Date) async throws -> [Habit]?
-    func editHabit(userId: String, habitId: String) async throws -> Habit?
+    func createNewHabit(userId: String, habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: String, dateCreated: Date) async throws
+    func getHabitDetail(userId: String, habitId: String) async throws -> HabitDB?
+    func getAllHabitByDate(userId: String, date: Date) async throws -> [HabitDB]?
+    func editHabit(userId: String, habitId: String) async throws -> HabitDB?
     func deleteHabit(userId: String, habitId: String) async throws
 }
 
 protocol PomodoroUseCase{
     func createNewPomodoro(userId: String) async throws
-    func getAllPomodoroByDate(userId: String, date: Date) async throws -> [Pomodoro]?
-    func getPomodoroDetail(userId: String, pomodoroId: String) async throws -> Pomodoro?
-    func editPomodoro(userId: String, pomodoroId: String) async throws -> Pomodoro?
+    func getAllPomodoroByDate(userId: String, date: Date) async throws -> [PomodoroDB]?
+    func getPomodoroDetail(userId: String, pomodoroId: String) async throws -> PomodoroDB?
+    func editPomodoro(userId: String, pomodoroId: String) async throws -> PomodoroDB?
     func deletePomodoro(userId: String, pomodoroId: String) async throws
 }
