@@ -11,6 +11,7 @@ struct JournalView: View {
     
     @State var showSheet = false
     @State var showCreateHabit = false
+    @State var showStreak = true
     
     var body: some View {
         NavigationView {
@@ -96,6 +97,9 @@ struct JournalView: View {
                     .offset(y: .getResponsiveHeight(-530))
             )
         }
+        .alertOverlay($showStreak, content: {
+            StreakGainView(isShown: $showStreak)
+        })
         .alertOverlay($showCreateHabit, closeOnTap: true, content: {
             VStack (spacing: 24) {
                 CreateButton(type: .habit) {

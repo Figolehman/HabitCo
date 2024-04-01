@@ -11,9 +11,13 @@ struct SplashScreenView: View {
     var body: some View {
         VStack (spacing: 24) {
             
-            Image(systemName: "square.dashed")
-                .font(.system(size: 110))
-                .foregroundColor(.getAppColor(.primary))
+            Color.clear
+                .frame(width: .getResponsiveWidth(110), height: .getResponsiveHeight(220))
+                .overlay (
+                    Image("logo")
+                        .offset(y: .getResponsiveHeight(220 - 167))
+                        .clipped()
+                )
             
             Text("HabitCo")
                 .font(.largeTitle)

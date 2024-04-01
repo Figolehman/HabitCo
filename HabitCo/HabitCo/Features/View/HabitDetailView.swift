@@ -31,23 +31,23 @@ struct HabitDetailView: View {
                         }
                     }
                     
-                    CardView {
+                    CardView(height: .getResponsiveHeight(70)) {
+                        HStack {
+                            Text("Frequency")
+                            Spacer()
+                            Text("APSKD")
+                        }
+                    }
+                    CardView(height: .getResponsiveHeight(70)) {
                         HStack {
                             Text("Repeat")
                             Spacer()
                             Text("APSKD")
                         }
                     }
-                    CardView {
+                    CardView(height: .getResponsiveHeight(70)) {
                         HStack {
-                            Text("Repeat")
-                            Spacer()
-                            Text("APSKD")
-                        }
-                    }
-                    CardView {
-                        HStack {
-                            Text("Repeat")
+                            Text("Reminder")
                             Spacer()
                             Text("APSKD")
                         }
