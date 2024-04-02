@@ -38,7 +38,8 @@ struct JournalView: View {
                         Spacer()
                         
                         Button {
-                            showCreateHabit = true
+                            //showCreateHabit = true
+                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 1, repeatHabit: [], reminderHabit: Date())
                         } label: {
                             Image(systemName: "plus")
                                 .foregroundColor(.getAppColor(.primary))
@@ -76,14 +77,12 @@ struct JournalView: View {
                         
                         Button {
                             //showSheet = true
-                            //userViewModel.getJournalByDate()
-                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 1, repeatHabit: [], reminderHabit: Date())
-//                                                        do {
-//                                                            try auth.signOut()
-//                                                            appRootManager.currentRoot = .onBoardingView
-//                                                        } catch {
-//                                                            print(error)
-//                                                        }
+                            do {
+                                try auth.signOut()
+                                appRootManager.currentRoot = .onBoardingView
+                            } catch {
+                                print(error)
+                            }
                         } label: {
                             Image(systemName: "gearshape.fill")
                                 .foregroundColor(.getAppColor(.primary))

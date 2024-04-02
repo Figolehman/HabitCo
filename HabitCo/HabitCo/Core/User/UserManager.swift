@@ -12,12 +12,14 @@ import FirebaseFirestoreSwift
 enum JournalType: String{
     case habit = "habits"
     case pomodoro = "pomodoros"
+    case subJournal = "sub_journals"
 }
 
 @MainActor
 final class UserManager {
     
     static let shared = UserManager()
+    private let dayInteger: [Int] = [1, 2, 3, 4, 5, 6, 7]
     
     private let userCollection = Firestore.firestore().collection("users")
     
@@ -63,7 +65,16 @@ private extension UserManager{
         userPomodoroCollection(userId: userId).document(pomodoroId)
     }
     
-    func generateDocumentID(userId: String, type: JournalType?) -> (DocumentReference, String){
+    // SubJournalCollection
+    func userSubJournalCollection(userId: String, journalId: String) -> CollectionReference {
+        userJournalDocument(userId: userId, journalId: journalId).collection("sub_journals")
+    }
+    
+    func userSubJournalDocument(userId: String, journalId: String, subJournalId: String) -> DocumentReference{
+        userSubJournalCollection(userId: userId, journalId: journalId).document(subJournalId)
+    }
+    
+    func generateDocumentID(userId: String, journalId: String? = nil, type: JournalType?) -> (DocumentReference, String){
         switch type {
         case .habit:
             let habitDocument = userHabitCollection(userId: userId).document()
@@ -71,38 +82,73 @@ private extension UserManager{
         case .pomodoro:
             let pomodoroDocument = userPomodoroCollection(userId: userId).document()
             return (pomodoroDocument, pomodoroDocument.documentID)
+        case .subJournal:
+            let subJournalDocument = userSubJournalCollection(userId: userId, journalId: journalId ?? "").document()
+            return (subJournalDocument, subJournalDocument.documentID)
         case .none:
             let journalDocument =  userJournalCollection(userId: userId).document()
             return (journalDocument, journalDocument.documentID)
         }
     }
     
-    func addJournalBasedOnRepeatDay(userId: String, journalId: String?, habitId: String?, pomodoroId: String?, reminderDay: [Int]) async throws {
+    func getJournalDocumentByDateName(userId: String, dayName: String) async throws -> QuerySnapshot {
+        return try await userJournalCollection(userId: userId)
+            .whereField(JournalDB.CodingKeys.dateName.rawValue, isEqualTo:  dayName)
+            .getDocuments()
+    }
+    
+    func addJournalForOneMonth(userId: String, reminderDay: [Int]) async throws {
         let calendar = Calendar.current
         let currentDate = Date()
         let startDate = calendar.startOfDay(for: currentDate)
-        if let endDate = calendar.date(byAdding: .weekday, value: 10, to: currentDate) {
+        if let endDate = calendar.date(byAdding: .month, value: 1, to: currentDate) {
             for day in reminderDay {
+                print(day)
                 calendar.enumerateDates(startingAfter: startDate, matching: DateComponents(weekday: day), matchingPolicy: .nextTime) { date, _, stop in
-                    guard let date else {
-                        print("NODATE")
+                    guard let date, date < endDate else {
+                        stop = true
                         return
                     }
-                    if date < endDate {
-                        Task {
-                            do {
-                                try await generateJournal(userId: userId, journalId: journalId, habitId: habitId ?? "", pomodoroId: pomodoroId, date: date)
-                            } catch {
-                                print("Error: \(error)")
-                            }
+                    Task {
+                        do {
+                            try await generateJournal(userId: userId, date: date)
+                        } catch {
+                            print("Error: \(error)")
                         }
-                    } else {
-                        stop = true
                     }
                 }
             }
         }
     }
+    
+    func addSubJournalBasedOnRepeatDay(userId: String, habitPomodoroId: String, reminderDay: [Int], frequencyCount: Int) async throws {
+        let calendar = Calendar.current
+        let currentDate = Date()
+        let startDate = calendar.startOfDay(for: currentDate)
+        if let endDate = calendar.date(byAdding: .month, value: 1, to: currentDate) {
+            for day in reminderDay {
+                var dateDate = Date()
+                calendar.enumerateDates(startingAfter: startDate, matching: DateComponents(weekday: day), matchingPolicy: .nextTime) { date, _, stop in
+                    guard let date, date < endDate else {
+                        stop = true
+                        return
+                    }
+                    dateDate = date
+                }
+                Task {
+                    do {
+                        let journalQueryDocument = try await getJournalDocumentByDateName(userId: userId, dayName: dateDate.getDayName)
+                        for document in journalQueryDocument.documents {
+                            try await generateSubJournal(userId: userId, journalId: document.documentID, habitPomodoroId: habitPomodoroId, frequencyCount: frequencyCount)
+                        }
+                    } catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 // MARK: CRUD For Firestore
@@ -116,6 +162,7 @@ extension UserManager: UserUseCase{
         } else {
             try userDocument(userId: user.id).setData(from: user, merge: true)
         }
+        try await addJournalForOneMonth(userId: user.id, reminderDay: dayInteger)
     }
     
     func getUserDB(userId: String) async throws -> UserDB {
@@ -125,34 +172,10 @@ extension UserManager: UserUseCase{
 
 // MARK: - For Journal Use Case
 extension UserManager: JournalUseCase {
-    func generateJournal(userId: String, journalId: String?,  habitId: String, pomodoroId: String?, date: Date) async throws {
+    func generateJournal(userId: String, date: Date) async throws {
         let (document, id) = generateDocumentID(userId: userId, type: nil)
-        let journal = JournalDB(id: id, habitId: [habitId], pomodoroId: pomodoroId ?? "", date: date, dateName: date.getDayName)
-        print(date.getDayName)
-        let journalQuerySnapshot = try await userJournalCollection(userId: userId)
-            .whereField(JournalDB.CodingKeys.dateName.rawValue, isEqualTo:  date.getDayName)
-            .getDocuments()
-        // Check if any documents exist in the query snapshot
-        if !journalQuerySnapshot.documents.isEmpty {
-            // Update the existing document
-            let data: [String: Any] = {
-                if !habitId.isEmpty{
-                    return [JournalDB.CodingKeys.habitId.rawValue: FieldValue.arrayUnion([habitId])]
-                } else if let pomodoroId = pomodoroId {
-                    return [JournalDB.CodingKeys.pomodoroId.rawValue: pomodoroId]
-                } else {
-                    return [:]
-                }
-            }()
-            print("B")
-            for document in journalQuerySnapshot.documents {
-                try await userJournalDocument(userId: userId, journalId: document.documentID).updateData(data)
-            }
-        } else {
-            // Create a new document
-            print("A")
-            try document.setData(from: journal, merge: false)
-        }
+        let journal = JournalDB(id: id, date: date, dateName: date.getDayName)
+        try document.setData(from: journal, merge: false)
     }
     
     // Use for calendar
@@ -173,14 +196,23 @@ extension UserManager: JournalUseCase {
     
 }
 
+extension UserManager {
+    func generateSubJournal(userId: String, journalId: String, habitPomodoroId: String, frequencyCount: Int) async throws {
+        let (document, id) = generateDocumentID(userId: userId, journalId: journalId, type: .subJournal)
+        let subJournal = SubJournalDB(id: id, habitPomodoroId: habitPomodoroId, frequencyCount: frequencyCount)
+        try document.setData(from: subJournal, merge: false)
+        print("Generate")
+    }
+}
+
 // MARK: - For Habit Use Case
 extension UserManager: HabitUseCase {
     
     func createNewHabit(userId: String, habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: String, dateCreated: Date) async throws {
         let (document, id) = generateDocumentID(userId: userId, type: .habit)
-        let habit = HabitDB(id: id, habitName: "Baca buku", description: "Baca buku supaya pintar", label: "Blue Label", frequency: 2, repeatHabit: [1, 2, 6], reminderHabit: "12:00", dateCreated: Date())
+        let habit = HabitDB(id: id, habitName: "Baca kamus", description: "Baca buku supaya pintar", label: "Blue Label", frequency: 2, repeatHabit: [1, 2, 6], reminderHabit: "12:00", dateCreated: Date())
         try document.setData(from: habit, merge: false)
-        try await addJournalBasedOnRepeatDay(userId: userId, journalId: nil, habitId: id, pomodoroId: nil, reminderDay: [1, 2])
+        try await addSubJournalBasedOnRepeatDay(userId: userId, habitPomodoroId: id, reminderDay: [3, 4], frequencyCount: frequency)
     }
     
     func getAllHabitByDate(userId: String, date: Date) async throws -> [HabitDB]?{
@@ -212,11 +244,11 @@ extension UserManager: HabitUseCase {
 }
 
 extension UserManager: PomodoroUseCase {
-    
-    func createNewPomodoro(userId: String) async throws {
+    func createNewPomodoro(userId: String, pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, repeatPomodoro: [Int], reminderPomodoro: String) async throws {
         let (document, id) = generateDocumentID(userId: userId, type: .pomodoro)
         let pomodoro = PomodoroDB(id: id, pomodoroName: "Pomodoro 3", description: "Ini pomodoro malem", label: "Orange Label", session: 1, focusTime: 2, breakTime: 3, repeatPomodoro: [1, 2, 3], reminderPomodoro: "21:00", dateCreated: Date())
         try document.setData(from: pomodoro, merge: false)
+        try await addSubJournalBasedOnRepeatDay(userId: userId, habitPomodoroId: id, reminderDay: [3, 4], frequencyCount: session)
     }
     
     func getAllPomodoroByDate(userId: String, date: Date) async throws -> [PomodoroDB]? {

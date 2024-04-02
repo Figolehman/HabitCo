@@ -37,13 +37,6 @@ extension UserViewModel{
         }
     }
     
-    func createJournal(habitId: String?, pomodoroId: String?) {
-        Task {
-            guard let user = self.user else { return }
-            try await userManager.generateJournal(userId: user.id, journalId: "", habitId: habitId ?? "", pomodoroId: pomodoroId, date: Date())
-        }
-    }
-    
     func getAllJournal() throws {
         Task {
             guard let user = self.user else { return }

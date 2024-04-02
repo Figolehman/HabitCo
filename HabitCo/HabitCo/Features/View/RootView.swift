@@ -38,7 +38,6 @@ struct RootView: View {
                                 ForEach(habit, id: \.id) { habit in
                                     Button {
                                         habitViewModel.getHabitDetail(habitId: habit.id ?? "No Value")
-                                        viewModel.createJournal(habitId: habit.id, pomodoroId: nil)
                                     } label: {
                                         Text("Habit name: \(habit.habitName ?? "")")
                                     }
