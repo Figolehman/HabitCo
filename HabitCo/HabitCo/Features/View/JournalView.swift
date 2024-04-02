@@ -11,7 +11,7 @@ struct JournalView: View {
     
     @State var showSheet = false
     @State var showCreateHabit = false
-    @State var showStreak = true
+    @State var showStreak = false
     
     var body: some View {
         NavigationView {
@@ -71,7 +71,9 @@ struct JournalView: View {
                         Spacer()
                         
                         Button {
-                            showSheet = true
+                            withAnimation {
+                                showSheet = true
+                            }
                         } label: {
                             Image(systemName: "gearshape.fill")
                                 .foregroundColor(.getAppColor(.primary))
@@ -97,6 +99,9 @@ struct JournalView: View {
                     .offset(y: .getResponsiveHeight(-530))
             )
         }
+        .customSheet($showSheet, sheetType: .settings, content: {
+            Text("AD")
+        })
         .alertOverlay($showStreak, content: {
             StreakGainView(isShown: $showStreak)
         })
@@ -109,9 +114,6 @@ struct JournalView: View {
                     
                 }
             }
-        })
-        .sheet(isPresented: $showSheet, content: {
-            
         })
         .onAppear {
             let customNavigation = UINavigationBarAppearance()

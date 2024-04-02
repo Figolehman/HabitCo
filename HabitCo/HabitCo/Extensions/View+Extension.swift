@@ -79,6 +79,25 @@ extension View {
 }
 
 // MARK: - Half Sheet
+extension View {
+    func customSheet(_ condition: Binding<Bool>, sheetType: SheetType, content: @escaping () -> (some View)) -> some View {
+        ZStack {
+            
+            self // = journal view
+            
+            if condition.wrappedValue {
+                Color.black
+                    .opacity(0.4)
+                    .ignoresSafeArea()
+            }
+            
+            CustomSheetView(condition: condition, sheetType: sheetType) {
+                content()
+            }
+            
+        }
+    }
+}
 
 
 #Preview {
