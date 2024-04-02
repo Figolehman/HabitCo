@@ -12,6 +12,9 @@ struct JournalView: View {
     @State var showSheet = false
     @State var showCreateHabit = false
     @State var showStreak = false
+    @State var showPrivacyPolicy = false
+    @State var showTermsAndConditions = false
+    @State var showFilter = false
     
     var body: some View {
         NavigationView {
@@ -23,8 +26,10 @@ struct JournalView: View {
                 
                 VStack (spacing: 24) {
                     HStack (spacing: 16) {
-                        FilterButton(isDisabled: .constant(true)) {
-                            
+                        FilterButton(isDisabled: .constant(false)) {
+                            withAnimation {
+                                showFilter = true
+                            }
                         }
                         
                         SortButton(label: "Progress", isDisabled: .constant(true), imageType: .unsort) {
@@ -100,7 +105,16 @@ struct JournalView: View {
             )
         }
         .customSheet($showSheet, sheetType: .settings, content: {
-            Text("AD")
+            SettingsView(username: "Full Name", userEmail: "FullName@habitmail.com", initial: "FL", showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
+        })
+        .customSheet($showPrivacyPolicy, sheetType: .rules, content: {
+            PrivacyPolicyView()
+        })
+        .customSheet($showTermsAndConditions, sheetType: .rules, content: {
+            TermsAndConditionsView()
+        })
+        .customSheet($showFilter, sheetType: .filters, content: {
+            FilterView()
         })
         .alertOverlay($showStreak, content: {
             StreakGainView(isShown: $showStreak)

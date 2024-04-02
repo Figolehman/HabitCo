@@ -104,5 +104,5 @@ struct AppButton: View {
 }
 
 #Preview {
-    AppButton(label: "+5 minute", sizeType: .share) {}
+    AppButton(label: "+5 minute", sizeType: .submit) {}
 }

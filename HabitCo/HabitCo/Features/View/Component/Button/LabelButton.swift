@@ -19,9 +19,23 @@ struct LabelButton: View {
         self.color = color
     }
     
+    init(tag: Color.FilterColors, selection: Binding<Set<Color.FilterColors>>, color: Color){
+        self._isSelected = Binding(
+            get: { selection.wrappedValue.contains(tag)},
+            set: { tes in
+                if !tes {
+                    selection.wrappedValue.remove(tag)
+                } else{
+                    selection.wrappedValue.insert(tag)
+                }
+            }
+        )
+        self.color = color
+    }
+    
     var body: some View {
         Button(action: {
-            isSelected = true
+            isSelected.toggle()
         }, label: {
             if isSelected {
                 Image(systemName: "checkmark")

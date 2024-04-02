@@ -109,6 +109,7 @@ struct CustomSheetView<Content: View>: View {
                         }
                     }
                 }
+                .padding(.bottom, 28)
                 
                 content()
                 
