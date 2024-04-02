@@ -83,6 +83,7 @@
 		1BE028B32BA97A9D0042CAC3 /* HabitCo_Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */; };
 		1BE028B52BA97A9F0042CAC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */; };
 		1BE028B92BA97A9F0042CAC3 /* HabitCo WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1BE028AB2BA97A9D0042CAC3 /* HabitCo WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9B4789EF2BBAB11600B5C717 /* CustomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4789EE2BBAB11600B5C717 /* CustomSheetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -183,6 +184,7 @@
 		1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCo_Widget.swift; sourceTree = "<group>"; };
 		1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BE028B62BA97A9F0042CAC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9B4789EE2BBAB11600B5C717 /* CustomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSheetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,6 +265,7 @@
 				1BC868212BB0794600B348FE /* LoadingView.swift */,
 				1B793A9F2BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift */,
 				1BC868292BB17DB200B348FE /* LabeledStepper.swift */,
+				9B4789EE2BBAB11600B5C717 /* CustomSheetView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -601,6 +604,7 @@
 				1B4B2A3B2BADAE770059559F /* SignInButton.swift in Sources */,
 				1B4B2A372BAD91EC0059559F /* OnboardingView.swift in Sources */,
 				1BC23B0B2BAB658200133C27 /* AuthProvider.swift in Sources */,
+				9B4789EF2BBAB11600B5C717 /* CustomSheetView.swift in Sources */,
 				1BD50F112BA5B3A300FC7BCF /* FilterLabel.swift in Sources */,
 				1BC23AEE2BAB535E00133C27 /* JournalDB.swift in Sources */,
 				1BC23AE82BAB518200133C27 /* CollectionReference+Extension.swift in Sources */,
