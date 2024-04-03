@@ -88,6 +88,7 @@
 		9BDAF11E2BBC85EA00D935A5 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BDAF11D2BBC85EA00D935A5 /* PrivacyPolicyView.swift */; };
 		9BDAF1202BBC8E9C00D935A5 /* TermsAndConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BDAF11F2BBC8E9C00D935A5 /* TermsAndConditionsView.swift */; };
 		9BDAF1222BBC917D00D935A5 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BDAF1212BBC917D00D935A5 /* FilterView.swift */; };
+		9BF3F7CD2BBD55BF00B7CE59 /* CustomAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF3F7CC2BBD55BF00B7CE59 /* CustomAlertView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -193,6 +194,7 @@
 		9BDAF11D2BBC85EA00D935A5 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
 		9BDAF11F2BBC8E9C00D935A5 /* TermsAndConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsView.swift; sourceTree = "<group>"; };
 		9BDAF1212BBC917D00D935A5 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
+		9BF3F7CC2BBD55BF00B7CE59 /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -278,6 +280,7 @@
 				1B793A9F2BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift */,
 				1BC868292BB17DB200B348FE /* LabeledStepper.swift */,
 				1B013A1A2BBBF7E00027FD6E /* CustomSheetView.swift */,
+				9BF3F7CC2BBD55BF00B7CE59 /* CustomAlertView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -644,6 +647,7 @@
 				1BD50F1B2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift in Sources */,
 				1BC23AE02BAB510C00133C27 /* UserData.swift in Sources */,
 				1BC23AF02BAB53C000133C27 /* StreakDB.swift in Sources */,
+				9BF3F7CD2BBD55BF00B7CE59 /* CustomAlertView.swift in Sources */,
 				1BC23B042BAB64EB00133C27 /* AuthDataResultModel.swift in Sources */,
 				1B4B2A3D2BADEE3E0059559F /* CGFloat+Extension.swift in Sources */,
 				1B560C862BA2F6F500CE2DC6 /* SortButton.swift in Sources */,

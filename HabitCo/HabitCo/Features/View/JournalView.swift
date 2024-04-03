@@ -15,6 +15,7 @@ struct JournalView: View {
     @State var showPrivacyPolicy = false
     @State var showTermsAndConditions = false
     @State var showFilter = false
+    @State var showAlert = false
     
     var body: some View {
         NavigationView {
@@ -105,13 +106,18 @@ struct JournalView: View {
             )
         }
         .customSheet($showSheet, sheetType: .settings, content: {
-            SettingsView(username: "Full Name", userEmail: "FullName@habitmail.com", initial: "FL", showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
+            SettingsView(username: "Full Name", userEmail: "FullName@habitmail.com", initial: "FL", showAlert: $showAlert, showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
         })
         .customSheet($showPrivacyPolicy, sheetType: .rules, content: {
             PrivacyPolicyView()
         })
         .customSheet($showTermsAndConditions, sheetType: .rules, content: {
             TermsAndConditionsView()
+        })
+        .alertOverlay($showAlert, content: {
+            CustomAlertView(title: "Are you sure you want to Sign Out?", message: "Signing out means that you will need to sign in again when you open the apps.", dismiss: "Cancel", destruct: "Sign Out", dismissAction: {
+                showAlert = false
+            }, destructAction: {})
         })
         .customSheet($showFilter, sheetType: .filters, content: {
             FilterView()
