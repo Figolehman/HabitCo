@@ -27,6 +27,7 @@
 		1B560C8B2BA3130500CE2DC6 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C8A2BA3130500CE2DC6 /* FilterButton.swift */; };
 		1B560C8D2BA317F400CE2DC6 /* RepeatButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C8C2BA317F400CE2DC6 /* RepeatButton.swift */; };
 		1B560C8F2BA3627D00CE2DC6 /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C8E2BA3627D00CE2DC6 /* PomodoroTimer.swift */; };
+		1B772ADB2BBD5B6000BB675E /* TaskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B772ADA2BBD5B6000BB675E /* TaskModel.swift */; };
 		1B793AA02BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B793A9F2BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift */; };
 		1B793AA22BB3311600B6BFC9 /* CreatePomodoroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B793AA12BB3311600B6BFC9 /* CreatePomodoroView.swift */; };
 		1B793AA72BB48FBE00B6BFC9 /* EditHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B793AA62BB48FBE00B6BFC9 /* EditHabitView.swift */; };
@@ -124,6 +125,7 @@
 		1B560C8A2BA3130500CE2DC6 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
 		1B560C8C2BA317F400CE2DC6 /* RepeatButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatButton.swift; sourceTree = "<group>"; };
 		1B560C8E2BA3627D00CE2DC6 /* PomodoroTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimer.swift; sourceTree = "<group>"; };
+		1B772ADA2BBD5B6000BB675E /* TaskModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskModel.swift; sourceTree = "<group>"; };
 		1B793A9F2BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSheetViewRepresentable.swift; sourceTree = "<group>"; };
 		1B793AA12BB3311600B6BFC9 /* CreatePomodoroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePomodoroView.swift; sourceTree = "<group>"; };
 		1B793AA62BB48FBE00B6BFC9 /* EditHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditHabitView.swift; sourceTree = "<group>"; };
@@ -478,6 +480,7 @@
 				1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */,
 				1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */,
 				1BE028B62BA97A9F0042CAC3 /* Info.plist */,
+				1B772ADA2BBD5B6000BB675E /* TaskModel.swift */,
 			);
 			path = "HabitCo Widget";
 			sourceTree = "<group>";
@@ -664,6 +667,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B772ADB2BBD5B6000BB675E /* TaskModel.swift in Sources */,
 				1BE028B32BA97A9D0042CAC3 /* HabitCo_Widget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

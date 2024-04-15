@@ -9,68 +9,90 @@ import WidgetKit
 import SwiftUI
 
 struct Provider: TimelineProvider {
-    func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), emoji: "😀")
+    func placeholder(in context: Context) -> TaskEntry {
+        TaskEntry(lastFourTasks: Array(TaskDataModel.shared.tasks.prefix(4)))
     }
-
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), emoji: "😀")
+    
+    func getSnapshot(in context: Context, completion: @escaping (TaskEntry) -> ()) {
+        let entry = TaskEntry(lastFourTasks: Array(TaskDataModel.shared.tasks.prefix(4)))
         completion(entry)
     }
-
+    
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [SimpleEntry] = []
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, emoji: "😀")
-            entries.append(entry)
-        }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
+        
+        let latestTasks = Array(TaskDataModel.shared.tasks.prefix(4))
+        let latestEntries = [TaskEntry(lastFourTasks: latestTasks)]
+        
+        let timeline = Timeline(entries: latestEntries, policy: .atEnd)
         completion(timeline)
     }
 }
 
-struct SimpleEntry: TimelineEntry {
-    let date: Date
-    let emoji: String
+struct TaskEntry: TimelineEntry {
+    let date: Date = Date()
+    var lastFourTasks: [TaskModel]
 }
 
 struct HabitCo_WidgetEntryView : View {
     var entry: Provider.Entry
-
+    
     var body: some View {
+        
         VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text("Emoji:")
-            Text(entry.emoji)
+                
+            ForEach(entry.lastFourTasks, id:\.id) { task in
+                HStack (spacing: 20) {
+                    HStack {
+                        Text("\(task.taskTitle)")
+                        Spacer()
+                        Text("\(task.taskCount)/\(task.totalTask)")
+                    }
+                    .padding(20)
+//                    .frame(width: 210, height: 60)
+                    .background(
+                        Color.getAppColor(.primary2)
+                            .overlay(
+                                HStack {
+//                                    Text("\(task.taskCount * 220 / task.totalTask)")
+                                    task.filterColor
+                                        .frame(width: CGFloat(task.taskCount * 266 / task.totalTask))
+                                    Spacer()
+                                }
+                            )
+                    )
+                    .cornerRadius(12)
+                }
+                if task.id != entry.lastFourTasks.last!.id {
+                    Spacer()
+                }
+            }
         }
+        .ignoresSafeArea()
+        .padding(24)
+        .foregroundColor(.getAppColor(.primary))
     }
 }
 
 @main
 struct HabitCo_Widget: Widget {
     let kind: String = "HabitCo_Widget"
-
+    
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             HabitCo_WidgetEntryView(entry: entry)
+                .widgetBackground(.getAppColor(.neutral3))
         }
         .configurationDisplayName("My Widget")
         .description("This is an example widget.")
+        .supportedFamilies([.systemLarge])
     }
 }
 
 struct HabitCo_Widget_Previews: PreviewProvider {
     static var previews: some View {
-        HabitCo_WidgetEntryView(entry: SimpleEntry(date: Date(), emoji: "💦"))
-            .previewContext(WidgetPreviewContext(family: .systemSmall))
-            .widgetBackground(.yellow)
+        HabitCo_WidgetEntryView(entry: TaskEntry(lastFourTasks: Array(TaskDataModel.shared.tasks.prefix(4))))
+            .previewContext(WidgetPreviewContext(family: .systemLarge))
+            .widgetBackground(.getAppColor(.neutral3))
     }
 }
 //
@@ -83,5 +105,45 @@ extension View {
         } else {
             return background(color)
         }
+    }
+}
+
+// MARK: - Color Palette
+extension Color {
+    enum AppColors: String {
+        case danger
+        case primary
+        case primary2
+        case primary3
+        case secondary
+        case neutral
+        case neutral2
+        case neutral3
+        
+        
+        // Elevation Effect
+        case shadow
+    }
+    
+    static func getAppColor(_ appColor: AppColors) -> Color {
+        return Color("\(appColor.rawValue)")
+    }
+}
+
+// MARK: - Filter Colors
+extension Color {
+    enum FilterColors: String, CaseIterable {
+        case aluminium
+        case lavender
+        case mushroom
+        case glacier
+        case wisteria
+        case blush
+        case turquoise
+        case roseGold
+        case peach
+        case cornflower
+        case blossom
+        case goldenrod
     }
 }
