@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CardView<Content: View>: View {
-    let height: CGFloat?
+    let height: CGFloat
     let color: Color?
     var content: () -> Content
     
@@ -21,7 +21,12 @@ struct CardView<Content: View>: View {
     var body: some View {
         content()
             .padding(16)
-            .frame(width: 345, height: height, alignment: .leading)
+            .if(height.isNaN, transform: { content in
+                content.frame(width: 345, alignment: .leading)
+            })
+            .if(!height.isNaN, transform: { content in
+                content.frame(width: 345, height: height, alignment: .leading)
+            })
             .background(color)
             .cornerRadius(12)
             .shadow(color: Color(red: 0.09, green: 0.09, blue: 0.09).opacity(0.1), radius: 3, x: 0, y: 2)

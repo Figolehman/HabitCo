@@ -113,7 +113,7 @@ struct RootView: View {
         }
         .fullScreenCover(isPresented: $showSignInView, content: {
             NavigationView {
-                ContentView(showSignInView: $showSignInView)
+//                ContentView(showSignInView: $showSignInView)
             }
         })
     }
