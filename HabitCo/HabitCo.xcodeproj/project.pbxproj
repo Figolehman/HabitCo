@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B007E362BD0348D00915626 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B007E352BD0348D00915626 /* AppDelegate.swift */; };
 		1B2457C42BA6C7EF00E19459 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2457C32BA6C7EF00E19459 /* View+Extension.swift */; };
 		1B4B25792B7320B70081929F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B4B25782B7320B70081929F /* GoogleService-Info.plist */; };
 		1B4B257C2B73295E0081929F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1B4B257B2B73295E0081929F /* FirebaseAnalytics */; };
@@ -112,6 +113,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1B007E352BD0348D00915626 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1B2457C32BA6C7EF00E19459 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		1B4B25782B7320B70081929F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1B4B2A342BAD90170059559F /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				1B4B25782B7320B70081929F /* GoogleService-Info.plist */,
 				1BBC952A2B7286D900FF9353 /* Assets.xcassets */,
 				1BBC95262B7286D800FF9353 /* HabitCoApp.swift */,
+				1B007E352BD0348D00915626 /* AppDelegate.swift */,
 			);
 			name = Files;
 			sourceTree = "<group>";
@@ -641,6 +644,7 @@
 				1BBFDD2C2BCD2EBD0044CE05 /* NotificationHandler.swift in Sources */,
 				1B7A24AE2BB7E2640045E8D4 /* StreakGainView.swift in Sources */,
 				1B560C8D2BA317F400CE2DC6 /* RepeatButton.swift in Sources */,
+				1B007E362BD0348D00915626 /* AppDelegate.swift in Sources */,
 				1BC23B092BAB654C00133C27 /* UserUseCase.swift in Sources */,
 				1BD50F162BA5BB2500FC7BCF /* CardView.swift in Sources */,
 				1BD50F192BA5D21500FC7BCF /* EditableCardView.swift in Sources */,

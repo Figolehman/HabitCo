@@ -9,6 +9,7 @@ import Foundation
 import UserNotifications
 
 class NotificationHandler {
+    
     func askPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { isSuccess, error in
             if isSuccess {
@@ -41,6 +42,23 @@ class NotificationHandler {
             print("\(notifications)")
         }
     }
+//    
+//    func sendNotification(date: Date, habitWeekdays: [Int], title: String, body: String, withIdentifier id: String) {
+//        for habitDay in habitWeekdays {
+//            let dateComponents = date.get(.hour, .minute)
+//            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+//            
+//            let content = UNMutableNotificationContent()
+//            content.title = title
+//            content.body = body
+//            content.sound = UNNotificationSound.default
+//            
+//            let request = UNNotificationRequest(identifier: "\(id)", content: content, trigger: trigger)
+//            
+//            UNUserNotificationCenter.current().add(request)
+//        }
+//        
+//    }
     
     func sendNotification(timeInterval: Double = 10, title: String, body: String) {
         var trigger: UNNotificationTrigger?
