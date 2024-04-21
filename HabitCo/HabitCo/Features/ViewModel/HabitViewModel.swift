@@ -25,26 +25,22 @@ final class HabitViewModel: ObservableObject {
     
 }
 
-extension HabitViewModel {
-    private func initUser(){
+private extension HabitViewModel {
+    func initUser(){
         Task{
             guard let userAuthInfo = firebaseProvider.getAuthenticatedUser() else { return }
             self.user = try await userManager.getUserDB(userId: userAuthInfo.uid)
         }
     }
+}
+
+extension HabitViewModel {
    
     public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date){
         Task {
             guard let user = self.user else { return }
             let timeString = DateFormatUtil.shared.dateToString(date: reminderHabit, to: "HH:mm")
             try await userManager.createNewHabit(userId: user.id, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString, dateCreated: Date())
-        }
-    }
-    
-    public func getAllHabit(){
-        Task{
-            guard let user = self.user else { return }
-            self.habits = try await userManager.getAllHabit(userId: user.id)
         }
     }
     
@@ -59,6 +55,13 @@ extension HabitViewModel {
                     }
                 }
             }
+        }
+    }
+    
+    public func editHabit(habitId: String) {
+        Task{
+            guard let habits else { return }
+            try await userManager.editHabit(userId: UserDefaultManager.userID ?? "", habitId: "ChnrWkKEVGZqrLiEmliw", repeatHabit: [])
         }
     }
     

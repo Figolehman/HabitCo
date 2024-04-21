@@ -33,10 +33,11 @@ extension PomodoroViewModel {
         }
     }
    
-    public func createUserPomodoro(){
+    public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date){
         Task {
             guard let user = self.user else { return }
-            try await userManager.createNewPomodoro(userId: user.id)
+            let timeString = DateFormatUtil.shared.dateToString(date: reminderPomodoro, to: "HH:mm")
+            try await userManager.createNewPomodoro(userId: user.id, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString)
         }
     }
     

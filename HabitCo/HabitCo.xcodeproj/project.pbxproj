@@ -73,11 +73,14 @@
 		1BE028B32BA97A9D0042CAC3 /* HabitCo_Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */; };
 		1BE028B52BA97A9F0042CAC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */; };
 		1BE028B92BA97A9F0042CAC3 /* HabitCo WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1BE028AB2BA97A9D0042CAC3 /* HabitCo WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		3FAC603B2BAB8C0900448C21 /* Habit+PomodoroDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC603A2BAB8C0900448C21 /* Habit+PomodoroDB.swift */; };
+		3FAC603B2BAB8C0900448C21 /* HabitDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC603A2BAB8C0900448C21 /* HabitDB.swift */; };
 		3FAC60502BB12E7400448C21 /* PomodoroViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC604F2BB12E7400448C21 /* PomodoroViewModel.swift */; };
 		3FBCEAF02BB186560057E204 /* AppRootManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEAEF2BB186560057E204 /* AppRootManager.swift */; };
 		3FBCEB0F2BB1AB7F0057E204 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEB0E2BB1AB7F0057E204 /* UserDefault.swift */; };
 		3FBCEB1B2BB552510057E204 /* SubJournalDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEB1A2BB552510057E204 /* SubJournalDB.swift */; };
+		3FBCEB412BC593D50057E204 /* FutureJournalDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEB402BC593D50057E204 /* FutureJournalDB.swift */; };
+		3FBCEB432BC8DEDF0057E204 /* SubFutureJournalDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEB422BC8DEDF0057E204 /* SubFutureJournalDB.swift */; };
+		3FBCEB452BC8DF650057E204 /* PomodoroDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEB442BC8DF650057E204 /* PomodoroDB.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -168,12 +171,15 @@
 		1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCo_Widget.swift; sourceTree = "<group>"; };
 		1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BE028B62BA97A9F0042CAC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3FAC603A2BAB8C0900448C21 /* Habit+PomodoroDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Habit+PomodoroDB.swift"; sourceTree = "<group>"; };
+		3FAC603A2BAB8C0900448C21 /* HabitDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDB.swift; sourceTree = "<group>"; };
 		3FAC604F2BB12E7400448C21 /* PomodoroViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroViewModel.swift; sourceTree = "<group>"; };
 		3FAC60512BB14C6700448C21 /* HabitCo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitCo.entitlements; sourceTree = "<group>"; };
 		3FBCEAEF2BB186560057E204 /* AppRootManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootManager.swift; sourceTree = "<group>"; };
 		3FBCEB0E2BB1AB7F0057E204 /* UserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		3FBCEB1A2BB552510057E204 /* SubJournalDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubJournalDB.swift; sourceTree = "<group>"; };
+		3FBCEB402BC593D50057E204 /* FutureJournalDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureJournalDB.swift; sourceTree = "<group>"; };
+		3FBCEB422BC8DEDF0057E204 /* SubFutureJournalDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubFutureJournalDB.swift; sourceTree = "<group>"; };
+		3FBCEB442BC8DF650057E204 /* PomodoroDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroDB.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -419,8 +425,11 @@
 				1BC23AED2BAB535E00133C27 /* JournalDB.swift */,
 				1BC23AEF2BAB53C000133C27 /* StreakDB.swift */,
 				1BC23AF12BAB53CC00133C27 /* UserDB.swift */,
-				3FAC603A2BAB8C0900448C21 /* Habit+PomodoroDB.swift */,
+				3FAC603A2BAB8C0900448C21 /* HabitDB.swift */,
 				3FBCEB1A2BB552510057E204 /* SubJournalDB.swift */,
+				3FBCEB402BC593D50057E204 /* FutureJournalDB.swift */,
+				3FBCEB422BC8DEDF0057E204 /* SubFutureJournalDB.swift */,
+				3FBCEB442BC8DF650057E204 /* PomodoroDB.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -598,6 +607,7 @@
 				1BC23B112BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift in Sources */,
 				1BC23AFE2BAB5A1800133C27 /* DateFormatUtil.swift in Sources */,
 				1BC23AF82BAB54EF00133C27 /* UserViewModel.swift in Sources */,
+				3FBCEB452BC8DF650057E204 /* PomodoroDB.swift in Sources */,
 				1BC868282BB1424D00B348FE /* CreateHabitView.swift in Sources */,
 				1BD50F1B2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift in Sources */,
 				3FBCEAF02BB186560057E204 /* AppRootManager.swift in Sources */,
@@ -607,13 +617,15 @@
 				1B560C862BA2F6F500CE2DC6 /* SortButton.swift in Sources */,
 				1B4B2A392BAD95980059559F /* ScreenSize.swift in Sources */,
 				1BC23B002BAB623100133C27 /* SignInWithApple.swift in Sources */,
-				3FAC603B2BAB8C0900448C21 /* Habit+PomodoroDB.swift in Sources */,
+				3FBCEB432BC8DEDF0057E204 /* SubFutureJournalDB.swift in Sources */,
+				3FAC603B2BAB8C0900448C21 /* HabitDB.swift in Sources */,
 				3FAC60502BB12E7400448C21 /* PomodoroViewModel.swift in Sources */,
 				3FBCEB0F2BB1AB7F0057E204 /* UserDefault.swift in Sources */,
 				1B560C8D2BA317F400CE2DC6 /* RepeatButton.swift in Sources */,
 				1BC23B092BAB654C00133C27 /* UserUseCase.swift in Sources */,
 				1BD50F162BA5BB2500FC7BCF /* CardView.swift in Sources */,
 				1BD50F192BA5D21500FC7BCF /* EditableCardView.swift in Sources */,
+				3FBCEB412BC593D50057E204 /* FutureJournalDB.swift in Sources */,
 				1BC23B022BAB624600133C27 /* Utlities.swift in Sources */,
 				1B560C8F2BA3627D00CE2DC6 /* PomodoroTimer.swift in Sources */,
 				1BC23AEA2BAB519400133C27 /* Query+extension.swift in Sources */,

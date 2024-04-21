@@ -11,6 +11,8 @@ struct JournalView: View {
     
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var habitViewModel = HabitViewModel()
+    @StateObject private var pomodoroViewModel = PomodoroViewModel()
+    @State var selectedDate = Date()
     @State var showSheet = false
     @State var showCreateHabit = false
     @State private var isDataLoaded = false
@@ -22,13 +24,12 @@ struct JournalView: View {
             
             VStack(spacing: 48) {
                 
-                ScrollableCalendarView(hasHabit: [])
+                ScrollableCalendarView(hasHabit: [], selectedDate: $selectedDate)
                     .padding(.top, .getResponsiveHeight(60))
                 
                 VStack (spacing: 24) {
                     HStack (spacing: 16) {
                         FilterButton(isDisabled: .constant(true)) {
-                            
                         }
                         
                         SortButton(label: "Progress", isDisabled: .constant(true), imageType: .unsort) {
@@ -54,11 +55,27 @@ struct JournalView: View {
                     //                    .foregroundColor(.getAppColor(.neutral))
                     //                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
                     
+                    Button {
+                        habitViewModel.editHabit(habitId: "")
+                    } label: {
+                        Text("Update Habit")
+                    }
+                    
+                    Button {
+                        pomodoroViewModel.createUserPomodoro(pomodoroName: "", description: "", label: "", session: 0, focusTime: 0, breakTime: 0, repeatPomodoro: [], reminderPomodoro: Date())
+                    } label: {
+                        Text("add pomodoro")
+                    }
+                    
                     ScrollView {
                         VStack (spacing: .getResponsiveHeight(24)) {
-                            HabitItem(habitType: .type1)
-                            
-                            HabitItem(habitType: .type2)
+                            ForEach(userViewModel.subJournals ?? [], id: \.subJournal.id) { item in
+                                if item.habit != nil {
+                                    HabitItem(habitType: .type1, habitName: item.habit?.habitName ?? "NO NAME")
+                                } else {
+                                    HabitItem(habitType: .type2, habitName: item.habit?.habitName ?? "NO NAME")
+                                }
+                            }
                         }
                     }
                 }
@@ -69,7 +86,7 @@ struct JournalView: View {
             .toolbar {
                 VStack {
                     HStack {
-                        Text(userViewModel.getMonthAndYear(date: Date()))
+                        Text(userViewModel.getMonthAndYear(date: selectedDate))
                             .foregroundColor(.getAppColor(.neutral))
                             .font(.largeTitle.weight(.bold))
                         
@@ -126,8 +143,9 @@ struct JournalView: View {
             customNavigation.titleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             
-            UINavigationBar.appearance().standardAppearance = customNavigation
+            userViewModel.getDetailJournal(from: Date())
             
+            UINavigationBar.appearance().standardAppearance = customNavigation
             do {
                 try userViewModel.getCurrentUserData { [self] in
                     do {

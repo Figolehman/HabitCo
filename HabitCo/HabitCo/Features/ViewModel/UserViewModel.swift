@@ -12,7 +12,7 @@ final class UserViewModel: ObservableObject{
     
     @Published private(set) var user: UserDB? = nil
     @Published private(set) var journals: [JournalDB]? = nil
-    @Published private(set) var journal: JournalDB? = nil
+    @Published private(set) var subJournals: [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)]? = nil
     
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
@@ -25,6 +25,8 @@ final class UserViewModel: ObservableObject{
 }
 
 extension UserViewModel{
+    
+    //Done
     func getCurrentUserData(completion: @escaping () -> ()) throws {
         Task {
             guard let userAuthInfo = firebaseProvider.getAuthenticatedUser() else { return }
@@ -37,11 +39,18 @@ extension UserViewModel{
         }
     }
     
+    func generateJournal() throws {
+        Task {
+            guard let user else { return }
+        }
+    }
+    
+    // Done
     func getAllJournal() throws {
         Task {
-            guard let user = self.user else { return }
             do {
-                if let userJournals = try await userManager.getAllJournal(userId: user.id) {
+                guard let userId = UserDefaultManager.userID else { return }
+                if let userJournals = try await userManager.getAllJournal(userId: userId) {
                     self.journals = userJournals
                 }
             } catch {
@@ -50,33 +59,37 @@ extension UserViewModel{
         }
     }
     
+    // Done
     func getDetailJournal(from date: Date){
         Task {
-            guard let user = self.user else { return }
-            if let journal = try await userManager.getDetailJournal(userId: user.id, from: date) {
-                self.journal = journal
+            guard let userId = UserDefaultManager.userID else { return }
+            if let subJournals = try await userManager.getSubJournal(userId: userId, from: date) {
+                var localArray: [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)] = []
+                for subJournal in subJournals {
+                    if subJournal.subJournalType == .habit {
+                        if let habitPomodoroId = try await userManager.getHabitDetail(userId: userId, habitId: subJournal.habitPomodoroId ?? "") {
+                            localArray.append((subJournal, habitPomodoroId, nil))
+                        }
+                    } else {
+                        let habitPomodoroId = try await userManager.getPomodoroDetail(userId: userId, pomodoroId: subJournal.habitPomodoroId ?? "")
+                        localArray.append((subJournal, nil, habitPomodoroId))
+                    }
+                }
+                self.subJournals = localArray
             }
         }
     }
     
-    func generateInitial() -> String{
-        guard let user = self.user else { return "NO DATA"}
-        let splitName = user.fullName?.split(separator: " ")
-        guard let lastName = splitName?.last, let firstLastName = lastName.first else { return "" }
-        let initial = String(user.fullName?.prefix(1) ?? "") + String(firstLastName)
-        return initial.uppercased()
-    }
-    
     func createStreak(){
         Task {
-            guard let user = self.user else { return }
+            guard let user else { return }
             try await userManager.createStreak(userId: user.id, description: "")
         }
     }
     
     func deleteStreak(){
         Task{
-            guard let user = self.user else { return }
+            guard let user else { return }
             guard let isStreak = user.streak?.isStreak else { return }
             if !isStreak{
                 try await userManager.deleteStreak(userId: user.id)
@@ -84,16 +97,8 @@ extension UserViewModel{
         }
     }
     
-//    func getJournalByDate(){
-//        Task{
-//            guard let user = self.user else { return }
-//            let a = try await userManager.getJournalByDay(userId: user.id, days: [1, 2])
-//        }
-//    }
-    
     func getMonthAndYear(date: Date) -> String {
         var dateString = ""
-        
         let calendar = Calendar.current
         if let todayMonthYear = calendar.date(byAdding: .month, value: 0, to: date) {
             dateString = DateFormatUtil().dateToString(date: todayMonthYear, to: "MMMM, yyyy")

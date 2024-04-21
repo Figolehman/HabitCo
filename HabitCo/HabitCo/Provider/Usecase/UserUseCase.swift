@@ -12,13 +12,27 @@ protocol UserUseCase {
     func getUserDB(userId: String) async throws -> UserDB
 }
 
-protocol JournalUseCase{
+protocol JournalUseCase {
     func generateJournal(userId: String, date: Date) async throws
     func getAllJournal(userId: String) async throws -> [JournalDB]?
     func getDetailJournal(userId: String, from date: Date) async throws -> JournalDB?
 }
 
-protocol StreakUseCase{
+protocol SubJournalUseCase {
+    func generateSubJournal(userId: String, journalId: String, type: SubJournalType, habitPomodoroId: String, frequencyCount: Int) async throws
+    func getSubJournal(userId: String, from date: Date) async throws -> [SubJournalDB]?
+}
+
+protocol FutureJournalUseCase {
+    func generateFutureJournal(userId: String, dateName: String) async throws
+}
+
+protocol SubFutureJournalUseCase {
+    func generateSubFutureJournal(userId: String, futureJournalId: String, subJournalType: SubJournalType, habitPomodoroId: String) async throws
+    func deleteSubFutureJournal(userId: String, futureJournalId: String, subFutureJournalId: String) async throws
+}
+
+protocol StreakUseCase {
     func createStreak(userId: String, description: String) async throws
     func deleteStreak(userId: String) async throws
     func updateCountStreak(userId: String) async throws -> UserDB?

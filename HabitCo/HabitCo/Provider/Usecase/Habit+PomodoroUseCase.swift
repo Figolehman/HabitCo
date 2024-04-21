@@ -11,7 +11,7 @@ protocol HabitUseCase{
     func createNewHabit(userId: String, habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: String, dateCreated: Date) async throws
     func getHabitDetail(userId: String, habitId: String) async throws -> HabitDB?
     func getAllHabitByDate(userId: String, date: Date) async throws -> [HabitDB]?
-    func editHabit(userId: String, habitId: String) async throws -> HabitDB?
+    func editHabit(userId: String, habitId: String, repeatHabit: [Int]?) async throws -> HabitDB?
     func deleteHabit(userId: String, habitId: String) async throws
 }
 

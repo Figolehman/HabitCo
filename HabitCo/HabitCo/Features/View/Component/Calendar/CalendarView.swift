@@ -63,8 +63,8 @@ struct CalendarView: View {
             .padding(.vertical, 7)
             
             HStack {
-                ForEach(Date.nameOfDays, id: \.self) { day in
-                    Text(day)
+                ForEach(DateName.allCases, id: \.self) { day in
+                    Text(day.rawValue)
                         .frame(maxWidth: .infinity)
                         .font(.footnote.weight(.semibold))
                         .foregroundColor(Color(UIColor.tertiaryLabel))

@@ -30,9 +30,7 @@ struct RootView: View {
                                 }
                             }
                             
-                            if let journal = viewModel.journal {
-                                Text("Detail Journal: \(journal.id ?? "") \(journal.date ?? Date())")
-                            }
+                            
                             
                             if let habit = habitViewModel.habits {
                                 ForEach(habit, id: \.id) { habit in
@@ -67,12 +65,6 @@ struct RootView: View {
                             habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 0, repeatHabit: [], reminderHabit: Date())
                         } label: {
                             Text("Create Habit")
-                        }
-                        
-                        Button {
-                            habitViewModel.getAllHabit()
-                        } label: {
-                            Text("Get Habit")
                         }
                         
                         Button {
