@@ -63,6 +63,14 @@ extension UserViewModel{
         }
     }
         
+    func generateInitial() -> String{
+            guard let user else { return "NO DATA"}
+            let splitName = user.fullName?.split(separator: " ")
+            guard let lastName = splitName?.last, let firstLastName = lastName.first else { return "" }
+            let initial = String(user.fullName?.prefix(1) ?? "") + String(firstLastName)
+            return initial.uppercased()
+        }
+    
     // Done
     func getAllJournal() throws {
         Task {

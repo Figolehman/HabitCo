@@ -47,8 +47,8 @@ struct JournalView: View {
                         Spacer()
                         
                         Button {
-                            //showCreateHabit = true
-                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 1, repeatHabit: [], reminderHabit: Date())
+                            showCreateHabit = true
+//                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 1, repeatHabit: [], reminderHabit: Date())
                         } label: {
                             Image(systemName: "plus")
                                 .foregroundColor(.getAppColor(.primary))
@@ -125,14 +125,6 @@ struct JournalView: View {
                             withAnimation {
                                 showSettings = true
                             }
-                            /*
-                            do {
-                                try auth.signOut()
-                                appRootManager.currentRoot = .onBoardingView
-                            } catch {
-                                print(error)
-                            }
-                            */
                         } label: {
                             Image(systemName: "gearshape.fill")
                                 .foregroundColor(.getAppColor(.primary))
@@ -159,7 +151,7 @@ struct JournalView: View {
             )
         }
         .customSheet($showSettings, sheetType: .settings, content: {
-            SettingsView(username: "Full Name", userEmail: "FullName@habitmail.com", initial: "FL", showAlert: $showAlert, showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
+            SettingsView(username: userViewModel.user?.fullName ?? "Full Name", userEmail: "Apple ID", initial: userViewModel.generateInitial(), showAlert: $showAlert, showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
         })
         .customSheet($showPrivacyPolicy, sheetType: .rules, content: {
             PrivacyPolicyView()
@@ -170,7 +162,14 @@ struct JournalView: View {
         .alertOverlay($showAlert, content: {
             CustomAlertView(title: "Are you sure you want to Sign Out?", message: "Signing out means that you will need to sign in again when you open the apps.", dismiss: "Cancel", destruct: "Sign Out", dismissAction: {
                 showAlert = false
-            }, destructAction: {})
+            }, destructAction: {
+                do {
+                    try auth.signOut()
+                    appRootManager.currentRoot = .onBoardingView
+                } catch {
+                    print(error)
+                }
+            })
         })
         .customSheet($showFilter, sheetType: .filters, content: {
             FilterView()
@@ -180,9 +179,15 @@ struct JournalView: View {
         })
         .alertOverlay($showCreateHabit, closeOnTap: true, content: {
             VStack (spacing: 24) {
-                CreateButton(type: .habit) {
-                    
+
+                NavigationLink {
+                    CreateHabitView(habitVM: habitViewModel)
+                } label: {
+                    CreateButton(type: .habit) {
+                        print("trigger")
+                    }
                 }
+
                 CreateButton(type: .pomodoro) {
                     
                 }
