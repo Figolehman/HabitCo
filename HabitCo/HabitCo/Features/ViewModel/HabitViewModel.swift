@@ -10,10 +10,9 @@ import Foundation
 @MainActor
 final class HabitViewModel: ObservableObject {
     
-    @Published private(set) var habits: [Habit]? = []
-    @Published private(set) var habit: Habit? = nil
+    @Published private(set) var habits: [HabitDB]? = []
+    @Published private(set) var habit: HabitDB? = nil
     
-    private var journal: Journal? = nil
     private var user: UserDB? = nil
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
@@ -26,54 +25,50 @@ final class HabitViewModel: ObservableObject {
     
 }
 
-extension HabitViewModel {
-    private func initUser(){
+private extension HabitViewModel {
+    func initUser(){
         Task{
             guard let userAuthInfo = firebaseProvider.getAuthenticatedUser() else { return }
             self.user = try await userManager.getUserDB(userId: userAuthInfo.uid)
         }
-        initJournal()
     }
-    
-    private func initJournal(){
-        Task{
-            guard let user = self.user else { return }
-            self.journal = try await userManager.getDetailJournal(userId: user.id, from: Date())
-        }
-    }
+}
+
+extension HabitViewModel {
    
-    public func createnewHabit(){
+    public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date){
         Task {
             guard let user = self.user else { return }
-            guard let journal = self.journal else { return }
-            try await userManager.createNewHabit(userId: user.id, journalId: journal.id ?? "NO ID")
+            let timeString = DateFormatUtil.shared.dateToString(date: reminderHabit, to: "HH:mm")
+            try await userManager.createNewHabit(userId: user.id, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString, dateCreated: Date())
         }
     }
     
-    public func getAllHabit(){
+    public func getHabitDetail(habitId: String){
         Task{
             guard let user = self.user else { return }
-            guard let journal = self.journal else { return }
-            self.habits = try await userManager.getAllHabitByDate(userId: user.id, journalId: journal.id ?? "NO ID")
-        }
-    }
-    
-    public func getHabitDetail(){
-        Task{
-            guard let user = self.user else { return }
-            guard let journal = self.journal else { return }
-            guard let habit = self.habit else { return }
-            if let habit = try? await userManager.getHabitDetail(userId: user.id, journalId: journal.id ?? "NO ID", habitId: habit.id ?? "") {
-                self.habit = habit
+            guard let habits = self.habits else { return }
+            for habit in habits {
+                if habit.id == habitId {
+                    if let habit = try? await userManager.getHabitDetail(userId: user.id, habitId: habit.id ?? "") {
+                        self.habit = habit
+                    }
+                }
             }
         }
     }
     
-    public func deleteHabit(){
+    public func editHabit(habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: String?) {
+        Task{
+            guard let userId = UserDefaultManager.userID else { return }
+            try await userManager.editHabit(userId: userId, habitId: habitId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminderHabit)
+        }
+    }
+    
+    public func deleteHabit(habitId: String){
         Task{
             guard let user = self.user else { return }
-            guard let journal = self.journal else { return }
-            try? await userManager.deleteHabit(userId: user.id, journalId: journal.id ?? "NO ID", habitId: "")
+            try? await userManager.deleteHabit(userId: user.id, habitId: habitId)
         }
     }
 }

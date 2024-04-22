@@ -9,7 +9,6 @@ import Foundation
 //import SwiftUI
 
 extension Date {
-    static public let nameOfDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
     
     static func getDatesInRange(of a: Date, to b: Date) -> [Date] {
         guard a < b else { return [] }

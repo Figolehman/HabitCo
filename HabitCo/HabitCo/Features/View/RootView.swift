@@ -9,7 +9,8 @@ import SwiftUI
 
 struct RootView: View {
     @State private var showSignInView = false
-    @StateObject private var viewModel = ProfileViewModel()
+    @StateObject private var viewModel = UserViewModel()
+    @StateObject private var habitViewModel = HabitViewModel()
     @Environment(\.auth) var authUser
     var body: some View {
         ZStack {
@@ -29,49 +30,48 @@ struct RootView: View {
                                 }
                             }
                             
-                            if let journal = viewModel.journal {
-                                Text("Detail Journal: \(journal.id ?? "") \(journal.date ?? Date())")
+                            
+                            
+                            if let habit = habitViewModel.habits {
+                                ForEach(habit, id: \.id) { habit in
+                                    Button {
+                                        habitViewModel.getHabitDetail(habitId: habit.id ?? "No Value")
+                                    } label: {
+                                        Text("Habit name: \(habit.habitName ?? "")")
+                                    }
+                                }
                             }
-                            
-                            
+                    
+                            if let habit = habitViewModel.habit {
+                                Text("Habit Id: \(habit.id ?? "")")
+                                Text("Habit name: \(habit.habitName ?? "")")
+                                Text("Habit Label: \(habit.label ?? "")")
+                            }
                         }
                         
-                        Button {
-                            viewModel.createJournal()
-                        } label: {
-                            Text("Create journal")
-                        }
-                        
-                        Button {
-                            viewModel.getAllJournal()
-                        } label: {
-                            Text("Get journal")
-                        }
-                        
-                        Button {
-                            viewModel.getDetailJournal(from: Date())
-                        } label: {
-                            Text("Get Detail Journal By Date")
-                        }
-                        
-//
 //                        Button {
-//                            viewModel.deleteHabit()
+//                            await viewModel.getAllJournal()
 //                        } label: {
-//                            Text("Delete habit")
-//                        }
-//
-//                        Button {
-//                            viewModel.getDetailJournal()
-//                        } label: {
-//                            Text("Get Detail Journal")
+//                            Text("Get journal")
 //                        }
                         
 //                        Button {
-//                            viewModel.getHabitDetail()
+//                            viewModel.getDetailJournal(from: Date())
 //                        } label: {
-//                            Text("Get Habit Detail")
+//                            Text("Get Detail Journal By Date")
 //                        }
+//                        
+                        Button {
+                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 0, repeatHabit: [], reminderHabit: Date())
+                        } label: {
+                            Text("Create Habit")
+                        }
+                        
+                        Button {
+                            habitViewModel.deleteHabit(habitId: habitViewModel.habit?.id ?? "")
+                        } label: {
+                            Text("Delete Habit")
+                        }
                         
                         Button {
                             if viewModel.user?.streak == nil {
@@ -80,15 +80,6 @@ struct RootView: View {
                         } label: {
                             Text("Create streak")
                         }
-//
-//
-//                        Button {
-//                            viewModel.createHabit()
-//                        } label: {
-//                            Text("Create Habit")
-//                        }
-//
-                        
                         
                         Button("Logout"){
                             do{
@@ -102,13 +93,8 @@ struct RootView: View {
                 }
             }
         }
-//        .task {
-//            viewModel.getCurrentUserData()
-//        }
         .onAppear {
-            Task{
-                viewModel.getCurrentUserData()
-            }
+            //viewModel.getCurrentUserData()
             self.showSignInView = authUser.currentUser.profile == nil
         }
         .fullScreenCover(isPresented: $showSignInView, content: {

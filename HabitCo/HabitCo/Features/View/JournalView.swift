@@ -9,8 +9,15 @@ import SwiftUI
 
 struct JournalView: View {
     
+    @StateObject private var userViewModel = UserViewModel()
+    @StateObject private var habitViewModel = HabitViewModel()
+    @StateObject private var pomodoroViewModel = PomodoroViewModel()
+    @State var selectedDate = Date()
     @State var showSettings = false
     @State var showCreateHabit = false
+    @State private var isDataLoaded = false
+    @Environment(\.auth) var auth
+    @EnvironmentObject var appRootManager: AppRootManager
     @State var showStreak = false
     @State var showPrivacyPolicy = false
     @State var showTermsAndConditions = false
@@ -22,7 +29,7 @@ struct JournalView: View {
             
             VStack(spacing: 48) {
                 
-                ScrollableCalendarView(hasHabit: [])
+                ScrollableCalendarView(hasHabit: [], selectedDate: $selectedDate)
                     .padding(.top, .getResponsiveHeight(60))
                 
                 VStack (spacing: 24) {
@@ -40,26 +47,64 @@ struct JournalView: View {
                         Spacer()
                         
                         Button {
-                            showCreateHabit = true
+                            //showCreateHabit = true
+                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 1, repeatHabit: [], reminderHabit: Date())
                         } label: {
                             Image(systemName: "plus")
                                 .foregroundColor(.getAppColor(.primary))
                         }
                     }
                     
-//                    VStack (spacing: .getResponsiveHeight(16)) {
-//                        Image(systemName: "leaf")
-//                            .font(.largeTitle)
-//                        Text("There’s no habit recorded yet.")
+                    //                    VStack (spacing: .getResponsiveHeight(16)) {
+                    //                        Image(systemName: "leaf")
+                    //                            .font(.largeTitle)
+                    //                        Text("There’s no habit recorded yet.")
+                    //                    }
+                    //                    .foregroundColor(.getAppColor(.neutral))
+                    //                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
+                    
+//                    Button {
+//                        habitViewModel.editHabit(habitId: "")
+//                    } label: {
+//                        Text("Update Habit")
 //                    }
-//                    .foregroundColor(.getAppColor(.neutral))
-//                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
+                    
+                     Button {
+                         userViewModel.createStreak()
+                    } label: {
+                        Text("Create streak")
+                    }
+                    
+                    
+//                    Button {
+//                        userViewModel.getDetailJournal(from: Date())
+//                    } label: {
+//                        Text("Get Detail Journal")
+//                    }
+//                    
+                    Button {
+                        pomodoroViewModel.createUserPomodoro(pomodoroName: "", description: "", label: "", session: 0, focusTime: 0, breakTime: 0, repeatPomodoro: [], reminderPomodoro: Date())
+                    } label: {
+                        Text("add pomodoro")
+                    }
                     
                     ScrollView {
                         VStack (spacing: .getResponsiveHeight(24)) {
-                            HabitItem(habitType: .type1)
-                            
-                            HabitItem(habitType: .type2)
+                            ForEach(userViewModel.subJournals ?? [], id: \.subJournal.id) { item in
+                                if item.subJournal.subJournalType == .habit {
+                                    Button {
+                                        userViewModel.updateCountStreak()
+                                    } label: {
+                                        HabitItem(habitType: .type2, habitName: item.habit?.habitName ?? "NO NAME")
+                                    }
+                                } else {
+                                    Button {
+                                        userViewModel.updateFreqeunceSubJournal(subJournalId: item.subJournal.id ?? "", from: Date())
+                                    } label: {
+                                        HabitItem(habitType: .type1, habitName: item.pomodoro?.pomodoroName ?? "NO NAME")
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -70,7 +115,7 @@ struct JournalView: View {
             .toolbar {
                 VStack {
                     HStack {
-                        Text("March, 2024")
+                        Text(userViewModel.getMonthAndYear(date: selectedDate))
                             .foregroundColor(.getAppColor(.neutral))
                             .font(.largeTitle.weight(.bold))
                         
@@ -80,6 +125,14 @@ struct JournalView: View {
                             withAnimation {
                                 showSettings = true
                             }
+                            /*
+                            do {
+                                try auth.signOut()
+                                appRootManager.currentRoot = .onBoardingView
+                            } catch {
+                                print(error)
+                            }
+                            */
                         } label: {
                             Image(systemName: "gearshape.fill")
                                 .foregroundColor(.getAppColor(.primary))
@@ -140,7 +193,27 @@ struct JournalView: View {
             customNavigation.titleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             
+            userViewModel.generateJournalEntries()
+            userViewModel.getDetailJournal(from: Date())
+//            userViewModel.generateJournalEntries {
+//                userViewModel.addListenerForSubJournals(from: Date())
+//            }
+//            userViewModel.addListenerForSubJournals(from: Date())
+
+             UserDefaultManager.lastEntryDate = DateFormatUtil.shared.formattedDate(date: Date(), to: .fullMonthName)
+            
             UINavigationBar.appearance().standardAppearance = customNavigation
+            do {
+                try userViewModel.getCurrentUserData { [self] in
+                    do {
+                        try userViewModel.getAllJournal()
+                    } catch {
+                        print("No Journal")
+                    }
+                }
+            } catch {
+                print("No Authenticated User")
+            }
         }
     }
 }

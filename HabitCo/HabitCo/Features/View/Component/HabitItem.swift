@@ -14,13 +14,14 @@ enum HabitType {
 
 struct HabitItem: View {
     let progressSize: CGFloat = 50
-    
     let habitType: HabitType
+    let habitName: String
     let fraction: Double
     let progress: Int
     
-    init(habitType: HabitType, fraction: Double = 1, progress: Int = 2) {
+    init(habitType: HabitType, habitName: String, fraction: Double = 1, progress: Int = 2) {
         self.habitType = habitType
+        self.habitName = habitName
         self.fraction = fraction
         self.progress = progress
     }
@@ -34,7 +35,7 @@ struct HabitItem: View {
                     .cornerRadius(4)
                     .padding(.trailing, 16)
                 
-                Text("Habit Name")
+                Text("\(habitName)")
                 
                 Spacer()
             }
@@ -100,7 +101,7 @@ struct HabitItem: View {
 
 #Preview {
     VStack {
-        HabitItem(habitType: .type1, fraction: 0.5)
-        HabitItem(habitType: .type2, fraction: 0.5)
+        HabitItem(habitType: .type1, habitName: "test", fraction: 0.5)
+        HabitItem(habitType: .type2, habitName: "test", fraction: 0.5)
     }
 }

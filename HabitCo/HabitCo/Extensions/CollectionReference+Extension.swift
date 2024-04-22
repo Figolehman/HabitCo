@@ -8,14 +8,13 @@
 import FirebaseFirestore
 
 extension CollectionReference {
-    func whereField(_ field: String, isDateInToday value: Date) -> Query {
-        let components = Calendar.current.dateComponents([.year, .month, .day], from: value)
-        guard
-            let start = Calendar.current.date(from: components),
-            let end = Calendar.current.date(byAdding: .day, value: 1, to: start)
-        else {
-            fatalError("ERROR from CollectionReference+extension")
+    func whereDateField(_ field: String, isEqualToDate date: Date) -> Query {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+        guard let startOfDay = calendar.date(from: components),
+              let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) else {
+            fatalError("Failed to create date range")
         }
-        return whereField(field, isGreaterThan: start).whereField(field, isLessThan: end)
+        return whereField(field, isGreaterThanOrEqualTo: startOfDay).whereField(field, isLessThan: endOfDay)
     }
 }

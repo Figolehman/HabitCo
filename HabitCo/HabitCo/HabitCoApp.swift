@@ -11,6 +11,9 @@ import Firebase
 @main
 struct HabitCoApp: App {
     
+    @StateObject private var appRootManager = AppRootManager()
+    @Environment(\.auth) var authUser
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     init() {
@@ -31,10 +34,20 @@ struct HabitCoApp: App {
             UserDefaults.standard.set(true, forKey: "hasOpened")
         }
     }
-    
+        
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            switch appRootManager.currentRoot {
+            case .splashView:
+                SplashScreenView()
+                    .environmentObject(appRootManager)
+            case .onBoardingView:
+                OnboardingView()
+                    .environmentObject(appRootManager)
+            case .journalView:
+                JournalView()
+                    .environmentObject(appRootManager)
+            }
         }
     }
 }

@@ -26,10 +26,12 @@ struct FirebaseAuthProvider: AuthProvider {
                 
                 if let currentUser {
                     let user = UserAuthInfo(user: currentUser)
-                    //print(user)
+                    UserDefaultManager.isLogin = true
                     continuation.yield(user)
                 } else {
-                    print("User Logged Out")
+                    UserDefaultManager.isLogin = false
+                    UserDefaultManager.userID = nil
+                    print("Logout")
                     continuation.yield(nil)
                 }
             }

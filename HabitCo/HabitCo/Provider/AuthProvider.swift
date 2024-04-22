@@ -29,6 +29,13 @@ public struct UserAuthInfo: Codable {
     public let creationDate: Date?
     public let lastSignInDate: Date?
     
+    var dateCreatedString: String? {
+        if let creationDate {
+            return DateFormatUtil.shared.dateToString(date: creationDate, to: "MMMM dd, YYYY")
+        }
+        return nil
+    }
+    
     init(
         uid: String,
         email: String? = nil,
