@@ -9,9 +9,13 @@ import SwiftUI
 
 struct JournalView: View {
     
-    @State var showSheet = false
+    @State var showSettings = false
     @State var showCreateHabit = false
-    @State var showStreak = true
+    @State var showStreak = false
+    @State var showPrivacyPolicy = false
+    @State var showTermsAndConditions = false
+    @State var showFilter = false
+    @State var showAlert = false
     
     var body: some View {
         NavigationView {
@@ -23,8 +27,10 @@ struct JournalView: View {
                 
                 VStack (spacing: 24) {
                     HStack (spacing: 16) {
-                        FilterButton(isDisabled: .constant(true)) {
-                            
+                        FilterButton(isDisabled: .constant(false)) {
+                            withAnimation {
+                                showFilter = true
+                            }
                         }
                         
                         SortButton(label: "Progress", isDisabled: .constant(true), imageType: .unsort) {
@@ -71,7 +77,9 @@ struct JournalView: View {
                         Spacer()
                         
                         Button {
-                            showSheet = true
+                            withAnimation {
+                                showSettings = true
+                            }
                         } label: {
                             Image(systemName: "gearshape.fill")
                                 .foregroundColor(.getAppColor(.primary))
@@ -97,6 +105,23 @@ struct JournalView: View {
                     .offset(y: .getResponsiveHeight(-530))
             )
         }
+        .customSheet($showSettings, sheetType: .settings, content: {
+            SettingsView(username: "Full Name", userEmail: "FullName@habitmail.com", initial: "FL", showAlert: $showAlert, showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
+        })
+        .customSheet($showPrivacyPolicy, sheetType: .rules, content: {
+            PrivacyPolicyView()
+        })
+        .customSheet($showTermsAndConditions, sheetType: .rules, content: {
+            TermsAndConditionsView()
+        })
+        .alertOverlay($showAlert, content: {
+            CustomAlertView(title: "Are you sure you want to Sign Out?", message: "Signing out means that you will need to sign in again when you open the apps.", dismiss: "Cancel", destruct: "Sign Out", dismissAction: {
+                showAlert = false
+            }, destructAction: {})
+        })
+        .customSheet($showFilter, sheetType: .filters, content: {
+            FilterView()
+        })
         .alertOverlay($showStreak, content: {
             StreakGainView(isShown: $showStreak)
         })
@@ -109,9 +134,6 @@ struct JournalView: View {
                     
                 }
             }
-        })
-        .sheet(isPresented: $showSheet, content: {
-            
         })
         .onAppear {
             let customNavigation = UINavigationBarAppearance()
