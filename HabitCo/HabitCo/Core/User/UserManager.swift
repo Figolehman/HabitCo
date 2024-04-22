@@ -74,7 +74,7 @@ private extension UserManager{
     
     // Sub Future Journal
     func userSubFutureJournalCollection(userId: String, futureJournalId: String) -> CollectionReference {
-        userFutureJournalDocument(userId: userId, futureJournalId: futureJournalId).collection("future_journals")
+        userFutureJournalDocument(userId: userId, futureJournalId: futureJournalId).collection("sub_future_journals")
     }
     
     func userSubFutureJournalDocument(userId: String, futureJournalId: String, subFutureJournalId: String) -> DocumentReference{
@@ -224,6 +224,15 @@ extension UserManager: FutureJournalUseCase {
         let futureJournal = FutureJournalDB(id: id, dateName: dateName)
         try document.setData(from: futureJournal, merge: false)
     }
+    
+    func getFutureJournal(userId: String, from date: Date) async throws -> FutureJournalDB? {
+        let snapshot = try await userFutureJournalCollection(userId: userId).whereField(FutureJournalDB.CodingKeys.dateName.rawValue, isEqualTo: date.getDayName).getDocuments()
+        if let document = snapshot.documents.first {
+            let journal = try document.data(as: FutureJournalDB.self)
+            return journal
+        }
+        return nil
+    }
 }
 
 // MARK: - CRUD For SubFutureJournal - DONE
@@ -234,17 +243,41 @@ extension UserManager: SubFutureJournalUseCase {
         try document.setData(from: subFutureJournal, merge: false)
     }
     
+    func getSubFutureJournal(userId: String, from date: Date) async throws -> [SubFutureJournalDB]? {
+        let futureJournal = try await getFutureJournal(userId: userId, from: date)
+        if let futureJournal {
+            let subJournal = try await userSubFutureJournalCollection(userId: userId, futureJournalId: futureJournal.id ?? "").getAllDocuments(as: SubFutureJournalDB.self)
+            return subJournal
+        }
+        return nil
+    }
+    
     func deleteSubFutureJournal(userId: String, futureJournalId: String, subFutureJournalId: String) async throws {
         try await userSubFutureJournalDocument(userId: userId, futureJournalId: futureJournalId, subFutureJournalId: subFutureJournalId).delete()
     }
 }
 
-// MARK: - For Journal Use Case
+// MARK: - For Journal Use Case - DONE
 extension UserManager: JournalUseCase {
     func generateJournal(userId: String, date: Date) async throws {
-        let (document, id) = generateDocumentID(userId: userId, type: nil)
-        let journal = JournalDB(id: id, date: date, dateName: date.getDayName)
-        try document.setData(from: journal, merge: false)
+        guard let subFutureJournals = try await getSubFutureJournal(userId: userId, from: date) else { return }
+        if try await (getDetailJournal(userId: userId, from: date) == nil) {
+            let (document, id) = generateDocumentID(userId: userId, type: nil)
+            let journal = JournalDB(id: id, date: date, dateName: date.getDayName)
+            try document.setData(from: journal, merge: false)
+            
+            for subFutureJournal in subFutureJournals {
+                if subFutureJournal.subJournalType == .habit {
+                    let habit = try await getHabitDetail(userId: userId, habitId: subFutureJournal.habitPomodoroId ?? "")
+                    try await generateSubJournal(userId: userId, journalId: id, type: subFutureJournal.subJournalType ?? .habit, habitPomodoroId: subFutureJournal.habitPomodoroId ?? "", frequencyCount: habit?.frequency ?? 0)
+                } else {
+                    let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: subFutureJournal.habitPomodoroId ?? "")
+                    try await generateSubJournal(userId: userId, journalId: id, type: subFutureJournal.subJournalType ?? .pomodoro, habitPomodoroId: subFutureJournal.habitPomodoroId ?? "", frequencyCount: pomodoro?.session ?? 0)
+                }
+            }
+            print("A")
+        }
+        print("B")
     }
     
     // Use for calendar
@@ -263,7 +296,7 @@ extension UserManager: JournalUseCase {
     }
 }
 
-// MARK: - For SubJournal Use Case - WIP
+// MARK: - For SubJournal Use Case - DONE
 extension UserManager: SubJournalUseCase {
     func generateSubJournal(userId: String, journalId: String, type: SubJournalType, habitPomodoroId: String, frequencyCount: Int) async throws {
         let (document, id) = generateDocumentID(userId: userId, journalId: journalId, type: .subJournal)
@@ -298,10 +331,16 @@ extension UserManager: SubJournalUseCase {
 extension UserManager: HabitUseCase {
     
     func createNewHabit(userId: String, habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: String, dateCreated: Date) async throws {
+        let snapshot = try await userJournalCollection(userId: userId).whereDateField(JournalDB.CodingKeys.date.rawValue, isEqualToDate: Date()).getDocuments()
+        
         let (document, id) = generateDocumentID(userId: userId, type: .habit)
         let habit = HabitDB(id: id, habitName: "Baca kamus", description: "Baca buku supaya pintar", label: "Blue Label", frequency: 2, repeatHabit: [1, 2, 6], reminderHabit: "12:00", dateCreated: Date())
         try document.setData(from: habit, merge: false)
         try await manageSubJournalBasedOnRepeatDay(userId: userId, habitPomodoroId: id, type: .habit, method: .generate, repeatHabit: [1, 2, 6], frequencyCount: frequency)
+        
+        if let document = snapshot.documents.first {
+            try await generateSubJournal(userId: userId, journalId: document.documentID, type: .habit, habitPomodoroId: id, frequencyCount: frequency)
+        }
     }
     
     func getAllHabitByDate(userId: String, date: Date) async throws -> [HabitDB]?{
@@ -318,7 +357,6 @@ extension UserManager: HabitUseCase {
         let data: [String: Any] = [
             HabitDB.CodingKeys.repeatHabit.rawValue: [3, 4]
         ]
-        print("Trigger")
         try await userHabitDocument(userId: userId, habitId: habitId).updateData(data)
         try await manageSubJournalBasedOnRepeatDay(userId: userId, habitPomodoroId: habitId, method: .generate, repeatHabit: [3, 4])
         return try await getHabitDetail(userId: userId, habitId: habitId)
@@ -331,10 +369,17 @@ extension UserManager: HabitUseCase {
 
 extension UserManager: PomodoroUseCase {
     func createNewPomodoro(userId: String, pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, repeatPomodoro: [Int], reminderPomodoro: String) async throws {
+        
+        let snapshot = try await userJournalCollection(userId: userId).whereDateField(JournalDB.CodingKeys.date.rawValue, isEqualToDate: Date()).getDocuments()
+        
         let (document, id) = generateDocumentID(userId: userId, type: .pomodoro)
         let pomodoro = PomodoroDB(id: id, pomodoroName: "Pomodoro 3", description: "Ini pomodoro malem", label: "Orange Label", session: 1, focusTime: 2, breakTime: 3, repeatPomodoro: [1, 2, 3], reminderPomodoro: "21:00", dateCreated: Date())
         try document.setData(from: pomodoro, merge: false)
-        try await manageSubJournalBasedOnRepeatDay(userId: userId, habitPomodoroId: id, type: .pomodoro, method: .generate, repeatHabit: [3, 4], frequencyCount: session)
+        try await manageSubJournalBasedOnRepeatDay(userId: userId, habitPomodoroId: id, type: .pomodoro, method: .generate, repeatHabit: [1, 2, 3], frequencyCount: session)
+        
+        if let document = snapshot.documents.first {
+            try await generateSubJournal(userId: userId, journalId: document.documentID, type: .pomodoro, habitPomodoroId: id, frequencyCount: session)
+        }
     }
     
     func getAllPomodoroByDate(userId: String, date: Date) async throws -> [PomodoroDB]? {

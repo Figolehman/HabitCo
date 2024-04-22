@@ -8,11 +8,13 @@
 import Foundation
 
 @MainActor
-final class UserViewModel: ObservableObject{
+final class UserViewModel: ObservableObject {
     
     @Published private(set) var user: UserDB? = nil
     @Published private(set) var journals: [JournalDB]? = nil
     @Published private(set) var subJournals: [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)]? = nil
+    
+    private var isJournalCreated = false
     
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
@@ -39,12 +41,26 @@ extension UserViewModel{
         }
     }
     
-    func generateJournal() throws {
+    func generateJournalEntries()  {
+        let lastEntryDate = UserDefaultManager.lastEntryDate
+        let calendar = Calendar.current
+        let currentDate = Date()
+        let formattedCurrentDate = DateFormatUtil.shared.formattedDate(date: currentDate, to: .fullMonthName)
+        let missedDay = calendar.dateComponents([.day], from: lastEntryDate, to: formattedCurrentDate).day ?? 0
         Task {
-            guard let user else { return }
+            if missedDay > 0 {
+                for i in 1...missedDay {
+                    if let missedDate = calendar.date(byAdding: .day, value: -i, to: formattedCurrentDate)
+                    {
+                        try await userManager.generateJournal(userId: UserDefaultManager.userID ?? "", date: missedDate)
+                    }
+                }
+            } else {
+                try await userManager.generateJournal(userId: UserDefaultManager.userID ?? "", date: formattedCurrentDate)
+            }
         }
     }
-    
+        
     // Done
     func getAllJournal() throws {
         Task {

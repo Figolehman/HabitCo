@@ -61,6 +61,13 @@ struct JournalView: View {
                         Text("Update Habit")
                     }
                     
+                    
+                    Button {
+                        userViewModel.getDetailJournal(from: Date())
+                    } label: {
+                        Text("Get Detail Journal")
+                    }
+                    
                     Button {
                         pomodoroViewModel.createUserPomodoro(pomodoroName: "", description: "", label: "", session: 0, focusTime: 0, breakTime: 0, repeatPomodoro: [], reminderPomodoro: Date())
                     } label: {
@@ -73,7 +80,7 @@ struct JournalView: View {
                                 if item.habit != nil {
                                     HabitItem(habitType: .type1, habitName: item.habit?.habitName ?? "NO NAME")
                                 } else {
-                                    HabitItem(habitType: .type2, habitName: item.habit?.habitName ?? "NO NAME")
+                                    HabitItem(habitType: .type2, habitName: item.pomodoro?.pomodoroName ?? "NO NAME")
                                 }
                             }
                         }
@@ -144,6 +151,8 @@ struct JournalView: View {
             customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             
             userViewModel.getDetailJournal(from: Date())
+            userViewModel.generateJournalEntries()
+             UserDefaultManager.lastEntryDate = DateFormatUtil.shared.formattedDate(date: Date(), to: .fullMonthName)
             
             UINavigationBar.appearance().standardAppearance = customNavigation
             do {
