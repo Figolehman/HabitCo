@@ -32,6 +32,8 @@ struct CreatePomodoroView: View {
     
     @State private var currentDefaultPomodoro: DefaultPomodoro?
     
+    @ObservedObject var pomodoroViewModel: PomodoroViewModel
+
     private enum DefaultPomodoro: CaseIterable {
         case type1, type2, type3
         
@@ -339,6 +341,6 @@ extension CreatePomodoroView {
 
 #Preview {
     NavigationView {
-        CreatePomodoroView()
+        CreatePomodoroView(pomodoroViewModel: PomodoroViewModel())
     }
 }

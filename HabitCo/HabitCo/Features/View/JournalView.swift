@@ -25,131 +25,128 @@ struct JournalView: View {
     @State var showAlert = false
     
     var body: some View {
-        NavigationView {
+        VStack(spacing: 48) {
             
-            VStack(spacing: 48) {
-                
-                ScrollableCalendarView(hasHabit: [], selectedDate: $selectedDate)
-                    .padding(.top, .getResponsiveHeight(60))
-                
-                VStack (spacing: 24) {
-                    HStack (spacing: 16) {
-                        FilterButton(isDisabled: .constant(false)) {
-                            withAnimation {
-                                showFilter = true
-                            }
-                        }
-                        
-                        SortButton(label: "Progress", isDisabled: .constant(true), imageType: .unsort) {
-                            
-                        }
-                        
-                        Spacer()
-                        
-                        Button {
-                            showCreateHabit = true
-//                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 1, repeatHabit: [], reminderHabit: Date())
-                        } label: {
-                            Image(systemName: "plus")
-                                .foregroundColor(.getAppColor(.primary))
+            ScrollableCalendarView(hasHabit: [], selectedDate: $selectedDate)
+                .padding(.top, .getResponsiveHeight(60))
+            
+            VStack (spacing: 24) {
+                HStack (spacing: 16) {
+                    FilterButton(isDisabled: .constant(false)) {
+                        withAnimation {
+                            showFilter = true
                         }
                     }
                     
-                    //                    VStack (spacing: .getResponsiveHeight(16)) {
-                    //                        Image(systemName: "leaf")
-                    //                            .font(.largeTitle)
-                    //                        Text("There’s no habit recorded yet.")
-                    //                    }
-                    //                    .foregroundColor(.getAppColor(.neutral))
-                    //                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
-                    
-//                    Button {
-//                        habitViewModel.editHabit(habitId: "")
-//                    } label: {
-//                        Text("Update Habit")
-//                    }
-                    
-                     Button {
-                         userViewModel.createStreak()
-                    } label: {
-                        Text("Create streak")
+                    SortButton(label: "Progress", isDisabled: .constant(true), imageType: .unsort) {
+                        
                     }
                     
+                    Spacer()
                     
-//                    Button {
-//                        userViewModel.getDetailJournal(from: Date())
-//                    } label: {
-//                        Text("Get Detail Journal")
-//                    }
-//                    
                     Button {
-                        pomodoroViewModel.createUserPomodoro(pomodoroName: "", description: "", label: "", session: 0, focusTime: 0, breakTime: 0, repeatPomodoro: [], reminderPomodoro: Date())
+                        showCreateHabit = true
+                        //                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 1, repeatHabit: [], reminderHabit: Date())
                     } label: {
-                        Text("add pomodoro")
+                        Image(systemName: "plus")
+                            .foregroundColor(.getAppColor(.primary))
                     }
-                    
-                    ScrollView {
-                        VStack (spacing: .getResponsiveHeight(24)) {
-                            ForEach(userViewModel.subJournals ?? [], id: \.subJournal.id) { item in
-                                if item.subJournal.subJournalType == .habit {
-                                    Button {
-                                        userViewModel.updateCountStreak()
-                                    } label: {
-                                        HabitItem(habitType: .type2, habitName: item.habit?.habitName ?? "NO NAME")
-                                    }
-                                } else {
-                                    Button {
-                                        userViewModel.updateFreqeunceSubJournal(subJournalId: item.subJournal.id ?? "", from: Date())
-                                    } label: {
-                                        HabitItem(habitType: .type1, habitName: item.pomodoro?.pomodoroName ?? "NO NAME")
-                                    }
+                }
+                
+                //                    VStack (spacing: .getResponsiveHeight(16)) {
+                //                        Image(systemName: "leaf")
+                //                            .font(.largeTitle)
+                //                        Text("There’s no habit recorded yet.")
+                //                    }
+                //                    .foregroundColor(.getAppColor(.neutral))
+                //                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
+                
+                //                    Button {
+                //                        habitViewModel.editHabit(habitId: "")
+                //                    } label: {
+                //                        Text("Update Habit")
+                //                    }
+                
+                Button {
+                    userViewModel.createStreak()
+                } label: {
+                    Text("Create streak")
+                }
+                
+                
+                //                    Button {
+                //                        userViewModel.getDetailJournal(from: Date())
+                //                    } label: {
+                //                        Text("Get Detail Journal")
+                //                    }
+                //
+                Button {
+                    pomodoroViewModel.createUserPomodoro(pomodoroName: "", description: "", label: "", session: 0, focusTime: 0, breakTime: 0, repeatPomodoro: [], reminderPomodoro: Date())
+                } label: {
+                    Text("add pomodoro")
+                }
+                
+                ScrollView {
+                    VStack (spacing: .getResponsiveHeight(24)) {
+                        ForEach(userViewModel.subJournals ?? [], id: \.subJournal.id) { item in
+                            if item.subJournal.subJournalType == .habit {
+                                Button {
+                                    userViewModel.updateCountStreak()
+                                } label: {
+                                    HabitItem(habitType: .type2, habitName: item.habit?.habitName ?? "NO NAME")
+                                }
+                            } else {
+                                Button {
+                                    userViewModel.updateFreqeunceSubJournal(subJournalId: item.subJournal.id ?? "", from: Date())
+                                } label: {
+                                    HabitItem(habitType: .type1, habitName: item.pomodoro?.pomodoroName ?? "NO NAME")
                                 }
                             }
                         }
                     }
                 }
-                
-                Spacer()
             }
-            .padding(.horizontal, 24)
-            .toolbar {
-                VStack {
-                    HStack {
-                        Text(userViewModel.getMonthAndYear(date: selectedDate))
-                            .foregroundColor(.getAppColor(.neutral))
-                            .font(.largeTitle.weight(.bold))
-                        
-                        Spacer()
-                        
-                        Button {
-                            withAnimation {
-                                showSettings = true
-                            }
-                        } label: {
-                            Image(systemName: "gearshape.fill")
-                                .foregroundColor(.getAppColor(.primary))
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                    .frame(width: ScreenSize.width)
+            
+            Spacer()
+        }
+        .padding(.horizontal, 24)
+        .toolbar {
+            VStack {
+                HStack {
+                    Text(userViewModel.getMonthAndYear(date: selectedDate))
+                        .foregroundColor(.getAppColor(.neutral))
+                        .font(.largeTitle.weight(.bold))
                     
-                    HStack {
-                        Image(systemName: "flame")
-                            .font(.caption)
-                        Text("1 Day Streak!")
-                            .font(.caption)
-                        
-                        Spacer()
+                    Spacer()
+                    
+                    Button {
+                        withAnimation {
+                            showSettings = true
+                        }
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .foregroundColor(.getAppColor(.primary))
                     }
                 }
-                .padding(.top, 25)
+                .padding(.horizontal, 16)
+                .frame(width: ScreenSize.width)
+                
+                HStack {
+                    Image(systemName: "flame")
+                        .font(.caption)
+                    Text("1 Day Streak!")
+                        .font(.caption)
+                    
+                    Spacer()
+                }
             }
-            .background(
-                Image("blobsJournal")
-                    .frame(width: .getResponsiveWidth(558.86658), height: .getResponsiveHeight(509.7464))
-                    .offset(y: .getResponsiveHeight(-530))
-            )
+            .padding(.top, 25)
         }
+        .background(
+            Image("blobsJournal")
+                .frame(width: .getResponsiveWidth(558.86658), height: .getResponsiveHeight(509.7464))
+                .offset(y: .getResponsiveHeight(-530))
+        )
         .customSheet($showSettings, sheetType: .settings, content: {
             SettingsView(username: userViewModel.user?.fullName ?? "Full Name", userEmail: "Apple ID", initial: userViewModel.generateInitial(), showAlert: $showAlert, showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
         })
@@ -179,17 +176,16 @@ struct JournalView: View {
         })
         .alertOverlay($showCreateHabit, closeOnTap: true, content: {
             VStack (spacing: 24) {
-
                 NavigationLink {
                     CreateHabitView(habitVM: habitViewModel)
                 } label: {
-                    CreateButton(type: .habit) {
-                        print("trigger")
-                    }
+                    CreateLabel(type: .habit)
                 }
-
-                CreateButton(type: .pomodoro) {
-                    
+                
+                NavigationLink {
+                    CreatePomodoroView(pomodoroViewModel: pomodoroViewModel)
+                } label: {
+                    CreateLabel(type: .pomodoro)
                 }
             }
         })
@@ -200,12 +196,12 @@ struct JournalView: View {
             
             userViewModel.generateJournalEntries()
             userViewModel.getDetailJournal(from: Date())
-//            userViewModel.generateJournalEntries {
-//                userViewModel.addListenerForSubJournals(from: Date())
-//            }
-//            userViewModel.addListenerForSubJournals(from: Date())
-
-             UserDefaultManager.lastEntryDate = DateFormatUtil.shared.formattedDate(date: Date(), to: .fullMonthName)
+            //            userViewModel.generateJournalEntries {
+            //                userViewModel.addListenerForSubJournals(from: Date())
+            //            }
+            //            userViewModel.addListenerForSubJournals(from: Date())
+            
+            UserDefaultManager.lastEntryDate = DateFormatUtil.shared.formattedDate(date: Date(), to: .fullMonthName)
             
             UINavigationBar.appearance().standardAppearance = customNavigation
             do {

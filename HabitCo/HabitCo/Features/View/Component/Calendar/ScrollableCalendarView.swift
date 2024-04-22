@@ -23,12 +23,13 @@ struct ScrollableCalendarView: View {
     @State var lastItem: Date
     
     init(hasHabit: [Date], selectedDate: Binding<Date>) {
-        let lastDate = Calendar.current.date(byAdding: .year, value: 1, to: currentDate)!
-        
-        self._days = State(initialValue: Date.getDatesInRange(of: Calendar.current.date(byAdding: .month, value: -1, to: currentDate)!, to: lastDate))
         self._selectedDate = selectedDate
+        
+        let lastDate = Calendar.current.date(byAdding: .year, value: 1, to: selectedDate.wrappedValue)!
+        
+        self._days = State(initialValue: Date.getDatesInRange(of: Calendar.current.date(byAdding: .month, value: -1, to: selectedDate.wrappedValue)!, to: lastDate))
         self._lastItem = State(initialValue: lastDate)
-        self.hasHabit = [currentDate]
+        self.hasHabit = hasHabit
     }
     
     var body: some View {
@@ -53,7 +54,7 @@ struct ScrollableCalendarView: View {
                     }
                 }
                 .onAppear {
-                    value.scrollTo(currentDate, anchor: .center)
+                    value.scrollTo(selectedDate, anchor: .center)
                     
                     UIScrollView.appearance().showsHorizontalScrollIndicator = false
                 }
