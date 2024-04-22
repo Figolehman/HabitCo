@@ -48,7 +48,10 @@ struct CreateLabel: View {
         .frame(width: .getResponsiveWidth(345), height: .getResponsiveHeight(80))
         .background(Color.getAppColor(.primary))
         .cornerRadius(12)
+<<<<<<< HEAD:HabitCo/HabitCo/Features/View/Component/Button/CreateLabel.swift
         
+=======
+>>>>>>> nre-CRUD-database-user:HabitCo/HabitCo/Features/View/Component/Button/CreateButton.swift
     }
 }
 

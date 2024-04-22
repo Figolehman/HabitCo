@@ -34,6 +34,10 @@ struct CreatePomodoroView: View {
     
     @ObservedObject var pomodoroVM: PomodoroViewModel
     
+    @ObservedObject var pomodoroVM: PomodoroViewModel
+    
+    @ObservedObject var pomodoroViewModel: PomodoroViewModel
+
     private enum DefaultPomodoro: CaseIterable {
         case type1, type2, type3
         
