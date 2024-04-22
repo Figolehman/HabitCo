@@ -45,8 +45,10 @@ struct HabitCoApp: App {
                 OnboardingView()
                     .environmentObject(appRootManager)
             case .journalView:
-                JournalView()
-                    .environmentObject(appRootManager)
+                NavigationView {
+                    JournalView()
+                        .environmentObject(appRootManager)
+                }
             }
         }
     }

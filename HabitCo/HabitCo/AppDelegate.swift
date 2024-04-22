@@ -13,4 +13,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
         return true
     }
+    
+//    func applicationDidEnterBackground(_ application: UIApplication) {
+//
+//    }
 }

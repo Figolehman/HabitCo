@@ -71,7 +71,7 @@
 		1BC8681C2BAE047D00B348FE /* CustomPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC8681B2BAE047D00B348FE /* CustomPageControl.swift */; };
 		1BC8681E2BAE9E6F00B348FE /* JournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC8681D2BAE9E6F00B348FE /* JournalView.swift */; };
 		1BC868222BB0794600B348FE /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868212BB0794600B348FE /* LoadingView.swift */; };
-		1BC868262BB13ABA00B348FE /* CreateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868252BB13ABA00B348FE /* CreateButton.swift */; };
+		1BC868262BB13ABA00B348FE /* CreateLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868252BB13ABA00B348FE /* CreateLabel.swift */; };
 		1BC868282BB1424D00B348FE /* CreateHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868272BB1424D00B348FE /* CreateHabitView.swift */; };
 		1BC8682A2BB17DB200B348FE /* LabeledStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868292BB17DB200B348FE /* LabeledStepper.swift */; };
 		1BD50F0F2BA5688000FC7BCF /* ScrollableCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F0E2BA5688000FC7BCF /* ScrollableCalendarView.swift */; };
@@ -187,7 +187,7 @@
 		1BC8681B2BAE047D00B348FE /* CustomPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		1BC8681D2BAE9E6F00B348FE /* JournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalView.swift; sourceTree = "<group>"; };
 		1BC868212BB0794600B348FE /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
-		1BC868252BB13ABA00B348FE /* CreateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButton.swift; sourceTree = "<group>"; };
+		1BC868252BB13ABA00B348FE /* CreateLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLabel.swift; sourceTree = "<group>"; };
 		1BC868272BB1424D00B348FE /* CreateHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitView.swift; sourceTree = "<group>"; };
 		1BC868292BB17DB200B348FE /* LabeledStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledStepper.swift; sourceTree = "<group>"; };
 		1BD50F0E2BA5688000FC7BCF /* ScrollableCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableCalendarView.swift; sourceTree = "<group>"; };
@@ -483,7 +483,7 @@
 				1BD50F1D2BA61F8D00FC7BCF /* SettingButton.swift */,
 				1BC23B102BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift */,
 				1B4B2A3A2BADAE770059559F /* SignInButton.swift */,
-				1BC868252BB13ABA00B348FE /* CreateButton.swift */,
+				1BC868252BB13ABA00B348FE /* CreateLabel.swift */,
 			);
 			path = Button;
 			sourceTree = "<group>";
@@ -717,7 +717,7 @@
 				1B793AA92BB52E5200B6BFC9 /* FocusView.swift in Sources */,
 				1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */,
 				1BC23AF42BAB54C000133C27 /* RootView.swift in Sources */,
-				1BC868262BB13ABA00B348FE /* CreateButton.swift in Sources */,
+				1BC868262BB13ABA00B348FE /* CreateLabel.swift in Sources */,
 				1BC8681C2BAE047D00B348FE /* CustomPageControl.swift in Sources */,
 				1B793AA02BB2A80C00B6BFC9 /* CustomSheetViewRepresentable.swift in Sources */,
 				1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */,
