@@ -58,10 +58,10 @@ extension HabitViewModel {
         }
     }
     
-    public func editHabit(habitId: String) {
+    public func editHabit(habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: String?) {
         Task{
-            guard let habits else { return }
-            try await userManager.editHabit(userId: UserDefaultManager.userID ?? "", habitId: "ChnrWkKEVGZqrLiEmliw", repeatHabit: [])
+            guard let userId = UserDefaultManager.userID else { return }
+            try await userManager.editHabit(userId: userId, habitId: habitId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminderHabit)
         }
     }
     

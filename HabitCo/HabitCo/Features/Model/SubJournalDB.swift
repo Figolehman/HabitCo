@@ -16,11 +16,12 @@ struct SubJournalDB: Codable {
     let id: String?
     let habitPomodoroId: String?
     let subJournalType: SubJournalType?
+    let label: String?
     let frequencyCount: Int?
     let startFrequency: Int?
     
     enum CodingKeys: String, CodingKey {
-        case id
+        case id, label
         case habitPomodoroId = "habit_pomodoro_id"
         case subJournalType = "sub_journal_type"
         case frequencyCount = "frequency_count"
@@ -34,6 +35,7 @@ extension SubJournalDB {
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
         self.habitPomodoroId = try container.decodeIfPresent(String.self, forKey: .habitPomodoroId)
         self.subJournalType = try container.decodeIfPresent(SubJournalType.self, forKey: .subJournalType)
+        self.label = try container.decodeIfPresent(String.self, forKey: .label)
         self.frequencyCount = try container.decodeIfPresent(Int.self, forKey: .frequencyCount)
         self.startFrequency = try container.decodeIfPresent(Int.self, forKey: .startFrequency)
     }
@@ -43,6 +45,7 @@ extension SubJournalDB {
         try container.encodeIfPresent(self.id, forKey: .id)
         try container.encodeIfPresent(self.habitPomodoroId, forKey: .habitPomodoroId)
         try container.encodeIfPresent(self.subJournalType, forKey: .subJournalType)
+        try container.encodeIfPresent(self.label, forKey: .label)
         try container.encodeIfPresent(self.frequencyCount, forKey: .frequencyCount)
         try container.encodeIfPresent(self.startFrequency, forKey: .startFrequency)
     }

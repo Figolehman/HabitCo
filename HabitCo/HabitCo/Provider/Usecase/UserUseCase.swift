@@ -19,7 +19,7 @@ protocol JournalUseCase {
 }
 
 protocol SubJournalUseCase {
-    func generateSubJournal(userId: String, journalId: String, type: SubJournalType, habitPomodoroId: String, frequencyCount: Int) async throws
+    func generateSubJournal(userId: String, journalId: String, type: SubJournalType, habitPomodoroId: String, label: String, frequencyCount: Int) async throws
     func getSubJournal(userId: String, from date: Date) async throws -> [SubJournalDB]?
 }
 
@@ -35,5 +35,5 @@ protocol SubFutureJournalUseCase {
 protocol StreakUseCase {
     func createStreak(userId: String, description: String) async throws
     func deleteStreak(userId: String) async throws
-    func updateCountStreak(userId: String) async throws -> UserDB?
+    func updateCountStreak(userId: String) async throws
 }

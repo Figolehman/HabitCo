@@ -55,19 +55,25 @@ struct JournalView: View {
                     //                    .foregroundColor(.getAppColor(.neutral))
                     //                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
                     
-                    Button {
-                        habitViewModel.editHabit(habitId: "")
+//                    Button {
+//                        habitViewModel.editHabit(habitId: "")
+//                    } label: {
+//                        Text("Update Habit")
+//                    }
+                    
+                     Button {
+                         userViewModel.createStreak()
                     } label: {
-                        Text("Update Habit")
+                        Text("Create streak")
                     }
                     
                     
-                    Button {
-                        userViewModel.getDetailJournal(from: Date())
-                    } label: {
-                        Text("Get Detail Journal")
-                    }
-                    
+//                    Button {
+//                        userViewModel.getDetailJournal(from: Date())
+//                    } label: {
+//                        Text("Get Detail Journal")
+//                    }
+//                    
                     Button {
                         pomodoroViewModel.createUserPomodoro(pomodoroName: "", description: "", label: "", session: 0, focusTime: 0, breakTime: 0, repeatPomodoro: [], reminderPomodoro: Date())
                     } label: {
@@ -77,10 +83,18 @@ struct JournalView: View {
                     ScrollView {
                         VStack (spacing: .getResponsiveHeight(24)) {
                             ForEach(userViewModel.subJournals ?? [], id: \.subJournal.id) { item in
-                                if item.habit != nil {
-                                    HabitItem(habitType: .type1, habitName: item.habit?.habitName ?? "NO NAME")
+                                if item.subJournal.subJournalType == .habit {
+                                    Button {
+                                        userViewModel.updateCountStreak()
+                                    } label: {
+                                        HabitItem(habitType: .type2, habitName: item.habit?.habitName ?? "NO NAME")
+                                    }
                                 } else {
-                                    HabitItem(habitType: .type2, habitName: item.pomodoro?.pomodoroName ?? "NO NAME")
+                                    Button {
+                                        userViewModel.updateFreqeunceSubJournal(subJournalId: item.subJournal.id ?? "", from: Date())
+                                    } label: {
+                                        HabitItem(habitType: .type1, habitName: item.pomodoro?.pomodoroName ?? "NO NAME")
+                                    }
                                 }
                             }
                         }
@@ -150,8 +164,13 @@ struct JournalView: View {
             customNavigation.titleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             
-            userViewModel.getDetailJournal(from: Date())
             userViewModel.generateJournalEntries()
+            userViewModel.getDetailJournal(from: Date())
+//            userViewModel.generateJournalEntries {
+//                userViewModel.addListenerForSubJournals(from: Date())
+//            }
+//            userViewModel.addListenerForSubJournals(from: Date())
+
              UserDefaultManager.lastEntryDate = DateFormatUtil.shared.formattedDate(date: Date(), to: .fullMonthName)
             
             UINavigationBar.appearance().standardAppearance = customNavigation

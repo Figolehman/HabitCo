@@ -55,12 +55,12 @@ struct RootView: View {
 //                            Text("Get journal")
 //                        }
                         
-                        Button {
-                            viewModel.getDetailJournal(from: Date())
-                        } label: {
-                            Text("Get Detail Journal By Date")
-                        }
-                        
+//                        Button {
+//                            viewModel.getDetailJournal(from: Date())
+//                        } label: {
+//                            Text("Get Detail Journal By Date")
+//                        }
+//                        
                         Button {
                             habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 0, repeatHabit: [], reminderHabit: Date())
                         } label: {
