@@ -34,31 +34,24 @@ enum CreateType {
     }
 }
 
-struct CreateButton: View {
+struct CreateLabel: View {
     let type: CreateType
-    let action: () -> ()
     
     var body: some View {
-        Button{
-            action()
-        } label: {
-            HStack (spacing: 12) {
-                Image(systemName: type.systemImage)
-                Text(type.label)
-                Spacer()
-            }
-            .foregroundColor(.getAppColor(.neutral3))
-            .padding(.horizontal, 12)
-            .frame(width: .getResponsiveWidth(345), height: .getResponsiveHeight(80))
-            .background(Color.getAppColor(.primary))
-            .cornerRadius(12)
+        HStack (spacing: 12) {
+            Image(systemName: type.systemImage)
+            Text(type.label)
+            Spacer()
         }
+        .foregroundColor(.getAppColor(.neutral3))
+        .padding(.horizontal, 12)
+        .frame(width: .getResponsiveWidth(345), height: .getResponsiveHeight(80))
+        .background(Color.getAppColor(.primary))
+        .cornerRadius(12)
         
     }
 }
 
 #Preview {
-    CreateButton(type: .pomodoro) {
-        
-    }
+    CreateLabel(type: .pomodoro)
 }
