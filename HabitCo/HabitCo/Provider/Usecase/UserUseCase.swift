@@ -25,6 +25,7 @@ protocol SubJournalUseCase {
 
 protocol FutureJournalUseCase {
     func generateFutureJournal(userId: String, dateName: String) async throws
+    func getFutureJournal(userId: String, from date: Date) async throws -> FutureJournalDB?
 }
 
 protocol SubFutureJournalUseCase {

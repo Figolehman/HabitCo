@@ -86,6 +86,8 @@
 		1BE028B32BA97A9D0042CAC3 /* HabitCo_Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */; };
 		1BE028B52BA97A9F0042CAC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */; };
 		1BE028B92BA97A9F0042CAC3 /* HabitCo WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1BE028AB2BA97A9D0042CAC3 /* HabitCo WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3F28DD092BD7AF930043CB4F /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F28DD082BD7AF930043CB4F /* String+Extension.swift */; };
+		3F28DD2B2BD8751B0043CB4F /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F28DD2A2BD8751B0043CB4F /* Array+Extension.swift */; };
 		3FAC603B2BAB8C0900448C21 /* HabitDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC603A2BAB8C0900448C21 /* HabitDB.swift */; };
 		3FAC60502BB12E7400448C21 /* PomodoroViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC604F2BB12E7400448C21 /* PomodoroViewModel.swift */; };
 		3FBCEAF02BB186560057E204 /* AppRootManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEAEF2BB186560057E204 /* AppRootManager.swift */; };
@@ -202,6 +204,9 @@
 		1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCo_Widget.swift; sourceTree = "<group>"; };
 		1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BE028B62BA97A9F0042CAC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3F28DD082BD7AF930043CB4F /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		3F28DD2A2BD8751B0043CB4F /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
+		3F28DD2C2BD8A92E0043CB4F /* HabitCo WidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "HabitCo WidgetExtension.entitlements"; sourceTree = "<group>"; };
 		3FAC603A2BAB8C0900448C21 /* HabitDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDB.swift; sourceTree = "<group>"; };
 		3FAC604F2BB12E7400448C21 /* PomodoroViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroViewModel.swift; sourceTree = "<group>"; };
 		3FAC60512BB14C6700448C21 /* HabitCo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitCo.entitlements; sourceTree = "<group>"; };
@@ -316,6 +321,8 @@
 				1BC23AE92BAB519400133C27 /* Query+extension.swift */,
 				1BC23AEB2BAB51A700133C27 /* UIApplication+Extension.swift */,
 				1B4B2A3C2BADEE3E0059559F /* CGFloat+Extension.swift */,
+				3F28DD082BD7AF930043CB4F /* String+Extension.swift */,
+				3F28DD2A2BD8751B0043CB4F /* Array+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -352,6 +359,7 @@
 		1BBC951A2B7286D800FF9353 = {
 			isa = PBXGroup;
 			children = (
+				3F28DD2C2BD8A92E0043CB4F /* HabitCo WidgetExtension.entitlements */,
 				1BBC95252B7286D800FF9353 /* HabitCo */,
 				1BE028AF2BA97A9D0042CAC3 /* HabitCo Widget */,
 				1BAA2EB82BA772BF00235B3D /* Frameworks */,
@@ -695,6 +703,7 @@
 				1B4B2A3D2BADEE3E0059559F /* CGFloat+Extension.swift in Sources */,
 				1B560C862BA2F6F500CE2DC6 /* SortButton.swift in Sources */,
 				1B4B2A392BAD95980059559F /* ScreenSize.swift in Sources */,
+				3F28DD092BD7AF930043CB4F /* String+Extension.swift in Sources */,
 				1BC23B002BAB623100133C27 /* SignInWithApple.swift in Sources */,
 				1BBFDD2C2BCD2EBD0044CE05 /* NotificationHandler.swift in Sources */,
 				1B7A24AE2BB7E2640045E8D4 /* StreakGainView.swift in Sources */,
@@ -723,6 +732,7 @@
 				1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */,
 				1BC23AFA2BAB54F800133C27 /* HabitViewModel.swift in Sources */,
 				1B897F3A2BA420250018BEAA /* LabelButton.swift in Sources */,
+				3F28DD2B2BD8751B0043CB4F /* Array+Extension.swift in Sources */,
 				1B560C822BA222BE00CE2DC6 /* Color+Extension.swift in Sources */,
 				1B560C842BA2C25E00CE2DC6 /* ControlButton.swift in Sources */,
 				1BC23AE22BAB512200133C27 /* UserManager.swift in Sources */,
@@ -952,6 +962,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = "HabitCo WidgetExtension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UKUGHUS3M8;
@@ -980,6 +991,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = "HabitCo WidgetExtension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UKUGHUS3M8;

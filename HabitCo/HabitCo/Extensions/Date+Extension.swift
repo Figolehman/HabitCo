@@ -10,6 +10,10 @@ import Foundation
 
 extension Date {
     
+    enum FormatType: String {
+        case fullMonthName = "MMMM dd, yyyy"
+    }
+    
     static func getDatesInRange(of a: Date, to b: Date) -> [Date] {
         guard a < b else { return [] }
         
@@ -130,4 +134,14 @@ extension Date {
         return a == b
     }
     
+    func dateToString(to format: String) -> String {
+        let df = DateFormatter()
+        df.dateFormat = format
+        
+        return df.string(from: self)
+    }
+    
+    func formattedDate(to format: FormatType) -> Date {
+        dateToString(to: format.rawValue).stringToDate(to: format.rawValue)
+    }
 }

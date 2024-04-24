@@ -46,9 +46,9 @@ struct StreakGainView: View {
     }
 }
 
-#Preview {
-    JournalView()
-        .alertOverlay(.constant(true)) {
-            StreakGainView(isShown: .constant(true))
-        }
-}
+//#Preview {
+//    JournalView()
+//        .alertOverlay(true) {
+//            StreakGainView(isShown: .constant(true))
+//        }
+//}

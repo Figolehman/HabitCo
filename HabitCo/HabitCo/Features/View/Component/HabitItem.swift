@@ -16,12 +16,14 @@ struct HabitItem: View {
     let progressSize: CGFloat = 50
     let habitType: HabitType
     let habitName: String
+    let label: String
     let fraction: Double
     let progress: Int
     
-    init(habitType: HabitType, habitName: String, fraction: Double = 1, progress: Int = 2) {
+    init(habitType: HabitType, habitName: String, label: String = "blossom", fraction: Double = 1, progress: Int = 2) {
         self.habitType = habitType
         self.habitName = habitName
+        self.label = label
         self.fraction = fraction
         self.progress = progress
     }
@@ -30,7 +32,7 @@ struct HabitItem: View {
         HStack {
             Group {
                 Rectangle()
-                    .foregroundColor(.yellow)
+                    .foregroundColor(Color(label))
                     .frame(width: 20, height: 20)
                     .cornerRadius(4)
                     .padding(.trailing, 16)
@@ -101,7 +103,7 @@ struct HabitItem: View {
 
 #Preview {
     VStack {
-        HabitItem(habitType: .type1, habitName: "test", fraction: 0.5)
-        HabitItem(habitType: .type2, habitName: "test", fraction: 0.5)
+        HabitItem(habitType: .type1, habitName: "habit 1", label: "yellow", fraction: 0.5)
+        HabitItem(habitType: .type2, habitName: "habit 2", label: "yellow", fraction: 0.8)
     }
 }

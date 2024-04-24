@@ -72,15 +72,15 @@ struct RootView: View {
                         } label: {
                             Text("Delete Habit")
                         }
-                        
-                        Button {
-                            if viewModel.user?.streak == nil {
-                                viewModel.createStreak()
-                            }
-                        } label: {
-                            Text("Create streak")
-                        }
-                        
+//                        
+//                        Button {
+//                            if viewModel.user?.streak == nil {
+//                                viewModel.createStreak()
+//                            }
+//                        } label: {
+//                            Text("Create streak")
+//                        }
+//                        
                         Button("Logout"){
                             do{
                                 try authUser.signOut()

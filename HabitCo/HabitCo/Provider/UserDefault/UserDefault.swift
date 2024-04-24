@@ -13,22 +13,34 @@ final class UserDefaultManager {
         case isLogin
         case isJournalCreated
         case lastEntryDate
+        case hasOneStreak
+        case isStreak
         case userID
     }
 
     static var isLogin: Bool {
         get { UserDefaults.standard.bool(forKey: Keys.isLogin.rawValue) }
-        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.isLogin.rawValue)}
+        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.isLogin.rawValue) }
     }
     
     static var lastEntryDate: Date {
         get { UserDefaults.standard.object(forKey: Keys.lastEntryDate.rawValue) as? Date ?? Date() }
-        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.lastEntryDate.rawValue)}
+        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.lastEntryDate.rawValue) }
+    }
+    
+    static var hasOneStreak: Bool {
+        get { UserDefaults.standard.bool(forKey: Keys.hasOneStreak.rawValue) }
+        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.hasOneStreak.rawValue) }
+    }
+    
+    static var isStreak: Bool {
+        get { UserDefaults.standard.bool(forKey: Keys.isStreak.rawValue) }
+        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.isStreak.rawValue) }
     }
     
     static var userID: String? {
         get { UserDefaults.standard.string(forKey: Keys.userID.rawValue) }
-        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.userID.rawValue)}
+        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.userID.rawValue) }
     }
     
 }
