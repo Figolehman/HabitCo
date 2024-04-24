@@ -118,13 +118,13 @@ struct JournalView: View {
                                         Button {
                                             userViewModel.updateCountStreak()
                                         } label: {
-                                            HabitItem(habitType: .type2, habitName: item.habit?.habitName ?? "NO NAME")
+                                            HabitItem(habitType: .pomodoro, habitName: item.habit?.habitName ?? "NO NAME")
                                         }
                                     } else {
                                         Button {
                                             userViewModel.updateFreqeunceSubJournal(subJournalId: item.subJournal.id ?? "", from: Date())
                                         } label: {
-                                            HabitItem(habitType: .type1, habitName: item.pomodoro?.pomodoroName ?? "NO NAME")
+                                            HabitItem(habitType: .regular, habitName: item.pomodoro?.pomodoroName ?? "NO NAME")
                                         }
                                     }
                                 }
