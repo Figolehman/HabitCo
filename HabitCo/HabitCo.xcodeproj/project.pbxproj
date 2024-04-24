@@ -41,6 +41,7 @@
 		1B897F3A2BA420250018BEAA /* LabelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B897F392BA420250018BEAA /* LabelButton.swift */; };
 		1B897F3C2BA424800018BEAA /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B897F3B2BA424800018BEAA /* CalendarView.swift */; };
 		1B897F3E2BA4279B0018BEAA /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B897F3D2BA4279B0018BEAA /* Date+Extension.swift */; };
+		1BA3F2D42BD9099700570F04 /* TaskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B772ADA2BBD5B6000BB675E /* TaskModel.swift */; };
 		1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBC95262B7286D800FF9353 /* HabitCoApp.swift */; };
 		1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBC95282B7286D800FF9353 /* ContentView.swift */; };
 		1BBC952B2B7286D900FF9353 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952A2B7286D900FF9353 /* Assets.xcassets */; };
@@ -154,6 +155,7 @@
 		1B897F392BA420250018BEAA /* LabelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelButton.swift; sourceTree = "<group>"; };
 		1B897F3B2BA424800018BEAA /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		1B897F3D2BA4279B0018BEAA /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		1BA3F2D32BD9015500570F04 /* HabitCo WidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "HabitCo WidgetExtension.entitlements"; sourceTree = "<group>"; };
 		1BAA2EBB2BA772BF00235B3D /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		1BAA2F902BA777E500235B3D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1BBC95232B7286D800FF9353 /* HabitCo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HabitCo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -352,6 +354,8 @@
 		1BBC951A2B7286D800FF9353 = {
 			isa = PBXGroup;
 			children = (
+				1B772ADA2BBD5B6000BB675E /* TaskModel.swift */,
+				1BA3F2D32BD9015500570F04 /* HabitCo WidgetExtension.entitlements */,
 				1BBC95252B7286D800FF9353 /* HabitCo */,
 				1BE028AF2BA97A9D0042CAC3 /* HabitCo Widget */,
 				1BAA2EB82BA772BF00235B3D /* Frameworks */,
@@ -519,7 +523,6 @@
 				1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */,
 				1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */,
 				1BE028B62BA97A9F0042CAC3 /* Info.plist */,
-				1B772ADA2BBD5B6000BB675E /* TaskModel.swift */,
 			);
 			path = "HabitCo Widget";
 			sourceTree = "<group>";
@@ -685,6 +688,7 @@
 				1BC23AF82BAB54EF00133C27 /* UserViewModel.swift in Sources */,
 				1BC8682A2BB17DB200B348FE /* LabeledStepper.swift in Sources */,
 				1BC23AF82BAB54EF00133C27 /* UserViewModel.swift in Sources */,
+				1BA3F2D42BD9099700570F04 /* TaskModel.swift in Sources */,
 				3FBCEB452BC8DF650057E204 /* PomodoroDB.swift in Sources */,
 				1BC868282BB1424D00B348FE /* CreateHabitView.swift in Sources */,
 				1BD50F1B2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift in Sources */,
@@ -952,6 +956,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = "HabitCo WidgetExtension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JGSV4C4BP3;
@@ -966,7 +971,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "AMS.HabitCo.HabitCo-Widget";
+				PRODUCT_BUNDLE_IDENTIFIER = AMS.HabitCo.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -980,6 +985,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = "HabitCo WidgetExtension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JGSV4C4BP3;
@@ -994,7 +1000,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "AMS.HabitCo.HabitCo-Widget";
+				PRODUCT_BUNDLE_IDENTIFIER = AMS.HabitCo.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;

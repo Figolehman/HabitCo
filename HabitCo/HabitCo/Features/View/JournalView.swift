@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct JournalView: View {
     
@@ -60,8 +61,11 @@ struct JournalView: View {
                                 }
                             }
                             
-                            SortButton(label: "Progress", isDisabled: .constant(true), imageType: .unsort) {
-                                
+                            SortButton(label: "Progress", isDisabled: .constant(false), imageType: .unsort) {
+                                if let userDefaults = UserDefaults(suiteName: "group.HabitCo") {
+                                    userDefaults.setValue("KEREN", forKey: "KEREN")
+                                    WidgetCenter.shared.reloadAllTimelines()
+                                }
                             }
                             
                             Spacer()

@@ -35,6 +35,8 @@ struct TaskEntry: TimelineEntry {
 
 struct HabitCo_WidgetEntryView : View {
     var entry: Provider.Entry
+    let userDefaults = UserDefaults(suiteName: "group.HabitCo")
+    
     
     var body: some View {
         
