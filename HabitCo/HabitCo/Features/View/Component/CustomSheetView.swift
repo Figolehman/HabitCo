@@ -56,6 +56,9 @@ enum SheetType {
 
 struct CustomSheetView<Content: View>: View {
     
+    // Drag Properties
+    @State private var offset: CGFloat = 0
+    
     @Binding var condition: Bool
     
     var sheetType: SheetType
@@ -115,9 +118,34 @@ struct CustomSheetView<Content: View>: View {
                 Spacer()
             }
             .padding(.top, 6)
-            .frame(width: ScreenSize.width, height: condition ? .getResponsiveHeight(sheetType.height) : 0)
+            .frame(height: .getResponsiveHeight(sheetType.height))
             .background(Color.getAppColor(.neutral3))
             .cornerRadius(12)
+            .offset(y: condition ? 0 : .getResponsiveHeight(sheetType.height))
+            .offset(y: offset)
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        let translation = value.translation.height
+                        self.offset = max(translation, 0)
+                    }.onEnded({ _ in
+                        if self.offset >= sheetType.height/2 {
+                            withAnimation(.linear(duration: 0.5)) {
+                                condition = false
+                            }
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                self.offset = 0
+                            }
+
+                        } else {
+                            withAnimation {
+                                self.offset = 0
+                            }
+                        }
+                        
+                    })
+            )
         }
         .ignoresSafeArea()
     }
