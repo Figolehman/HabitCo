@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct StreakGainView: View {
+    let shareImage = StreakShareView(streak: 10).snapshot()
+    @State private var showShareSheet: Bool = false
     @Binding var isShown: Bool
     
     var body: some View {
@@ -24,7 +26,7 @@ struct StreakGainView: View {
                     
                 VStack (spacing: .getResponsiveHeight(16)) {
                     AppButton(label: "Share", sizeType: .share) {
-                        
+                        showShareSheet = true
                     }
                     AppButton(label: "Close", sizeType: .share) {
                         withAnimation {
@@ -43,6 +45,9 @@ struct StreakGainView: View {
             Color.getAppColor(.neutral3)
         )
         .cornerRadius(24)
+        .sheet(isPresented: $showShareSheet, content: {
+            ActivityView(image: shareImage)
+        })
     }
 }
 //

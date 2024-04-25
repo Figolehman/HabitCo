@@ -42,6 +42,8 @@
 		1B897F3C2BA424800018BEAA /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B897F3B2BA424800018BEAA /* CalendarView.swift */; };
 		1B897F3E2BA4279B0018BEAA /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B897F3D2BA4279B0018BEAA /* Date+Extension.swift */; };
 		1BA3F2D42BD9099700570F04 /* TaskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B772ADA2BBD5B6000BB675E /* TaskModel.swift */; };
+		1BB0C1762BDA1A880071F595 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0C1752BDA1A880071F595 /* ActivityView.swift */; };
+		1BB0C1782BDA1EBD0071F595 /* StreakShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0C1772BDA1EBD0071F595 /* StreakShareView.swift */; };
 		1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBC95262B7286D800FF9353 /* HabitCoApp.swift */; };
 		1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBC95282B7286D800FF9353 /* ContentView.swift */; };
 		1BBC952B2B7286D900FF9353 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952A2B7286D900FF9353 /* Assets.xcassets */; };
@@ -158,6 +160,8 @@
 		1BA3F2D32BD9015500570F04 /* HabitCo WidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "HabitCo WidgetExtension.entitlements"; sourceTree = "<group>"; };
 		1BAA2EBB2BA772BF00235B3D /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		1BAA2F902BA777E500235B3D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1BB0C1752BDA1A880071F595 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
+		1BB0C1772BDA1EBD0071F595 /* StreakShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakShareView.swift; sourceTree = "<group>"; };
 		1BBC95232B7286D800FF9353 /* HabitCo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HabitCo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BBC95262B7286D800FF9353 /* HabitCoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCoApp.swift; sourceTree = "<group>"; };
 		1BBC95282B7286D800FF9353 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -304,6 +308,7 @@
 				1BC868292BB17DB200B348FE /* LabeledStepper.swift */,
 				1B013A1A2BBBF7E00027FD6E /* CustomSheetView.swift */,
 				9BF3F7CC2BBD55BF00B7CE59 /* CustomAlertView.swift */,
+				1BB0C1752BDA1A880071F595 /* ActivityView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -338,6 +343,7 @@
 				1B793AA52BB48FA100B6BFC9 /* Habit Form */,
 				1B7A24AD2BB7E2640045E8D4 /* StreakGainView.swift */,
 				1B7A24AF2BBAAD310045E8D4 /* StreakLossView.swift */,
+				1BB0C1772BDA1EBD0071F595 /* StreakShareView.swift */,
 			);
 			path = Streak;
 			sourceTree = "<group>";
@@ -690,6 +696,7 @@
 				1BC23AF82BAB54EF00133C27 /* UserViewModel.swift in Sources */,
 				1BA3F2D42BD9099700570F04 /* TaskModel.swift in Sources */,
 				3FBCEB452BC8DF650057E204 /* PomodoroDB.swift in Sources */,
+				1BB0C1762BDA1A880071F595 /* ActivityView.swift in Sources */,
 				1BC868282BB1424D00B348FE /* CreateHabitView.swift in Sources */,
 				1BD50F1B2BA6002D00FC7BCF /* TextEditorWithPlaceholder.swift in Sources */,
 				3FBCEAF02BB186560057E204 /* AppRootManager.swift in Sources */,
@@ -712,6 +719,7 @@
 				1BD50F162BA5BB2500FC7BCF /* CardView.swift in Sources */,
 				1BD50F192BA5D21500FC7BCF /* EditableCardView.swift in Sources */,
 				3FBCEB412BC593D50057E204 /* FutureJournalDB.swift in Sources */,
+				1BB0C1782BDA1EBD0071F595 /* StreakShareView.swift in Sources */,
 				1BC23B022BAB624600133C27 /* Utlities.swift in Sources */,
 				1B560C8F2BA3627D00CE2DC6 /* PomodoroTimer.swift in Sources */,
 				1BC23AEA2BAB519400133C27 /* Query+extension.swift in Sources */,
