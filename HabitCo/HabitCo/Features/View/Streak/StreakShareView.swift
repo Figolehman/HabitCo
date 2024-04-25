@@ -9,26 +9,45 @@ import SwiftUI
 
 struct StreakShareView: View {
     let streak: Int
+    let x: Int?
+    let y: Int?
+    
+    init(streak: Int, x: Int? = nil, y: Int? = nil) {
+        self.streak = streak
+        self.x = x
+        self.y = y
+    }
+    
     var body: some View {
         VStack (spacing: .getResponsiveHeight(72)) {
             Spacer()
-            Image("shareTree-\(Int.random(in: 1...2))")
             
+            Image("shareTree-\(Int.random(in: 1...2))")
             VStack (spacing: .getResponsiveHeight(24)) {
                 Text("\(streak) days streak!")
                 
-                Text("\(Prompt.shareStreakPrompt[Int.random(in: 0...1)])")
+                Text("\(Prompt.shareStreakPrompt(streak: streak, x: x, y: y))")
                     .multilineTextAlignment(.center)
             }
             
-            Image("blobsJournal")
-                .resizable()
-                .ignoresSafeArea()
+            
+            Spacer()
         }
+        .background(
+            VStack {
+                Spacer()
+                Image("blobsStreak")
+//                    .resizable()
+//                    .ignoresSafeArea()
+            }
+                .ignoresSafeArea()
+        )
     }
 }
 
 #Preview {
         Image(uiImage: StreakShareView(streak: 10).snapshot())
-    
+}
+#Preview {
+    StreakShareView(streak: 10)
 }

@@ -16,7 +16,11 @@ struct Prompt {
     
     static let gainStreakPrompt = ["Your persistence and determination are truly inspiring. You're one step closer to achieving your goals. Don't forget to share your achievement with your friends!", "Your determination to succeed is both admirable and inspiring. Keep going!  Don't forget to share your achievement with your friends!"]
     
-    static let shareStreakPrompt = ["I'm thrilled to share that I've successfully maintained my streak for X consecutive days.", "I'm super proud to share that I've successfully completed Y out of Z habit for the past X days, without a break!"]
-    
     static let lossStreakPrompt = ["Don't be discouraged! Every setback is a chance to start anew. Losing your streak is just a small setback in your journey. Keep your spirits up!"]
+    
+    static func shareStreakPrompt(streak: Int, x: Int?, y: Int?) -> String {
+        guard let x, let y else { return "I'm thrilled to share that I've successfully maintained my streak for \(streak) consecutive days."}
+        
+        return "I'm super proud to share that I've successfully completed \(x) out of \(y) habit for the past \(streak) days, without a break!"
+    }
 }

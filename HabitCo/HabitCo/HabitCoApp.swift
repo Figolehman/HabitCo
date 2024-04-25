@@ -44,21 +44,17 @@ struct HabitCoApp: App {
         
     var body: some Scene {
         WindowGroup {
-            EmptyView()
-                .alertOverlay(.constant(true)) {
-                    StreakGainView(isShown: .constant(true))
-                }
-//            switch appRootManager.currentRoot {
-//            case .splashView:
-//                SplashScreenView()
-//                    .environmentObject(appRootManager)
-//            case .onBoardingView:
-//                OnboardingView()
-//                    .environmentObject(appRootManager)
-//            case .journalView:
-//                JournalView()
-//                    .environmentObject(appRootManager)
-//            }
+            switch appRootManager.currentRoot {
+            case .splashView:
+                SplashScreenView()
+                    .environmentObject(appRootManager)
+            case .onBoardingView:
+                OnboardingView()
+                    .environmentObject(appRootManager)
+            case .journalView:
+                JournalView()
+                    .environmentObject(appRootManager)
+            }
         }
     }
 }
