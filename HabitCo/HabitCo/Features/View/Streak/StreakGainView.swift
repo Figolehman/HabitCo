@@ -12,14 +12,14 @@ struct StreakGainView: View {
     
     var body: some View {
         VStack (alignment: .center, spacing: .getResponsiveHeight(72)){
-            Image(systemName: "square.dashed")
+            Image("gainTree-\(Int.random(in: 1...2))")
             
             VStack (spacing: .getResponsiveHeight(24)) {
                 Text("Congratulations on your X days streak!")
                     .multilineTextAlignment(.center)
                     .font(.body.weight(.semibold))
                 
-                Text("Your persistence and determination are truly inspiring. You're one step closer to achieving your goals. Don't forget to share your achievement with your friends!")
+                Text("\(Prompt.gainStreakPrompt[Int.random(in: 0...1)])")
                     .multilineTextAlignment(.center)
                     
                 VStack (spacing: .getResponsiveHeight(16)) {
@@ -45,9 +45,9 @@ struct StreakGainView: View {
         .cornerRadius(24)
     }
 }
-
+//
 #Preview {
-    JournalView()
+    EmptyView()
         .alertOverlay(.constant(true)) {
             StreakGainView(isShown: .constant(true))
         }

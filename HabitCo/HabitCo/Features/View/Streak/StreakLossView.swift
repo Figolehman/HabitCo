@@ -12,14 +12,14 @@ struct StreakLossView: View {
     
     var body: some View {
         VStack (alignment: .center, spacing: .getResponsiveHeight(72)){
-            Image(systemName: "square.dashed")
+            Image("lossTree")
             
             VStack (spacing: .getResponsiveHeight(24)) {
                 Text("Congratulations on your X days streak!")
                     .multilineTextAlignment(.center)
                     .font(.body.weight(.semibold))
                 
-                Text("Your persistence and determination are truly inspiring. You're one step closer to achieving your goals. Don't forget to share your achievement with your friends!")
+                Text("\(Prompt.lossStreakPrompt[0])")
                     .multilineTextAlignment(.center)
                     
                 AppButton(label: "Close", sizeType: .share) {
@@ -42,7 +42,7 @@ struct StreakLossView: View {
 }
 
 #Preview {
-    JournalView()
+    EmptyView()
         .alertOverlay(.constant(true)) {
             StreakLossView(isShown: .constant(true))
         }
