@@ -44,6 +44,8 @@
 		1BA3F2D42BD9099700570F04 /* TaskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B772ADA2BBD5B6000BB675E /* TaskModel.swift */; };
 		1BB0C1762BDA1A880071F595 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0C1752BDA1A880071F595 /* ActivityView.swift */; };
 		1BB0C1782BDA1EBD0071F595 /* StreakShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0C1772BDA1EBD0071F595 /* StreakShareView.swift */; };
+		1BB0C17A2BDAAA6F0071F595 /* SoundHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB0C1792BDAAA6F0071F595 /* SoundHandler.swift */; };
+		1BB0C17D2BDAAFFF0071F595 /* endPomodoro.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1BB0C17C2BDAAFFF0071F595 /* endPomodoro.mp3 */; };
 		1BBC95272B7286D800FF9353 /* HabitCoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBC95262B7286D800FF9353 /* HabitCoApp.swift */; };
 		1BBC95292B7286D800FF9353 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBC95282B7286D800FF9353 /* ContentView.swift */; };
 		1BBC952B2B7286D900FF9353 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BBC952A2B7286D900FF9353 /* Assets.xcassets */; };
@@ -162,6 +164,8 @@
 		1BAA2F902BA777E500235B3D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1BB0C1752BDA1A880071F595 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		1BB0C1772BDA1EBD0071F595 /* StreakShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakShareView.swift; sourceTree = "<group>"; };
+		1BB0C1792BDAAA6F0071F595 /* SoundHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundHandler.swift; sourceTree = "<group>"; };
+		1BB0C17C2BDAAFFF0071F595 /* endPomodoro.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = endPomodoro.mp3; sourceTree = "<group>"; };
 		1BBC95232B7286D800FF9353 /* HabitCo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HabitCo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BBC95262B7286D800FF9353 /* HabitCoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCoApp.swift; sourceTree = "<group>"; };
 		1BBC95282B7286D800FF9353 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -283,6 +287,7 @@
 		1B560C7B2BA2025400CE2DC6 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				1BB0C1802BDAE8E90071F595 /* Sounds */,
 				1BAA2F902BA777E500235B3D /* Info.plist */,
 				1B4B25782B7320B70081929F /* GoogleService-Info.plist */,
 				1BBC952A2B7286D900FF9353 /* Assets.xcassets */,
@@ -357,6 +362,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		1BB0C17B2BDAAFE10071F595 /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				1BB0C1792BDAAA6F0071F595 /* SoundHandler.swift */,
+			);
+			path = Sound;
+			sourceTree = "<group>";
+		};
+		1BB0C1802BDAE8E90071F595 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				1BB0C17C2BDAAFFF0071F595 /* endPomodoro.mp3 */,
+			);
+			name = Sounds;
+			sourceTree = "<group>";
+		};
 		1BBC951A2B7286D800FF9353 = {
 			isa = PBXGroup;
 			children = (
@@ -405,6 +426,7 @@
 		1BC23ADC2BAB50D300133C27 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				1BB0C17B2BDAAFE10071F595 /* Sound */,
 				3FBCEB0B2BB1A63A0057E204 /* AppRoot */,
 				1BC23ADE2BAB50F100133C27 /* User */,
 				1BC23AE32BAB513600133C27 /* AuthManager.swift */,
@@ -641,6 +663,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BB0C17D2BDAAFFF0071F595 /* endPomodoro.mp3 in Resources */,
 				1BBC952E2B7286D900FF9353 /* Preview Assets.xcassets in Resources */,
 				1BBC952B2B7286D900FF9353 /* Assets.xcassets in Resources */,
 				1B4B25792B7320B70081929F /* GoogleService-Info.plist in Resources */,
@@ -702,6 +725,7 @@
 				3FBCEAF02BB186560057E204 /* AppRootManager.swift in Sources */,
 				1BC23AF02BAB53C000133C27 /* StreakDB.swift in Sources */,
 				9BF3F7CD2BBD55BF00B7CE59 /* CustomAlertView.swift in Sources */,
+				1BB0C17A2BDAAA6F0071F595 /* SoundHandler.swift in Sources */,
 				1BC23B042BAB64EB00133C27 /* AuthDataResultModel.swift in Sources */,
 				1B4B2A3D2BADEE3E0059559F /* CGFloat+Extension.swift in Sources */,
 				1B560C862BA2F6F500CE2DC6 /* SortButton.swift in Sources */,

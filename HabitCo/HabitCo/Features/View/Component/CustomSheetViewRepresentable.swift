@@ -22,7 +22,7 @@ struct CustomSheetViewController: UIViewControllerRepresentable {
     }
 }
 
-struct TestView: View {
+struct CustomSheetTestView: View {
     @State private var isPresented = false
 
     var body: some View {
@@ -36,5 +36,5 @@ struct TestView: View {
 }
 
 #Preview {
-    TestView()
+    CustomSheetTestView()
 }

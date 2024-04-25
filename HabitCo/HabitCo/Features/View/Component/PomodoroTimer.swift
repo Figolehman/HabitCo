@@ -9,6 +9,8 @@ import SwiftUI
 import Combine
 
 struct PomodoroTimer: View {
+    var soundPlayer = SoundHandler()
+    
     @Binding var timer: Publishers.Autoconnect<Timer.TimerPublisher>
     let width: CGFloat = 270
     let height: CGFloat = 270
@@ -52,6 +54,9 @@ struct PomodoroTimer: View {
                         } else if duration == 0 && !isDone{
                             isDone = true
                             action()
+                            if duration == 0 {
+                                soundPlayer.playSound(.endPomodoro)
+                            }
                         }
                     }
                 

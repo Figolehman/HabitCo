@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 enum PomodoroTime {
     case focusTime, breakTime, longBreakTime
 }
 
 struct FocusView: View {
+
     
     @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State var isRunning = true
