@@ -40,7 +40,7 @@ struct HabitCo_WidgetEntryView : View {
     
     var body: some View {
         
-        VStack {
+        VStack (spacing: 19) {
                 
             ForEach(entry.lastFourTasks, id:\.id) { task in
                 HStack (spacing: 20) {
@@ -57,20 +57,16 @@ struct HabitCo_WidgetEntryView : View {
                                 HStack {
 //                                    Text("\(task.taskCount * 220 / task.totalTask)")
                                     task.filterColor
-                                        .frame(width: CGFloat(task.taskCount * 266 / task.totalTask))
+                                        .frame(width: CGFloat(task.taskCount * 314 / task.totalTask))
                                     Spacer()
                                 }
                             )
                     )
                     .cornerRadius(12)
                 }
-                if task.id != entry.lastFourTasks.last!.id {
-                    Spacer()
-                }
             }
         }
         .ignoresSafeArea()
-        .padding(24)
         .foregroundColor(.getAppColor(.primary))
     }
 }

@@ -365,6 +365,7 @@
 		1BB0C17B2BDAAFE10071F595 /* Sound */ = {
 			isa = PBXGroup;
 			children = (
+				1BB0C17C2BDAAFFF0071F595 /* endPomodoro.mp3 */,
 				1BB0C1792BDAAA6F0071F595 /* SoundHandler.swift */,
 			);
 			path = Sound;
@@ -373,7 +374,6 @@
 		1BB0C1802BDAE8E90071F595 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				1BB0C17C2BDAAFFF0071F595 /* endPomodoro.mp3 */,
 			);
 			name = Sounds;
 			sourceTree = "<group>";
