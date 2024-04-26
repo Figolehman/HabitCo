@@ -15,6 +15,8 @@ struct PomodoroTimer: View {
     let width: CGFloat = 270
     let height: CGFloat = 270
     
+    @State private var isAllDone = false
+    
     
     @Binding var totalTime: Int
     
@@ -25,6 +27,17 @@ struct PomodoroTimer: View {
     @Binding var isDone: Bool
 
     let action: () -> ()
+    
+    init(timer: Binding<Publishers.Autoconnect<Timer.TimerPublisher>>, totalTime: Binding<Int>, isRunning: Binding<Bool>, duration: Binding<Int>, isDone: Binding<Bool>, action: @escaping () -> Void) {
+        self._timer = timer
+        self._totalTime = totalTime
+        self._isRunning = isRunning
+        self._duration = duration
+        self._isDone = isDone
+        self.action = action
+        
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = UIColor(.getAppColor(.primary))
+    }
     
     var body: some View {
         VStack {
@@ -56,6 +69,7 @@ struct PomodoroTimer: View {
                             action()
                             if duration == 0 {
                                 soundPlayer.playSound(.endPomodoro)
+                                isAllDone = true
                             }
                         }
                     }
@@ -70,6 +84,9 @@ struct PomodoroTimer: View {
 //                }
 //            }
         }
+        .alert(isPresented: $isAllDone, content: {
+            Alert(title: Text("Your pomodoro session has finished"), message: Text("Great job! Take a breather before your next task!"), dismissButton: .cancel(Text("Okay")))
+        })
     }
 }
 
