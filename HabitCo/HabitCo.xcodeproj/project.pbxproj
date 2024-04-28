@@ -404,7 +404,7 @@
 			isa = PBXGroup;
 			children = (
 				3FBCEB0B2BB1A63A0057E204 /* AppRoot */,
-				1BC23ADE2BAB50F100133C27 /* User */,
+				1BC23ADE2BAB50F100133C27 /* Firestore */,
 				1BC23AE32BAB513600133C27 /* AuthManager.swift */,
 				1BC23AE52BAB514C00133C27 /* AuthManagerEnvironmentKey.swift */,
 				1BBFDD2B2BCD2EBD0044CE05 /* NotificationHandler.swift */,
@@ -412,12 +412,12 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
-		1BC23ADE2BAB50F100133C27 /* User */ = {
+		1BC23ADE2BAB50F100133C27 /* Firestore */ = {
 			isa = PBXGroup;
 			children = (
 				1BC23AE12BAB512200133C27 /* UserManager.swift */,
 			);
-			path = User;
+			path = Firestore;
 			sourceTree = "<group>";
 		};
 		1BC23AFB2BAB558100133C27 /* Provider */ = {

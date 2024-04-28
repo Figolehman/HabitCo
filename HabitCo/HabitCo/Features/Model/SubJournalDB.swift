@@ -19,6 +19,7 @@ struct SubJournalDB: Codable {
     let label: String?
     let frequencyCount: Int?
     let startFrequency: Int?
+    let isCompleted: Bool?
     
     enum CodingKeys: String, CodingKey {
         case id, label
@@ -26,6 +27,7 @@ struct SubJournalDB: Codable {
         case subJournalType = "sub_journal_type"
         case frequencyCount = "frequency_count"
         case startFrequency = "start_frequency"
+        case isCompleted = "is_completed"
     }
 }
 
@@ -38,6 +40,7 @@ extension SubJournalDB {
         self.label = try container.decodeIfPresent(String.self, forKey: .label)
         self.frequencyCount = try container.decodeIfPresent(Int.self, forKey: .frequencyCount)
         self.startFrequency = try container.decodeIfPresent(Int.self, forKey: .startFrequency)
+        self.isCompleted = try container.decodeIfPresent(Bool.self, forKey: .isCompleted)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -48,6 +51,7 @@ extension SubJournalDB {
         try container.encodeIfPresent(self.label, forKey: .label)
         try container.encodeIfPresent(self.frequencyCount, forKey: .frequencyCount)
         try container.encodeIfPresent(self.startFrequency, forKey: .startFrequency)
+        try container.encodeIfPresent(self.isCompleted, forKey: .isCompleted)
     }
 }
    

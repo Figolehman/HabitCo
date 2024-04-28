@@ -13,8 +13,8 @@ final class UserDefaultManager {
         case isLogin
         case isJournalCreated
         case lastEntryDate
-        case hasOneStreak
-        case isStreak
+        case hasTodayStreak
+        case isFirstStreak
         case userID
     }
 
@@ -28,14 +28,14 @@ final class UserDefaultManager {
         set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.lastEntryDate.rawValue) }
     }
     
-    static var hasOneStreak: Bool {
-        get { UserDefaults.standard.bool(forKey: Keys.hasOneStreak.rawValue) }
-        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.hasOneStreak.rawValue) }
+    static var hasTodayStreak: Bool {
+        get { UserDefaults.standard.bool(forKey: Keys.hasTodayStreak.rawValue) }
+        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.hasTodayStreak.rawValue) }
     }
     
-    static var isStreak: Bool {
-        get { UserDefaults.standard.bool(forKey: Keys.isStreak.rawValue) }
-        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.isStreak.rawValue) }
+    static var isFirstStreak: Bool {
+        get { UserDefaults.standard.bool(forKey: Keys.isFirstStreak.rawValue) }
+        set (newValue) { UserDefaults.standard.setValue(newValue, forKey:  Keys.isFirstStreak.rawValue) }
     }
     
     static var userID: String? {

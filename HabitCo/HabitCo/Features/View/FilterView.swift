@@ -24,9 +24,9 @@ struct FilterView: View {
                         
                 }
             }.padding(.horizontal, 24)
-            
+            let selectedLabel = selectedFilter.map { $0.rawValue }
             AppButton(label: "Save", sizeType: .submit, action: {
-                userVM.filterJournal(date: date, label: "")
+                userVM.filterJournal(date: date, labels: selectedLabel)
             })
         }
     }

@@ -12,6 +12,7 @@ final class HabitViewModel: ObservableObject {
     
     @Published private(set) var habits: [HabitDB]? = []
     @Published private(set) var habit: HabitDB? = nil
+    @Published private(set) var progress: Float? = nil
     @Published private(set) var errorMessage: String? = nil
     
     private let firebaseProvider: FirebaseAuthProvider
@@ -42,6 +43,13 @@ extension HabitViewModel {
             }
             let timeString = DateFormatUtil.shared.dateToString(date: reminderHabit ?? Date(), to: "HH:mm")
             try await userManager.createNewHabit(userId: userId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString)
+        }
+    }
+    
+    func getProgressHabit(habitId: String) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            self.progress = try await userManager.getProgressHabit(userId: userId, habitId: habitId)
         }
     }
     

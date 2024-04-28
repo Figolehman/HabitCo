@@ -53,10 +53,13 @@ struct JournalView: View {
                 }
                 
                 Button {
-                    pomodoroViewModel.createUserPomodoro(pomodoroName: "", description: "", label: "", session: 0, focusTime: 0, breakTime: 0, repeatPomodoro: [], reminderPomodoro: Date())
+                    userViewModel.generateJournalEntries()
                 } label: {
-                    Text("add pomodoro")
+                    Text("Generate")
                 }
+                
+                Text(String(UserDefaultManager.isFirstStreak))
+                Text(String(UserDefaultManager.hasTodayStreak))
                 
                 ScrollView {
                     if let _ = userViewModel.subJournals
@@ -71,7 +74,7 @@ struct JournalView: View {
                                     }
                                 } else {
                                     Button {
-                                        userViewModel.updateFreqeuncySubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                        userViewModel.undoCount(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                     } label: {
                                         HabitItem(habitType: .type1, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", fraction: userViewModel.fraction, progress: item.subJournal.startFrequency ?? 0)
                                     }
@@ -97,7 +100,7 @@ struct JournalView: View {
         .toolbar {
             VStack {
                 HStack {
-                    Text(userViewModel.getMonthAndYear(date: selectedDate))
+                    Text(selectedDate.getMonthAndYearString())
                         .foregroundColor(.getAppColor(.neutral))
                         .font(.largeTitle.weight(.bold))
                     

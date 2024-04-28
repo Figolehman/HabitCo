@@ -144,4 +144,18 @@ extension Date {
     func formattedDate(to format: FormatType) -> Date {
         dateToString(to: format.rawValue).stringToDate(to: format.rawValue)
     }
+    
+    func getMonthAndYearString() -> String {
+        let calendar = Calendar.current
+        if let todayMonthYear = calendar.date(byAdding: .month, value: 0, to: self) {
+            return DateFormatUtil().dateToString(date: todayMonthYear, to: "MMMM, yyyy")
+        }
+        return ""
+    }
+    
+    func getMonthAndYearDate() -> Date? {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: self)
+        return calendar.date(from: components)
+    }
 }
