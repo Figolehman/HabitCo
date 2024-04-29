@@ -213,19 +213,35 @@ extension UserManager: SubJournalUseCase {
     }
     
     // DONE
-    func filterSubJournalByLabel(userId: String, from date: Date, label: [String]) async throws -> [SubJournalDB]? {
+    func filterSubJournalByLabel(userId: String, from date: Date, label: [String]?) async throws -> [SubJournalDB]? {
         let journal = try await getJournal(userId: userId, from: date)
-        if let journal {
+        if let journal,
+           let label,
+           !label.isEmpty
+        {
             return try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").whereField(SubJournalDB.CodingKeys.label.rawValue, in: label).getAllDocuments(as: SubJournalDB.self)
         }
-        return nil
+        return try await getSubJournal(userId: userId, from: date)
     }
     
     // WIP
-    func filterByProgress(userId: String, from date: Date, label: String, isAscending: Bool) async throws -> [SubJournalDB]? {
-        let journal = try await getJournal(userId: userId, from: date)
-        if let journal {
-            return try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").whereField(SubJournalDB.CodingKeys.label.rawValue, isEqualTo: label).getAllDocuments(as: SubJournalDB.self)
+    func filterByProgress(userId: String, from date: Date, isAscending: Bool = false) async throws -> [SubJournalDB]? {
+        guard let subJournals = try await getSubJournal(userId: userId, from: date) else { return nil }
+        let sortedSubJournals = subJournals
+            .filter { $0.frequencyCount != 0 }
+            .sorted {
+                let progress1 = Float($0.startFrequency ?? 0) / Float($0.frequencyCount ?? 1)
+                let progress2 = Float($1.startFrequency ?? 0) / Float($1.frequencyCount ?? 1)
+                return isAscending ? progress1 < progress2 : progress1 > progress2
+            }
+        return sortedSubJournals
+    }
+    
+    func getFilteredAndSortedAllSubJournals(userId: String, from date: Date, label: [String]?, isAscending: Bool?) async throws -> [SubJournalDB]? {
+        if let label, let isAscending {
+            
+        } else if let label {
+            return try await filterSubJournalByLabel(userId: userId, from: date, label: label)
         }
         return nil
     }

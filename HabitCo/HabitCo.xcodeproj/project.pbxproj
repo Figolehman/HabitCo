@@ -96,6 +96,7 @@
 		3FBCEB412BC593D50057E204 /* FutureJournalDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEB402BC593D50057E204 /* FutureJournalDB.swift */; };
 		3FBCEB432BC8DEDF0057E204 /* SubFutureJournalDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEB422BC8DEDF0057E204 /* SubFutureJournalDB.swift */; };
 		3FBCEB452BC8DF650057E204 /* PomodoroDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCEB442BC8DF650057E204 /* PomodoroDB.swift */; };
+		3FC40E4F2BDFDEF300A7D7EA /* TestProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC40E4E2BDFDEF300A7D7EA /* TestProject.swift */; };
 		9B4789EF2BBAB11600B5C717 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4789EE2BBAB11600B5C717 /* SettingsView.swift */; };
 		9BDAF11E2BBC85EA00D935A5 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BDAF11D2BBC85EA00D935A5 /* PrivacyPolicyView.swift */; };
 		9BDAF1202BBC8E9C00D935A5 /* TermsAndConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BDAF11F2BBC8E9C00D935A5 /* TermsAndConditionsView.swift */; };
@@ -216,6 +217,7 @@
 		3FBCEB402BC593D50057E204 /* FutureJournalDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureJournalDB.swift; sourceTree = "<group>"; };
 		3FBCEB422BC8DEDF0057E204 /* SubFutureJournalDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubFutureJournalDB.swift; sourceTree = "<group>"; };
 		3FBCEB442BC8DF650057E204 /* PomodoroDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroDB.swift; sourceTree = "<group>"; };
+		3FC40E4E2BDFDEF300A7D7EA /* TestProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProject.swift; sourceTree = "<group>"; };
 		9B4789EE2BBAB11600B5C717 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9BDAF11D2BBC85EA00D935A5 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
 		9BDAF11F2BBC8E9C00D935A5 /* TermsAndConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsView.swift; sourceTree = "<group>"; };
@@ -359,6 +361,7 @@
 		1BBC951A2B7286D800FF9353 = {
 			isa = PBXGroup;
 			children = (
+				3FC40E4E2BDFDEF300A7D7EA /* TestProject.swift */,
 				3F28DD2C2BD8A92E0043CB4F /* HabitCo WidgetExtension.entitlements */,
 				1BBC95252B7286D800FF9353 /* HabitCo */,
 				1BE028AF2BA97A9D0042CAC3 /* HabitCo Widget */,
@@ -705,6 +708,7 @@
 				1B4B2A392BAD95980059559F /* ScreenSize.swift in Sources */,
 				3F28DD092BD7AF930043CB4F /* String+Extension.swift in Sources */,
 				1BC23B002BAB623100133C27 /* SignInWithApple.swift in Sources */,
+				3FC40E4F2BDFDEF300A7D7EA /* TestProject.swift in Sources */,
 				1BBFDD2C2BCD2EBD0044CE05 /* NotificationHandler.swift in Sources */,
 				1B7A24AE2BB7E2640045E8D4 /* StreakGainView.swift in Sources */,
 				3FBCEB432BC8DEDF0057E204 /* SubFutureJournalDB.swift in Sources */,

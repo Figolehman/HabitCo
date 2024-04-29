@@ -58,6 +58,14 @@ struct JournalView: View {
                     Text("Generate")
                 }
                 
+                
+                Button {
+                    userViewModel.filterByProgress(from: selectedDate, isAscending: false)
+                } label: {
+                    Text("progress")
+                }
+                
+                
                 Text(String(UserDefaultManager.isFirstStreak))
                 Text(String(UserDefaultManager.hasTodayStreak))
                 
@@ -74,7 +82,7 @@ struct JournalView: View {
                                     }
                                 } else {
                                     Button {
-                                        userViewModel.undoCount(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                        userViewModel.updateFreqeuncySubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                     } label: {
                                         HabitItem(habitType: .type1, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", fraction: userViewModel.fraction, progress: item.subJournal.startFrequency ?? 0)
                                     }
@@ -121,7 +129,7 @@ struct JournalView: View {
                 HStack {
                     Image(systemName: "flame")
                         .font(.caption)
-                    Text("1 Day Streak!")
+                    Text("\(userViewModel.streakCount) Day Streak!")
                         .font(.caption)
                     
                     Spacer()
@@ -181,9 +189,10 @@ struct JournalView: View {
             customNavigation.titleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             UINavigationBar.appearance().standardAppearance = customNavigation
-            UserDefaultManager.lastEntryDate = DateFormatUtil.shared.formattedDate(date: Date(), to: .fullMonthName)
+            UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
             userViewModel.generateJournalEntries()
             userViewModel.getSubJournals(from: selectedDate)
+            userViewModel.getStreak()
             do {
                 try userViewModel.getCurrentUserData { [self] in
                     do {

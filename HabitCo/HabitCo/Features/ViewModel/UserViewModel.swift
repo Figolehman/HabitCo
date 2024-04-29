@@ -14,9 +14,8 @@ final class UserViewModel: ObservableObject {
     @Published private(set) var journals: [JournalDB]? = nil
     @Published private(set) var subJournals: [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)]? = nil
     @Published var fraction: Double = 0.0
-     
-    private var isJournalCreated = false
-    
+    @Published var streakCount: Int = 0
+         
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
     
@@ -77,13 +76,13 @@ extension UserViewModel{
                     {
                         print("missed Date: \(missedDate)")
                         try await userManager.generateJournal(userId: UserDefaultManager.userID ?? "", date: missedDate)
-                        print("Generate missed Journal")
+                        print("Generate missed Journal\n")
                         getSubJournals(from: currentDate)
                     }
                 }
             } else {
                 try await userManager.generateJournal(userId: UserDefaultManager.userID ?? "", date: currentDate)
-                print("Generate Today Journal")
+                print("Generate Today Journal\n")
                 getSubJournals(from: currentDate)
             }
         }
@@ -94,6 +93,15 @@ extension UserViewModel{
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             if let subJournals = try await userManager.filterSubJournalByLabel(userId: userId, from: date, label: labels) {
+                self.subJournals = try await fetchSubJournal(userId: userId, subJournals: subJournals)
+            }
+        }
+    }
+    
+    func filterByProgress(from date: Date, isAscending: Bool) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            if let subJournals = try await userManager.filterByProgress(userId: userId, from: date, isAscending: isAscending) {
                 self.subJournals = try await fetchSubJournal(userId: userId, subJournals: subJournals)
             }
         }
@@ -110,6 +118,13 @@ extension UserViewModel{
             } catch {
                 print("Error fetching journals: \(error)")
             }
+        }
+    }
+    
+    func getStreak() {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            self.streakCount = try await userManager.getStreak(userId: userId)?.streaksCount ?? 0
         }
     }
 
@@ -133,6 +148,7 @@ extension UserViewModel{
         self.fraction = floor(Double(startProgress) / Double(endProgress) * 10) / 10
     }
     
+    // Undo Done -> CheckCompletedSubJournal not yet tested
     func undoCount(subJournalId: String, from date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -152,19 +168,20 @@ extension UserViewModel{
             let journal = try await userManager.getJournal(userId: userId, from: date)
             let complete = try await userManager.isSubJournalComplete(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
             print("isComplete: \(complete)")
-            print("Has Today Streak: \(UserDefaultManager.hasTodayStreak)")
+            print("Has Today Streak: \(UserDefaultManager.hasTodayStreak)\n")
             try await userManager.updateCountSubJournal(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
             if complete {
                 if (try await userManager.getStreak(userId: userId) != nil) {
                     updateCountStreak()
-                    print("A")
+                    print("A\n")
                 } else {
-                    print("B")
+                    print("B\n")
                     try await userManager.createStreak(userId: userId, description: "")
                     UserDefaultManager.hasTodayStreak = true
                     UserDefaultManager.isFirstStreak = true
                 }
                 try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
+                getStreak()
             }
             getSubJournals(from: date)
         }
@@ -179,7 +196,7 @@ extension UserViewModel{
             let yesterday = calendar.date(byAdding: .day, value: -1, to: formattedDate)
             let checkYesterdayJournalCompleted = try await userManager.checkCompletedSubJournal(userId: userId, from: yesterday ?? Date())
             print("Journal Completed yesterday: \(checkYesterdayJournalCompleted)")
-            print("yesterday: \(String(describing: yesterday))")
+            print("yesterday: \(String(describing: yesterday))\n")
             if let subJournals = try await userManager.getSubJournal(userId: userId, from: formattedDate) {
                 for _ in subJournals {
                     if !UserDefaultManager.isFirstStreak,
