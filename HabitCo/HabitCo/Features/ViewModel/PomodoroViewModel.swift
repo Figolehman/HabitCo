@@ -12,6 +12,7 @@ final class PomodoroViewModel: ObservableObject {
     
     @Published private(set) var pomodoros: [PomodoroDB]? = []
     @Published private(set) var pomodoro: PomodoroDB? = nil
+    @Published private(set) var errorMessage: String? = nil
     
     private var user: UserDB? = nil
     private let firebaseProvider: FirebaseAuthProvider
@@ -20,31 +21,30 @@ final class PomodoroViewModel: ObservableObject {
     init() {
         firebaseProvider = FirebaseAuthProvider()
         userManager = UserManager.shared
-        initUser()
     }
     
 }
 
 extension PomodoroViewModel {
-    private func initUser(){
-        Task{
-            guard let userAuthInfo = firebaseProvider.getAuthenticatedUser() else { return }
-            self.user = try await userManager.getUserDB(userId: userAuthInfo.uid)
-        }
-    }
    
-    public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date){
+    // Done
+    public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date?){
         Task {
-            guard let user = self.user else { return }
-            let timeString = DateFormatUtil.shared.dateToString(date: reminderPomodoro, to: "HH:mm")
-            try await userManager.createNewPomodoro(userId: user.id, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString)
-        }
-    }
-    
-    public func getAllPomodoro(date: Date){
-        Task{
-            guard let user = self.user else { return }
-            self.pomodoros = try await userManager.getAllPomodoroByDate(userId: user.id, date: date)
+            guard let userId = UserDefaultManager.userID else { return }
+            guard !pomodoroName.isEmpty,
+                  !description.isEmpty,
+                  !label.isEmpty,
+                  session != 0,
+                  focusTime != 0,
+                  breakTime != 0,
+                  !repeatPomodoro.isEmpty,
+                  reminderPomodoro != nil
+            else {
+                self.errorMessage = "Please fill all fields"
+                return
+            }
+            let timeString = DateFormatUtil.shared.dateToString(date: reminderPomodoro ?? Date(), to: "HH:mm")
+            try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString)
         }
     }
     

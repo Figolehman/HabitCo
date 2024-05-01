@@ -38,7 +38,7 @@ enum EditableCardType {
 struct EditableCardView: View {
     let cardType: EditableCardType
     
-    @State var text: String = ""
+    @Binding var text: String
     lazy var isFocus: Bool = false
     
     var body: some View {
@@ -65,7 +65,7 @@ struct EditableCardView: View {
 
 #Preview {
     VStack {
-        EditableCardView(cardType: .name)
-        EditableCardView(cardType: .description)
+        EditableCardView(cardType: .name, text: .constant("aaaaa"))
+        EditableCardView(cardType: .description, text: .constant("BBBB"))
     }
 }

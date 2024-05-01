@@ -23,4 +23,6 @@ struct Prompt {
         
         return "I'm super proud to share that I've successfully completed \(x) out of \(y) habit for the past \(streak) days, without a break!"
     }
+    
+    static let id = "ID"
 }

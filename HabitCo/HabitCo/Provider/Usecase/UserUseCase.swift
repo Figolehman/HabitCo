@@ -15,16 +15,16 @@ protocol UserUseCase {
 protocol JournalUseCase {
     func generateJournal(userId: String, date: Date) async throws
     func getAllJournal(userId: String) async throws -> [JournalDB]?
-    func getDetailJournal(userId: String, from date: Date) async throws -> JournalDB?
+    func getJournal(userId: String, from date: Date) async throws -> JournalDB?
 }
 
 protocol SubJournalUseCase {
     func generateSubJournal(userId: String, journalId: String, type: SubJournalType, habitPomodoroId: String, label: String, frequencyCount: Int) async throws
-    func getSubJournal(userId: String, from date: Date) async throws -> [SubJournalDB]?
 }
 
 protocol FutureJournalUseCase {
     func generateFutureJournal(userId: String, dateName: String) async throws
+    func getFutureJournal(userId: String, from date: Date) async throws -> FutureJournalDB?
 }
 
 protocol SubFutureJournalUseCase {

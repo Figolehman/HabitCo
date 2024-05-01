@@ -8,6 +8,15 @@
 import SwiftUI
 
 struct HabitDetailView: View {
+    
+    let habit: HabitDB?
+    
+    @StateObject private var habitVM = HabitViewModel()
+    
+    init(habit: HabitDB?) {
+        self.habit = habit
+    }
+    
     var body: some View {
         ScrollView {
             VStack (spacing: 40) {
@@ -15,7 +24,7 @@ struct HabitDetailView: View {
                     CalendarView()
                     
                     CardView {
-                        Text("Habit Description")
+                        Text("\(habit?.description ?? "")")
                     }
                 }
                 
@@ -27,7 +36,7 @@ struct HabitDetailView: View {
                             Rectangle()
                                 .cornerRadius(12)
                                 .frame(width: .getResponsiveWidth(124), height: .getResponsiveHeight(46))
-                                .foregroundColor(.aluminium)
+                                .foregroundColor(Color(habit?.label ?? ""))
                         }
                     }
                     
@@ -35,34 +44,36 @@ struct HabitDetailView: View {
                         HStack {
                             Text("Frequency")
                             Spacer()
-                            Text("APSKD")
+                            Text("\(habit?.frequency ?? 0)")
                         }
                     }
                     CardView(height: .getResponsiveHeight(70)) {
                         HStack {
                             Text("Repeat")
                             Spacer()
-                            Text("APSKD")
+                            Text("\(habit?.repeatHabit?.getRepeatLabel() ?? "")")
                         }
                     }
                     CardView(height: .getResponsiveHeight(70)) {
                         HStack {
                             Text("Reminder")
                             Spacer()
-                            Text("APSKD")
+                            Text("\(habit?.reminderHabit ?? "")")
                         }
                     }
                 }
             }
             .padding(24)
         }
-        .navigationTitle("Habit Name")
-        
+        .navigationTitle("\(habit?.habitName ?? "")")
+        .onAppear {
+            habitVM.getProgressHabit(habitId: habit?.id ?? "")
+        }
     }
 }
 
 #Preview {
     NavigationView {
-        HabitDetailView()
+        HabitDetailView(habit: HabitDB(habitName: "Lari Pagi", description: "Mau lari pagi", label: "mushroom", frequency: 0, repeatHabit: [1, 2], reminderHabit: "18:00", dateCreated: Date()))
     }
 }

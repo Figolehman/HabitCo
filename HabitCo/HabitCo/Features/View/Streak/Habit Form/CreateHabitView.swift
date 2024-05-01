@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CreateHabitView: View {
 
+    @State private var habitName: String = ""
+    @State private var description: String = ""
     @State private var selected: Color.FilterColors? = nil
     @State private var frequency: Int = 1
     
@@ -24,12 +26,15 @@ struct CreateHabitView: View {
     
     @ObservedObject var habitVM: HabitViewModel
     
+    @Environment(\.presentationMode) var presentationMode
+    //@EnvironmentObject var appRootManager: AppRootManager
+
     var body: some View {
         ScrollView (showsIndicators: false) {
             VStack (spacing: 40) {
                 VStack (spacing: 16) {
-                    EditableCardView(cardType: .name)
-                    EditableCardView(cardType: .description)
+                    EditableCardView(cardType: .name, text: $habitName)
+                    EditableCardView(cardType: .description, text: $description)
                 }
                 
                 VStack (spacing: 24) {
@@ -135,13 +140,20 @@ struct CreateHabitView: View {
                                 }
                             }
                         }
-                        
                     }
+//                    if let error = habitVM.errorMessage {
+//                        HStack {
+//                            Text(error)
+//                                .foregroundColor(.danger)
+//                            Spacer()
+//                        }
+//                        .padding()
+//                    }
                 }
-                
+                let repeatDateInt: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit) {
-                    // Save Action Here
-                    
+                    habitVM.createUserHabit(habitName: habitName, description: description, label: selected?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime)
+                    self.presentationMode.wrappedValue.dismiss()
                 }
                 .padding(.top, 4)
             }

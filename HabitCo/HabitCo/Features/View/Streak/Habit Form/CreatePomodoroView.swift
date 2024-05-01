@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CreatePomodoroView: View {
     
+    @State private var pomodoroName: String = ""
+    @State private var description: String = ""
     @State private var selected: Color.FilterColors? = nil
     @State private var session: Int = 1
     
@@ -33,6 +35,9 @@ struct CreatePomodoroView: View {
     @State private var currentDefaultPomodoro: DefaultPomodoro?
     
     @ObservedObject var pomodoroVM: PomodoroViewModel
+    
+    @Environment(\.presentationMode) var presentationMode
+    //@EnvironmentObject var appRootManager: AppRootManager
 
     private enum DefaultPomodoro: CaseIterable {
         case type1, type2, type3
@@ -69,8 +74,8 @@ struct CreatePomodoroView: View {
         ScrollView (showsIndicators: false) {
             VStack (spacing: 40) {
                 VStack (spacing: 16) {
-                    EditableCardView(cardType: .name)
-                    EditableCardView(cardType: .description)
+                    EditableCardView(cardType: .name, text: $pomodoroName)
+                    EditableCardView(cardType: .description, text: $description)
                 }
                 
                 VStack (spacing: 24) {
@@ -319,11 +324,19 @@ struct CreatePomodoroView: View {
 //
                         }
                     }
+                    //if let error = habitVM.errorMessage {
+                    //                        HStack {
+                    //                            Text(error)
+                    //                                .foregroundColor(.danger)
+                    //                            Spacer()
+                    //                        }
+                    //                        .padding()
+                    //                    }
                 }
-                
-                
+                let repeatPomodoro: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
-                    // Save Action Here
+                    pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderTime)
+                    //self.appRootManager.currentRoot = .journalView
                 }
                 .padding(.top, 4)
             }
