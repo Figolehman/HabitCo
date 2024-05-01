@@ -131,8 +131,6 @@ struct JournalView: View {
                             }
                         }
                     }
-                    
-                    Spacer()
                 }
                 .padding(.horizontal, 24)
             } /**/
