@@ -13,8 +13,10 @@ final class UserViewModel: ObservableObject {
     @Published private(set) var user: UserDB? = nil
     @Published private(set) var journals: [JournalDB]? = nil
     @Published private(set) var subJournals: [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)]? = nil
-    @Published var fraction: Double = 0.0
-    @Published var streakCount: Int = 0
+    @Published private(set) var fraction: Double = 0.0
+    @Published private(set) var streakCount: Int = 0
+    @Published var selectedLabels: [String]?
+    @Published var isAscending: Bool?
          
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
@@ -37,73 +39,65 @@ extension UserViewModel{
                 self.user = try await userManager.getUserDB(userId: userAuthInfo.uid)
                 completion()
             } catch {
-                print("Error fetching user data: \(error)")
+                debugPrint("Error fetching user data: \(error.localizedDescription)")
             }
         }
     }
     
     // DONE
     func generateInitial() -> String {
-        guard let user else { return "ID" }
+        guard let user else { return Prompt.id }
         var initial = ""
         let splitName = user.fullName?.split(separator: " ")
         if splitName?.count == 1 {
-            guard let firstLetter = user.fullName?.first else { return "ID" }
+            guard let firstLetter = user.fullName?.first else { return Prompt.id }
             initial = String(firstLetter)
         } else {
             guard let lastName = splitName?.last,
                   let firstLastName = lastName.first
-            else { return "ID" }
+            else { return Prompt.id }
             initial = String(user.fullName?.prefix(1) ?? "") + String(firstLastName)
         }
         return initial.uppercased()
     }
     
     // DONE
-    func generateJournalEntries()  {
+    func generateJournalEntries() {
         let lastEntryDate = UserDefaultManager.lastEntryDate
         let calendar = Calendar.current
         let currentDate = Date().formattedDate(to: .fullMonthName)
         let missedDay = calendar.dateComponents([.day], from: lastEntryDate, to: currentDate).day ?? 0
-        print(lastEntryDate)
-        print(missedDay)
-        print(currentDate)
         Task {
             if missedDay > 0 {
                 for i in 0...missedDay {
                     if let missedDate = calendar.date(byAdding: .day, value: -i, to: currentDate)
                     {
-                        print("missed Date: \(missedDate)")
                         try await userManager.generateJournal(userId: UserDefaultManager.userID ?? "", date: missedDate)
-                        print("Generate missed Journal\n")
                         getSubJournals(from: currentDate)
+                        checkIsStreak()
                     }
                 }
             } else {
                 try await userManager.generateJournal(userId: UserDefaultManager.userID ?? "", date: currentDate)
-                print("Generate Today Journal\n")
                 getSubJournals(from: currentDate)
+                checkIsStreak()
             }
         }
     }
     
     // DONE
-    func filterJournal(date: Date, labels: [String]) {
+    func filterSubJournalsByLabels(date: Date, labels: [String]?) {
         Task {
-            guard let userId = UserDefaultManager.userID else { return }
-            if let subJournals = try await userManager.filterSubJournalByLabel(userId: userId, from: date, label: labels) {
-                self.subJournals = try await fetchSubJournal(userId: userId, subJournals: subJournals)
-            }
+            self.selectedLabels = labels
+            getSubJournals(from: date)
         }
     }
     
-    // WIP
-    func filterByProgress(from date: Date, isAscending: Bool) {
+    // DONE
+    func filterSubJournalsByProgress(from date: Date, isAscending: Bool?) {
         Task {
-            guard let userId = UserDefaultManager.userID else { return }
-            if let subJournals = try await userManager.filterByProgress(userId: userId, from: date, isAscending: isAscending) {
-                self.subJournals = try await fetchSubJournal(userId: userId, subJournals: subJournals)
-            }
+            self.isAscending = isAscending
+            getSubJournals(from: date)
         }
     }
     
@@ -130,20 +124,20 @@ extension UserViewModel{
     }
 
     // DONE
-    func getSubJournals(from date: Date){
+    func getSubJournals(from date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            guard let subJournals = try await userManager.getSubJournal(userId: userId, from: date.formattedDate(to: .fullMonthName)),
-            !subJournals.isEmpty
+            guard let subJournals = try await userManager.getSubJournals(userId: userId, from: date.formattedDate(to: .fullMonthName), label: selectedLabels, isAscending: isAscending),
+                  !subJournals.isEmpty
             else {
                 self.subJournals = nil
                 return
             }
-                self.subJournals = try await fetchSubJournal(userId: userId, subJournals: subJournals)
-            }
+            self.subJournals = try await fetchSubJournal(userId: userId, subJournals: subJournals)
         }
+    }
     
-    // DONE
+    // BUG NOT EACH HAbit
     func calculateFraction(startProgress: Int, endProgress: Int) {
         guard endProgress != 0 else { return }
         self.fraction = floor(Double(startProgress) / Double(endProgress) * 10) / 10
@@ -170,14 +164,15 @@ extension UserViewModel{
             print("isComplete: \(complete)")
             print("Has Today Streak: \(UserDefaultManager.hasTodayStreak)\n")
             try await userManager.updateCountSubJournal(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
-            if complete {
+            if complete,
+               date.isSameDay(UserDefaultManager.lastEntryDate.formattedDate(to: .fullMonthName))
+            {
                 if (try await userManager.getStreak(userId: userId) != nil) {
                     updateCountStreak()
-                    print("A\n")
                 } else {
-                    print("B\n")
                     try await userManager.createStreak(userId: userId, description: "")
                     UserDefaultManager.hasTodayStreak = true
+                    UserDefaultManager.isFirstStreak = true
                 }
                 try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
                 getStreak()
@@ -194,10 +189,13 @@ extension UserViewModel{
             let formattedDate = DateFormatUtil.shared.formattedDate(date: Date(), to: .fullMonthName)
             let yesterday = calendar.date(byAdding: .day, value: -1, to: formattedDate)
             let checkYesterdayJournalCompleted = try await userManager.checkCompletedSubJournal(userId: userId, from: yesterday ?? Date())
+            let hasSubJournal = try await userManager.hasSubJournal(userId: userId, from: yesterday ?? Date())
             print("Journal Completed yesterday: \(checkYesterdayJournalCompleted)")
-            print("yesterday: \(String(describing: yesterday))\n")
+            print("yesterday: \(String(describing: yesterday))")
+            print("has Sub Journal: \(String(describing: hasSubJournal))\n")
             if (try await userManager.getStreak(userId: userId) != nil),
-               !checkYesterdayJournalCompleted
+               !checkYesterdayJournalCompleted,
+               hasSubJournal
             {
                 try await userManager.deleteStreak(userId: userId)
                 getStreak()
@@ -205,13 +203,6 @@ extension UserViewModel{
             }
         }
     }
-    
-    func checkIsToday() {
-        if !UserDefaultManager.lastEntryDate.isSameDay(Date().formattedDate(to: .fullMonthName)) {
-            UserDefaultManager.hasTodayStreak = false
-        }
-    }
-    
 }
 
 
@@ -223,6 +214,7 @@ private extension UserViewModel {
         for subJournal in subJournals {
             if subJournal.subJournalType == .habit {
                 if let habitPomodoroId = try await userManager.getHabitDetail(userId: userId, habitId: subJournal.habitPomodoroId ?? "") {
+                    calculateFraction(startProgress: subJournal.startFrequency ?? 0, endProgress: subJournal.frequencyCount ?? 0)
                     localArray.append((subJournal, habitPomodoroId, nil))
                 }
             } else {
@@ -242,6 +234,13 @@ private extension UserViewModel {
                 try await userManager.updateCountStreak(userId: userId)
                 UserDefaultManager.hasTodayStreak = true
             }
+        }
+    }
+    
+    // DONE
+    func checkIsToday() {
+        if !UserDefaultManager.lastEntryDate.isSameDay(Date().formattedDate(to: .fullMonthName)) {
+            UserDefaultManager.hasTodayStreak = false
         }
     }
 }

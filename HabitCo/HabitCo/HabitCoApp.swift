@@ -23,6 +23,7 @@ struct HabitCoApp: App {
         if UserDefaults.standard.bool(forKey: "hasOpened") == false {
             do {
                 try Auth.auth().signOut()
+                UserDefaultManager.hasTodayStreak = false
             } catch {
                 debugPrint(error.localizedDescription)
             }

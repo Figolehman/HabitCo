@@ -38,7 +38,7 @@ struct JournalView: View {
                         }
                     }
                     
-                    SortButton(label: "Progress", isDisabled: .constant(true), imageType: .unsort) {
+                    SortButton(label: "Progress", isDisabled: .constant(false), imageType: .unsort) {
                         
                     }
                     
@@ -52,22 +52,8 @@ struct JournalView: View {
                     }
                 }
                 
-                Button {
-                    userViewModel.checkIsStreak()
-                } label: {
-                    Text("checkIsStreak")
-                }
-                
-                
-                Button {
-                    userViewModel.filterByProgress(from: selectedDate, isAscending: false)
-                } label: {
-                    Text("progress")
-                }
-                
-                
-                Text(String(UserDefaultManager.isFirstStreak))
                 Text(String(UserDefaultManager.hasTodayStreak))
+                Text(String(UserDefaultManager.isFirstStreak))
                 
                 ScrollView {
                     if let _ = userViewModel.subJournals
@@ -78,13 +64,13 @@ struct JournalView: View {
                                     NavigationLink {
                                         HabitDetailView(habit: item.habit)
                                     } label: {
-                                        HabitItem(habitType: .type2, habitName: item.habit?.habitName ?? "NO NAME", fraction: userViewModel.fraction, progress: item.subJournal.startFrequency ?? 0, label: item.habit?.label ?? "blossom")
+                                        HabitItem(habitType: .type2, habitName: item.habit?.habitName ?? "", fraction: userViewModel.fraction, progress: item.subJournal.startFrequency ?? 0, label: item.habit?.label ?? "")
                                     }
                                 } else {
                                     Button {
                                         userViewModel.updateFreqeuncySubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                     } label: {
-                                        HabitItem(habitType: .type1, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", fraction: userViewModel.fraction, progress: item.subJournal.startFrequency ?? 0, label: item.pomodoro?.label ?? "blossom")
+                                        HabitItem(habitType: .type1, habitName: item.pomodoro?.pomodoroName ?? "", fraction: userViewModel.fraction, progress: item.subJournal.startFrequency ?? 0, label: item.pomodoro?.label ?? "")
                                     }
                                 }
                             }
@@ -189,11 +175,8 @@ struct JournalView: View {
             customNavigation.titleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             UINavigationBar.appearance().standardAppearance = customNavigation
-            userViewModel.generateJournalEntries()
-            userViewModel.getSubJournals(from: selectedDate)
-            userViewModel.getStreak()
-            do {
-                try userViewModel.getCurrentUserData { [self] in
+            do{
+                try userViewModel.getCurrentUserData {
                     do {
                         try userViewModel.getAllJournal()
                     } catch {
@@ -203,8 +186,10 @@ struct JournalView: View {
             } catch {
                 print("No Authenticated User")
             }
+            userViewModel.generateJournalEntries()
+            userViewModel.getSubJournals(from: selectedDate)
+            userViewModel.getStreak()
             UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
-            userViewModel.checkIsStreak()
         }
         .onChange(of: selectedDate) { newValue in
             userViewModel.getSubJournals(from: newValue)

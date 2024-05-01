@@ -154,12 +154,6 @@ extension UserManager: SubJournalUseCase {
         try document.setData(from: subJournal, merge: false)
     }
     
-    // DONE
-    func getSubJournal(userId: String, from date: Date) async throws -> [SubJournalDB]? {
-        guard let journal = try await getJournal(userId: userId, from: date) else { return nil }
-        return try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "NO ID").getAllDocuments(as: SubJournalDB.self)
-    }
-    
     //DONE
     func updateCountSubJournal(userId: String, journalId: String, subJournalId: String) async throws {
         let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
@@ -212,38 +206,26 @@ extension UserManager: SubJournalUseCase {
         return subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int == (((subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue]) as? Int ?? 0) - 1 )
     }
     
-    // DONE
-    func filterSubJournalByLabel(userId: String, from date: Date, label: [String]?) async throws -> [SubJournalDB]? {
-        let journal = try await getJournal(userId: userId, from: date)
-        if let journal,
-           let label,
-           !label.isEmpty
+    func hasSubJournal(userId: String, from date: Date) async throws -> Bool {
+        if let subJournals = try await getAllSubJournalsByDate(userId: userId, from: date),
+            subJournals.count != 0
         {
-            return try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").whereField(SubJournalDB.CodingKeys.label.rawValue, in: label).getAllDocuments(as: SubJournalDB.self)
+            return true
         }
-        return try await getSubJournal(userId: userId, from: date)
+        return false
     }
     
-    // WIP
-    func filterByProgress(userId: String, from date: Date, isAscending: Bool = false) async throws -> [SubJournalDB]? {
-        guard let subJournals = try await getSubJournal(userId: userId, from: date) else { return nil }
-        let sortedSubJournals = subJournals
-            .filter { $0.frequencyCount != 0 }
-            .sorted {
-                let progress1 = Float($0.startFrequency ?? 0) / Float($0.frequencyCount ?? 1)
-                let progress2 = Float($1.startFrequency ?? 0) / Float($1.frequencyCount ?? 1)
-                return isAscending ? progress1 < progress2 : progress1 > progress2
-            }
-        return sortedSubJournals
-    }
-    
-    func getFilteredAndSortedAllSubJournals(userId: String, from date: Date, label: [String]?, isAscending: Bool?) async throws -> [SubJournalDB]? {
+    // DONE
+    func getSubJournals(userId: String, from date: Date, label: [String]?, isAscending: Bool?) async throws -> [SubJournalDB]? {
         if let label, let isAscending {
-            
+            return try await getFilteredAndSortedAllSubJournals(userId: userId, from: date, label: label, isAscending: isAscending)
+        } else if let isAscending {
+            return try await getFilteredSubJournalByProgress(userId: userId, from: date, isAscending: isAscending)
         } else if let label {
-            return try await filterSubJournalByLabel(userId: userId, from: date, label: label)
+            return try await getFilterSubJournalByLabel(userId: userId, from: date, label: label)
+        } else {
+            return try await getAllSubJournalsByDate(userId: userId, from: date)
         }
-        return nil
     }
 }
 
@@ -580,6 +562,47 @@ private extension UserManager {
         let calendar = Calendar.current
         let currentDate = Date()
         return (calendar, calendar.startOfDay(for: currentDate))
+    }
+    
+    // DONE
+    func getAllSubJournalsByDate(userId: String, from date: Date) async throws -> [SubJournalDB]? {
+        guard let journal = try await getJournal(userId: userId, from: date) else { return nil }
+        return try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "NO ID").getAllDocuments(as: SubJournalDB.self)
+    }
+    
+    // DONE
+    func getFilterSubJournalByLabel(userId: String, from date: Date, label: [String]?) async throws -> [SubJournalDB]? {
+        let journal = try await getJournal(userId: userId, from: date)
+        if let journal,
+           let label,
+           !label.isEmpty
+        {
+            return try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").whereField(SubJournalDB.CodingKeys.label.rawValue, in: label).getAllDocuments(as: SubJournalDB.self)
+        }
+        return try await getAllSubJournalsByDate(userId: userId, from: date)
+    }
+    
+    // DONE
+    func getFilteredSubJournalByProgress(userId: String, from date: Date, isAscending: Bool) async throws -> [SubJournalDB]? {
+        guard let subJournals = try await getAllSubJournalsByDate(userId: userId, from: date) else { return nil }
+        return sortedSubJournals(subJournals, isAscending)
+    }
+    
+    // DONE
+    func getFilteredAndSortedAllSubJournals(userId: String, from date: Date, label: [String], isAscending: Bool) async throws -> [SubJournalDB]? {
+        guard let subJournals = try await getFilterSubJournalByLabel(userId: userId, from: date, label: label) else { return nil }
+        return sortedSubJournals(subJournals, isAscending)
+    }
+    
+    func sortedSubJournals(_ subJournals: [SubJournalDB], _ isAscending: Bool) -> [SubJournalDB]? {
+        let sortedSubJournals = subJournals
+            .filter { $0.frequencyCount != 0 }
+            .sorted {
+                let progress1 = Float($0.startFrequency ?? 0) / Float($0.frequencyCount ?? 1)
+                let progress2 = Float($1.startFrequency ?? 0) / Float($1.frequencyCount ?? 1)
+                return isAscending ? progress1 < progress2 : progress1 > progress2
+            }
+        return sortedSubJournals
     }
     
 }

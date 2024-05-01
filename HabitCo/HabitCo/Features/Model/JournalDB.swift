@@ -12,6 +12,7 @@ struct JournalDB: Codable{
     let id: String?
     let date: Date?
     let dateName: String?
+  //  let hasStreak: Bool?
     
     enum CodingKeys: String, CodingKey{
         case id, date

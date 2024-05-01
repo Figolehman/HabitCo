@@ -10,6 +10,7 @@ import SwiftUI
 struct SplashScreenView: View {
     
     @EnvironmentObject private var appRootManager: AppRootManager
+    @StateObject private var userVM = UserViewModel()
     
     var body: some View {
         VStack (spacing: 24) {

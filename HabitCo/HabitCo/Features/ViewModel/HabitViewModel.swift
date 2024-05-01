@@ -50,6 +50,7 @@ extension HabitViewModel {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             self.progress = try await userManager.getProgressHabit(userId: userId, habitId: habitId)
+            //print("trigger with progress \(self.progress)")
         }
     }
     
@@ -65,6 +66,7 @@ extension HabitViewModel {
                     }
                 }
             }
+            getProgressHabit(habitId: habitId)
         }
     }
     

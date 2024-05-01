@@ -20,7 +20,6 @@ protocol JournalUseCase {
 
 protocol SubJournalUseCase {
     func generateSubJournal(userId: String, journalId: String, type: SubJournalType, habitPomodoroId: String, label: String, frequencyCount: Int) async throws
-    func getSubJournal(userId: String, from date: Date) async throws -> [SubJournalDB]?
 }
 
 protocol FutureJournalUseCase {

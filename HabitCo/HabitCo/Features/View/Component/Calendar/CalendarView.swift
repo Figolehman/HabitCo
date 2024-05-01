@@ -16,6 +16,8 @@ struct CalendarView: View {
     @State var days = [Date]()
     @State var selectedDate: Int?
     
+    @StateObject private var habitVM = HabitViewModel()
+
     var currentMonth: Int {
         get {
             currentDate.get(.month)
@@ -71,7 +73,7 @@ struct CalendarView: View {
                 }
             }
             
-            calendarView()
+            calendarView(fraction: habitVM.progress ?? 0)
         }
         .padding()
         .onChange(of: currentDate, perform: { _ in
@@ -86,7 +88,7 @@ struct CalendarView: View {
 // MARK: - View Builder
 extension CalendarView {
     @ViewBuilder
-    func calendarView() -> some View {
+    func calendarView(fraction: Float) -> some View {
         let columns = Array(repeating: GridItem(.flexible()), count: 7)
         
         let emptyDays = currentDate.startOfMonth.get(.weekday) - 1
@@ -102,7 +104,7 @@ extension CalendarView {
                         text.font(.title3.bold())
                     })
                     .font(.title3)
-                    .modifier(DateMarking(fraction: 0.6, isSelected: selectedDate == dayDate))
+                    .modifier(DateMarking(fraction: CGFloat(fraction), isSelected: selectedDate == dayDate))
                     .onTapGesture {
                         selectedDate = dayDate
                     }
