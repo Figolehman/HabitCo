@@ -62,10 +62,7 @@ struct JournalView: View {
                             }
                             
                             SortButton(label: "Progress", isDisabled: .constant(false), imageType: .unsort) {
-                                if let userDefaults = UserDefaults(suiteName: "group.HabitCo") {
-                                    userDefaults.setValue("KEREN", forKey: "KEREN")
-                                    WidgetCenter.shared.reloadAllTimelines()
-                                }
+
                             }
                             
                             Spacer()
@@ -131,8 +128,6 @@ struct JournalView: View {
                             }
                         }
                     }
-                    
-                    Spacer()
                 }
                 .padding(.horizontal, 24)
             } /**/
