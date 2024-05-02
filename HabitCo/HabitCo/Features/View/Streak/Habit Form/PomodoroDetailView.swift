@@ -2,17 +2,100 @@
 //  PomodoroDetailView.swift
 //  HabitCo
 //
-//  Created by Figo Alessandro Lehman on 02/05/24.
+//  Created by Figo Alessandro Lehman on 29/03/24.
 //
 
 import SwiftUI
 
 struct PomodoroDetailView: View {
+
+    let pomodoro: PomodoroDB?
+
+    @StateObject private var pomodoroVM = PomodoroViewModel()
+
+    init(pomodoro: PomodoroDB?) {
+        self.pomodoro = pomodoro
+    }
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            VStack (spacing: 40) {
+                VStack (spacing: 24) {
+                    CalendarView()
+
+                    CardView {
+                        Text("\(pomodoro?.description ?? "")")
+                    }
+                }
+
+                VStack (spacing: 24) {
+                    CardView {
+                        HStack {
+                            Text("Label")
+                            Spacer()
+                            Rectangle()
+                                .cornerRadius(12)
+                                .frame(width: .getResponsiveWidth(124), height: .getResponsiveHeight(46))
+                                .foregroundColor(Color(pomodoro?.label ?? ""))
+                        }
+                    }
+
+
+                    CardView(height: .getResponsiveHeight(70)) {
+                        HStack {
+                            Text("Repeat")
+                            Spacer()
+                            Text("\(pomodoro?.repeatPomodoro?.getRepeatLabel() ?? "")")
+                        }
+                    }
+                    CardView(height: .getResponsiveHeight(70)) {
+                        HStack {
+                            Text("Reminder")
+                            Spacer()
+                            Text("\(pomodoro?.reminderPomodoro ?? "")")
+                        }
+                    }
+                    CardView(height: .getResponsiveHeight(70)) {
+                        HStack {
+                            Text("Session")
+                            Spacer()
+                            Text("\(pomodoro?.session ?? 0)")
+                        }
+                    }
+                    CardView(height: .getResponsiveHeight(70)) {
+                        HStack {
+                            Text("Focus Time")
+                            Spacer()
+                            Text("\(pomodoro?.reminderPomodoro ?? "")")
+                        }
+                    }
+                    CardView(height: .getResponsiveHeight(70)) {
+                        HStack {
+                            Text("Break Time")
+                            Spacer()
+                            Text("\(pomodoro?.reminderPomodoro ?? "")")
+                        }
+                    }
+                    CardView(height: .getResponsiveHeight(70)) {
+                        HStack {
+                            Text("Long Break Time")
+                            Spacer()
+                            Text("\(pomodoro?.reminderPomodoro ?? "")")
+                        }
+                    }
+                }
+            }
+            .padding(24)
+        }
+        .navigationTitle("\(pomodoro?.pomodoroName ?? "")")
+        .onAppear {
+//            pomodoroVM.getProgressHabit(habitId: pomodoro?.id ?? "")
+        }
     }
 }
 
 #Preview {
-    PomodoroDetailView()
+    NavigationView {
+//        PomodoroDetailView(habit: PomodoroDB(habitName: "Lari Pagi", description: "Mau lari pagi", label: "mushroom", frequency: 0, repeatHabit: [1, 2], reminderHabit: "18:00", dateCreated: Date()))
+    }
 }

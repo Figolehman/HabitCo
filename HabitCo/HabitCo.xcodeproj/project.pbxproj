@@ -292,7 +292,6 @@
 				1B4B2A362BAD91EC0059559F /* OnboardingView.swift */,
 				1BC8681D2BAE9E6F00B348FE /* JournalView.swift */,
 				1B793AA82BB52E5200B6BFC9 /* FocusView.swift */,
-				1B7A24AA2BB6D0480045E8D4 /* HabitDetailView.swift */,
 				9BDAF11D2BBC85EA00D935A5 /* PrivacyPolicyView.swift */,
 				9BDAF11F2BBC8E9C00D935A5 /* TermsAndConditionsView.swift */,
 				9BDAF1212BBC917D00D935A5 /* FilterView.swift */,
@@ -356,6 +355,7 @@
 				1BC868272BB1424D00B348FE /* CreateHabitView.swift */,
 				1B793AA12BB3311600B6BFC9 /* CreatePomodoroView.swift */,
 				1B793AA62BB48FBE00B6BFC9 /* EditHabitView.swift */,
+				1B7A24AA2BB6D0480045E8D4 /* HabitDetailView.swift */,
 				1B2E64E52BE3A03E002C8FA6 /* PomodoroDetailView.swift */,
 			);
 			path = "Habit Form";
