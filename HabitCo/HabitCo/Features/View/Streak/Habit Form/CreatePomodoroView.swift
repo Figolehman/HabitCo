@@ -342,6 +342,7 @@ struct CreatePomodoroView: View {
             }
         }
         .navigationTitle("Create Habit Form")
+        .navigationBarTitleDisplayMode(.large)
     }
 }
 
