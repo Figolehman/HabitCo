@@ -21,6 +21,8 @@ struct ScrollableCalendarView: View {
     
     @State var lastItem: Date
     
+    @StateObject private var userVM = UserViewModel()
+    
     init(hasHabit: [Date], selectedDate: Binding<Date>) {
         self._selectedDate = selectedDate
         
@@ -48,6 +50,7 @@ struct ScrollableCalendarView: View {
                                     if day == days.last {
                                         days.append(contentsOf: Date.getDatesInRange(of: Calendar.current.date(byAdding: .day, value: 1, to: days.last!)!, to: Calendar.current.date(byAdding: .year, value: 1, to: days.last!)!))
                                     }
+                                    userVM.printDay(date: day.formattedDate(to: .fullMonthName))
                                 }
                         } else {
                             selectedDate(day: day)
@@ -92,11 +95,12 @@ extension ScrollableCalendarView {
                 Text("\(day.get(.day))")
                     .frame(maxWidth: .infinity)
                     .font(day.isSameDay(currentDate) ? .title3.weight(.heavy) : .title3)
-                if hasHabit.contains(day) {
+                
+                if hasHabit.contains(day.formattedDate(to: .fullMonthName)) {
                     Circle()
                         .frame(width: 6, height: 6)
                         .offset(y: 16)
-                } 
+                }
             }
             
             

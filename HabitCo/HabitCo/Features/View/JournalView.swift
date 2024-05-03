@@ -146,15 +146,10 @@ struct JournalView: View {
                 } catch {
                     print("No Authenticated User")
                 }
-                do {
-                    try userViewModel.getAllJournal()
-                    userViewModel.generateJournalEntries()
-                    userViewModel.checkIsStreak()
-                    userViewModel.getSubJournals(from: selectedDate)
-                    userViewModel.checkHasSubJournal()
-                } catch {
-                    print("No Journal")
-                }
+                userViewModel.generateJournalEntries()
+                userViewModel.checkIsStreak()
+                userViewModel.getSubJournals(from: selectedDate)
+                userViewModel.checkHasSubJournal()
             }
             .toolbar {
 
@@ -203,7 +198,7 @@ struct JournalView: View {
             FilterView(date: $selectedDate, userVM: userViewModel)
         })
         .alertOverlay($showStreak, content: {
-            StreakGainView(isShown: $showStreak)
+            StreakGainView(isShown: $showStreak, streakCount: userViewModel.streakCount)
         })
         .alertOverlay($showCreateHabit, closeOnTap: true, content: {
             VStack (spacing: 24) {

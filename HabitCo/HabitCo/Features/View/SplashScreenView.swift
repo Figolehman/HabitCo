@@ -33,13 +33,7 @@ struct SplashScreenView: View {
                 if UserDefaultManager.isLogin {
                     appRootManager.currentRoot = .journalView
                     do {
-                        try userViewModel.getCurrentUserData {
-                            do {
-                                try userViewModel.getAllJournal()
-                            } catch {
-                                print("No Journal")
-                            }
-                        }
+                        try userViewModel.getCurrentUserData { }
                     } catch {
                         print("No Authenticated User")
                     }

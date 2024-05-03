@@ -13,6 +13,7 @@ struct UserDB: Codable{
     let email: String?
     let photoUrl: String?
     let dateCreated: String?
+    let isStreak: Bool?
     let lastSignIn: Date?
     let streak: StreakDB?
 
@@ -21,6 +22,7 @@ struct UserDB: Codable{
         case fullName = "full_name"
         case photoUrl = "photo_url"
         case dateCreated = "date_created"
+        case isStreak = "is_streak"
         case lastSignIn = "last_sign_in"
     }
     
@@ -30,6 +32,7 @@ struct UserDB: Codable{
         email: String?,
         photoUrl: String?,
         dateCreated: String?,
+        isStreak: Bool? = false,
         lastSignIn: Date?,
         streak: StreakDB? = nil
     ) {
@@ -38,6 +41,7 @@ struct UserDB: Codable{
         self.email = email
         self.photoUrl = photoUrl
         self.dateCreated = dateCreated
+        self.isStreak = isStreak
         self.lastSignIn = lastSignIn
         self.streak = streak
     }
@@ -50,6 +54,7 @@ extension UserDB{
         self.email = user.email
         self.photoUrl = user.photoURL?.absoluteString
         self.dateCreated = user.dateCreatedString
+        self.isStreak = false
         self.lastSignIn = Date()
         self.streak = nil
     }
@@ -62,6 +67,7 @@ extension UserDB{
         self.fullName = try container.decodeIfPresent(String.self, forKey: .fullName)
         self.photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
         self.dateCreated = try container.decodeIfPresent(String.self, forKey: .dateCreated)
+        self.isStreak = try container.decodeIfPresent(Bool.self, forKey: .isStreak)
         self.lastSignIn = try container.decodeIfPresent(Date.self, forKey: .lastSignIn)
     }
     
@@ -73,6 +79,7 @@ extension UserDB{
         try container.encodeIfPresent(self.fullName, forKey: .fullName)
         try container.encodeIfPresent(self.photoUrl, forKey: .photoUrl)
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
+        try container.encodeIfPresent(self.isStreak, forKey: .isStreak)
         try container.encodeIfPresent(self.lastSignIn, forKey: .lastSignIn)
     }
 }

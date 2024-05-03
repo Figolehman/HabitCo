@@ -11,13 +11,14 @@ struct StreakGainView: View {
     let shareImage = StreakShareView(streak: 10).snapshot()
     @State private var showShareSheet: Bool = false
     @Binding var isShown: Bool
+    let streakCount: Int
     
     var body: some View {
         VStack (alignment: .center, spacing: .getResponsiveHeight(72)){
             Image("gainTree-\(Int.random(in: 1...2))")
             
             VStack (spacing: .getResponsiveHeight(24)) {
-                Text("Congratulations on your X days streak!")
+                Text("Congratulations on your \(streakCount) days streak!")
                     .multilineTextAlignment(.center)
                     .font(.body.weight(.semibold))
                 
@@ -54,6 +55,6 @@ struct StreakGainView: View {
 #Preview {
     EmptyView()
         .alertOverlay(.constant(true)) {
-            StreakGainView(isShown: .constant(true))
+            StreakGainView(isShown: .constant(true), streakCount: 0)
         }
 }

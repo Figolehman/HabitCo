@@ -102,20 +102,6 @@ extension UserViewModel{
         }
     }
     
-    // Not Yet Tested
-    func getAllJournal() throws {
-        Task {
-            do {
-                guard let userId = UserDefaultManager.userID else { return }
-                if let userJournals = try await userManager.getAllJournal(userId: userId) {
-                    self.journals = userJournals
-                }
-            } catch {
-                print("Error fetching journals: \(error)")
-            }
-        }
-    }
-    
     // DONE
     func getStreak() {
         Task {
@@ -191,11 +177,15 @@ extension UserViewModel{
         }
     }
     
+    func printDay(date: Date) {
+        print("Day: \(date)")
+    }
+    
     func checkHasSubJournal() {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             let journal = try await userManager.checkHasSubJournals(userId: userId)
-            print("\(journal)\n", journal?.count)
+            print("Journal: \(journal))\n", "Count: \(journal?.count)")
             self.hasHabit = journal
         }
     }

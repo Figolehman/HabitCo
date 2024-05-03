@@ -54,6 +54,18 @@ extension UserManager: UserUseCase{
         }
     }
     
+    func checkIsUserStreak(userId: String) async throws -> Bool {
+        let userDoc = try await getUserDB(userId: userId)
+        return ((userDoc.streak?.id.isEmpty) != nil)
+    }
+    
+    func updateUserStreak(userId: String, isStreak: Bool = false) async throws {
+        let updatedData: [String: Any] = [
+            UserDB.CodingKeys.isStreak.rawValue: isStreak
+        ]
+        try await userDocument(userId: userId).updateData(updatedData)
+    }
+    
     // Get User DB from Firestore than convert it to UserDB
     func getUserDB(userId: String) async throws -> UserDB {
         try await userDocument(userId: userId).getDocument(as: UserDB.self)
@@ -160,6 +172,7 @@ extension UserManager: JournalUseCase {
             }
             results.append(journal.date ?? Date())
         }
+        print(results)
         return results
     }
     
