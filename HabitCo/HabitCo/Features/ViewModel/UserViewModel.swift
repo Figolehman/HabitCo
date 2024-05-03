@@ -76,7 +76,6 @@ extension UserViewModel{
                     }
                 }
                 UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
-
             } else {
                 try await userManager.generateJournal(userId: UserDefaultManager.userID ?? "", date: currentDate)
                 checkIsStreak()

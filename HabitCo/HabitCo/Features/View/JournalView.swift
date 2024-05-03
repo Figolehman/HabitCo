@@ -102,9 +102,9 @@ struct JournalView: View {
                                                 }
                                             } else {
                                                 HabitItem(habitType: .regular, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", label: item.pomodoro?.label ?? "", progress: item.subJournal.startFrequency ?? 0) {
-                                                    navigateTo = .focus
+                                                    navigateTo = .pomodoroDetail
                                                 } action: {
-                                                    // action
+                                                    navigateTo = .focus
                                                 } undoAction: {
                                                     userViewModel.undoCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                                 }

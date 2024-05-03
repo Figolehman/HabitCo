@@ -10,6 +10,7 @@
 		1B007E362BD0348D00915626 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B007E352BD0348D00915626 /* AppDelegate.swift */; };
 		1B013A1B2BBBF7E00027FD6E /* CustomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B013A1A2BBBF7E00027FD6E /* CustomSheetView.swift */; };
 		1B2457C42BA6C7EF00E19459 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2457C32BA6C7EF00E19459 /* View+Extension.swift */; };
+		1B2E64E62BE3A03E002C8FA6 /* PomodoroDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2E64E52BE3A03E002C8FA6 /* PomodoroDetailView.swift */; };
 		1B4B25792B7320B70081929F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B4B25782B7320B70081929F /* GoogleService-Info.plist */; };
 		1B4B257C2B73295E0081929F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1B4B257B2B73295E0081929F /* FirebaseAnalytics */; };
 		1B4B257E2B73295E0081929F /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 1B4B257D2B73295E0081929F /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -137,6 +138,7 @@
 		1B007E352BD0348D00915626 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1B013A1A2BBBF7E00027FD6E /* CustomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSheetView.swift; sourceTree = "<group>"; };
 		1B2457C32BA6C7EF00E19459 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
+		1B2E64E52BE3A03E002C8FA6 /* PomodoroDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroDetailView.swift; sourceTree = "<group>"; };
 		1B4B25782B7320B70081929F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1B4B2A342BAD90170059559F /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		1B4B2A362BAD91EC0059559F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -260,6 +262,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B2E64E42BE398D8002C8FA6 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				3FC40E4E2BDFDEF300A7D7EA /* TestProject.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		1B560C772BA2022600CE2DC6 /* Features */ = {
 			isa = PBXGroup;
 			children = (
@@ -282,7 +292,6 @@
 				1B4B2A362BAD91EC0059559F /* OnboardingView.swift */,
 				1BC8681D2BAE9E6F00B348FE /* JournalView.swift */,
 				1B793AA82BB52E5200B6BFC9 /* FocusView.swift */,
-				1B7A24AA2BB6D0480045E8D4 /* HabitDetailView.swift */,
 				9BDAF11D2BBC85EA00D935A5 /* PrivacyPolicyView.swift */,
 				9BDAF11F2BBC8E9C00D935A5 /* TermsAndConditionsView.swift */,
 				9BDAF1212BBC917D00D935A5 /* FilterView.swift */,
@@ -346,6 +355,8 @@
 				1BC868272BB1424D00B348FE /* CreateHabitView.swift */,
 				1B793AA12BB3311600B6BFC9 /* CreatePomodoroView.swift */,
 				1B793AA62BB48FBE00B6BFC9 /* EditHabitView.swift */,
+				1B7A24AA2BB6D0480045E8D4 /* HabitDetailView.swift */,
+				1B2E64E52BE3A03E002C8FA6 /* PomodoroDetailView.swift */,
 			);
 			path = "Habit Form";
 			sourceTree = "<group>";
@@ -395,7 +406,7 @@
 				1BE028AF2BA97A9D0042CAC3 /* HabitCo Widget */,
 				1BAA2EB82BA772BF00235B3D /* Frameworks */,
 				1BBC95242B7286D800FF9353 /* Products */,
-				3FD604752BE240CA00964A96 /* Recovered References */,
+				1B2E64E42BE398D8002C8FA6 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -702,6 +713,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B2E64E62BE3A03E002C8FA6 /* PomodoroDetailView.swift in Sources */,
 				1BC23B0F2BAB659F00133C27 /* MockAuthProvider.swift in Sources */,
 				1BD50F202BA6210000FC7BCF /* HabitItem.swift in Sources */,
 				9BDAF1202BBC8E9C00D935A5 /* TermsAndConditionsView.swift in Sources */,

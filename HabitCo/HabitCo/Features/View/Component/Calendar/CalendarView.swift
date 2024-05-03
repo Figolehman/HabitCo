@@ -98,6 +98,7 @@ extension CalendarView {
     @ViewBuilder
     func calendarView(fraction: CGFloat) -> some View {
         let columns = Array(repeating: GridItem(.flexible()), count: 7)
+        
         let emptyDays = currentDate.startOfMonth.get(.weekday) - 1
         
         LazyVGrid(columns: columns, spacing: 20, content: {

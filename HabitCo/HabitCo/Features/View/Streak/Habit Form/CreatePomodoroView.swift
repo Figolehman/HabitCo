@@ -328,6 +328,7 @@ struct CreatePomodoroView: View {
             }
         }
         .navigationTitle("Create Pomodoro Form")
+        .navigationBarTitleDisplayMode(.large)
     }
 }
 

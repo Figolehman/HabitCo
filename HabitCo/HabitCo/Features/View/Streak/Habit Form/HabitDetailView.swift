@@ -10,9 +10,7 @@ import SwiftUI
 struct HabitDetailView: View {
     
     let habit: HabitDB?
-    
-    @StateObject private var habitVM = HabitViewModel()
-    
+        
     init(habit: HabitDB?) {
         self.habit = habit
     }

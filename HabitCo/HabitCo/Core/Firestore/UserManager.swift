@@ -397,36 +397,36 @@ extension UserManager: PomodoroUseCase {
     }
     
     func getProgressPomodoro(userId: String, pomodoroId: String, month: Date) async throws -> [CGFloat]? {
-        var progressValues: [CGFloat] = []
-        
-        let calendar = Calendar.current
-        guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: month)),
-              let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)
-        else {
-            return nil
-        }
-        print(startOfMonth, endOfMonth)
-        guard let journalDocuments = try await getJournalForOneMonth(userId: userId, forMonth: month) else {
-            return nil
-        }
-        for journalDocument in journalDocuments {
-            guard let subJournalDocuments = try await userSubJournalCollection(userId: userId, journalId: journalDocument.id ?? "")
-                    .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: pomodoroId)
-                    .getAllDocuments(as: SubJournalDB.self), subJournalDocuments.count != 0
-            else {
-                progressValues.append(0.0)
-                continue
-            }
+            var progressValues: [CGFloat] = []
             
-            for subJournalDocument in subJournalDocuments {
-                if subJournalDocument.frequencyCount != 0 {
-                    let progress = Float(subJournalDocument.startFrequency ?? 0) / Float(subJournalDocument.frequencyCount ?? 0)
-                    progressValues.append(CGFloat(progress))
+            let calendar = Calendar.current
+            guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: month)),
+                  let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)
+            else {
+                return nil
+            }
+            print(startOfMonth, endOfMonth)
+            guard let journalDocuments = try await getJournalForOneMonth(userId: userId, forMonth: month) else {
+                return nil
+            }
+            for journalDocument in journalDocuments {
+                guard let subJournalDocuments = try await userSubJournalCollection(userId: userId, journalId: journalDocument.id ?? "")
+                        .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: pomodoroId)
+                        .getAllDocuments(as: SubJournalDB.self), subJournalDocuments.count != 0
+                else {
+                    progressValues.append(0.0)
+                    continue
+                }
+                
+                for subJournalDocument in subJournalDocuments {
+                    if subJournalDocument.frequencyCount != 0 {
+                        let progress = Float(subJournalDocument.startFrequency ?? 0) / Float(subJournalDocument.frequencyCount ?? 0)
+                        progressValues.append(CGFloat(progress))
+                    }
                 }
             }
+            return progressValues.isEmpty ? nil : progressValues
         }
-        return progressValues.isEmpty ? nil : progressValues
-    }
     
     // DONE
     func getPomodoroDetail(userId: String, pomodoroId: String) async throws -> PomodoroDB? {
