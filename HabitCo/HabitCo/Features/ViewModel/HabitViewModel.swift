@@ -12,7 +12,7 @@ final class HabitViewModel: ObservableObject {
     
     @Published private(set) var habits: [HabitDB]? = []
     @Published private(set) var habit: HabitDB? = nil
-    @Published private(set) var progress: Float? = nil
+    @Published private(set) var progress: [CGFloat]? = nil
     @Published private(set) var errorMessage: String? = nil
     
     private let firebaseProvider: FirebaseAuthProvider
@@ -49,20 +49,8 @@ extension HabitViewModel {
     func getProgressHabit(habitId: String) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            self.progress = try await userManager.getProgressHabit(userId: userId, habitId: habitId)
-            print("trigger with progress \(self.progress)")
+            self.progress = try await userManager.getProgressHabit(userId: userId, habitId: habitId, month: Date().formattedDate(to: .fullMonthName))
         }
-    }
-    
-    func getProgressHabit2(habitId: String) {
-        Task {
-            guard let userId = UserDefaultManager.userID else { return }
-            let _ = try await userManager.getProgress2(userId: userId, habitId: habitId, month: Date().formattedDate(to: .fullMonthName))
-        }
-    }
-    
-    func printHabit(name: String, habitId: String) {
-        print(name, habitId)
     }
     
     public func getHabitDetail(habitId: String){
@@ -77,7 +65,6 @@ extension HabitViewModel {
                     }
                 }
             }
-            getProgressHabit(habitId: habitId)
         }
     }
     

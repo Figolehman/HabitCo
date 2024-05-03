@@ -17,6 +17,8 @@ struct CalendarView: View {
     @State var selectedDate: Int?
     
     @StateObject private var habitVM = HabitViewModel()
+    
+    let habitId: String
 
     var currentMonth: Int {
         get {
@@ -29,7 +31,9 @@ struct CalendarView: View {
         }
     }
     
-    init() {
+    init(habitId: String) {
+        self.habitId = habitId
+        
         self._days = State(initialValue: currentDate.calendarDisplayDate)
     }
     
@@ -72,8 +76,12 @@ struct CalendarView: View {
                         .foregroundColor(Color(UIColor.tertiaryLabel))
                 }
             }
-            
-            calendarView(fraction: habitVM.progress ?? 0)
+            if let progress = habitVM.progress {
+                calendarView(fraction: progress.first ?? 0.8)
+            }
+        }
+        .onAppear{
+            habitVM.getProgressHabit(habitId: habitId)
         }
         .padding()
         .onChange(of: currentDate, perform: { _ in
@@ -88,9 +96,8 @@ struct CalendarView: View {
 // MARK: - View Builder
 extension CalendarView {
     @ViewBuilder
-    func calendarView(fraction: Float) -> some View {
+    func calendarView(fraction: CGFloat) -> some View {
         let columns = Array(repeating: GridItem(.flexible()), count: 7)
-        
         let emptyDays = currentDate.startOfMonth.get(.weekday) - 1
         
         LazyVGrid(columns: columns, spacing: 20, content: {
@@ -104,7 +111,7 @@ extension CalendarView {
                         text.font(.title3.bold())
                     })
                     .font(.title3)
-                    .modifier(DateMarking(fraction: CGFloat(fraction), isSelected: selectedDate == dayDate))
+                    .modifier(DateMarking(fraction: fraction, isSelected: selectedDate == dayDate))
                     .onTapGesture {
                         selectedDate = dayDate
                     }
@@ -191,5 +198,5 @@ struct DateMarking: ViewModifier {
 }
 
 #Preview {
-    CalendarView()
+    CalendarView(habitId: "")
 }

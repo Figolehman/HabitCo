@@ -21,7 +21,7 @@ struct HabitDetailView: View {
         ScrollView {
             VStack (spacing: 40) {
                 VStack (spacing: 24) {
-                    CalendarView()
+                    CalendarView(habitId: habit?.id ?? "")
                     
                     CardView {
                         Text("\(habit?.description ?? "")")
@@ -66,11 +66,6 @@ struct HabitDetailView: View {
             .padding(24)
         }
         .navigationTitle("\(habit?.habitName ?? "")")
-        .onAppear {
-            habitVM.getProgressHabit(habitId: habit?.id ?? "")
-            habitVM.getProgressHabit2(habitId: habit?.id ?? "")
-            habitVM.printHabit(name: habit?.habitName ?? "", habitId: habit?.id ?? "")
-        }
     }
 }
 

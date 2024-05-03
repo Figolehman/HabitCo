@@ -12,6 +12,7 @@ final class PomodoroViewModel: ObservableObject {
     
     @Published private(set) var pomodoros: [PomodoroDB]? = []
     @Published private(set) var pomodoro: PomodoroDB? = nil
+    @Published private(set) var progress: [CGFloat]? = nil
     @Published private(set) var errorMessage: String? = nil
     
     private var user: UserDB? = nil
@@ -45,6 +46,13 @@ extension PomodoroViewModel {
             }
             let timeString = DateFormatUtil.shared.dateToString(date: reminderPomodoro ?? Date(), to: "HH:mm")
             try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString)
+        }
+    }
+    
+    func getProgressPomodoro(pomodoroId: String) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            self.progress = try await userManager.getProgressPomodoro(userId: userId, pomodoroId: pomodoroId, month: Date().formattedDate(to: .fullMonthName))
         }
     }
     

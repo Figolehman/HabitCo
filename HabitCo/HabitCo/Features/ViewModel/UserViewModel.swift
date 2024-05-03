@@ -13,7 +13,6 @@ final class UserViewModel: ObservableObject {
     @Published private(set) var user: UserDB? = nil
     @Published private(set) var journals: [JournalDB]? = nil
     @Published private(set) var subJournals: [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)]? = nil
-    @Published private(set) var fraction: Double = 0.0
     @Published private(set) var streakCount: Int = 0
     @Published var selectedLabels: [String]?
     @Published var isAscending: Bool?
