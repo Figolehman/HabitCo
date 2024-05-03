@@ -15,6 +15,7 @@ struct PomodoroDB: Codable {
     let session: Int?
     let focusTime: Int?
     let breakTime: Int?
+    let longBreakTime: Int?
     let repeatPomodoro: [Int]?
     let reminderPomodoro: String?
     let dateCreated: Date?
@@ -24,6 +25,7 @@ struct PomodoroDB: Codable {
         case pomodoroName = "pomodoro_name"
         case focusTime = "focus_time"
         case breakTime = "break_time"
+        case longBreakTime = "long_break_time"
         case repeatPomodoro = "repeat_pomodoro"
         case reminderPomodoro = "reminder_pomodoro"
         case dateCreated = "date_created"
@@ -40,6 +42,7 @@ extension PomodoroDB {
         self.pomodoroName = try container.decodeIfPresent(String.self, forKey: .pomodoroName)
         self.focusTime = try container.decodeIfPresent(Int.self, forKey: .focusTime)
         self.breakTime = try container.decodeIfPresent(Int.self, forKey: .breakTime)
+        self.longBreakTime = try container.decodeIfPresent(Int.self, forKey: .longBreakTime)
         self.repeatPomodoro = try container.decodeIfPresent([Int].self, forKey: .repeatPomodoro)
         self.reminderPomodoro = try container.decodeIfPresent(String.self, forKey: .reminderPomodoro)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
@@ -54,6 +57,7 @@ extension PomodoroDB {
         try container.encodeIfPresent(self.pomodoroName, forKey: .pomodoroName)
         try container.encodeIfPresent(self.focusTime, forKey: .focusTime)
         try container.encodeIfPresent(self.breakTime, forKey: .breakTime)
+        try container.encodeIfPresent(self.longBreakTime, forKey: .longBreakTime)
         try container.encodeIfPresent(self.repeatPomodoro, forKey: .repeatPomodoro)
         try container.encodeIfPresent(self.reminderPomodoro, forKey: .reminderPomodoro)
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)

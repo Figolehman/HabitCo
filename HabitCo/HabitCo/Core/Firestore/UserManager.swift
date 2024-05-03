@@ -147,6 +147,22 @@ extension UserManager: JournalUseCase {
         return snapshotTodayStreak.count == snapshotHasSubJournal.count
     }
     
+    func checkHasSubJournals(userId: String) async throws -> [Date]? {
+        guard let journals = try await getAllJournal(userId: userId) else {
+            return []
+        }
+        var results: [Date] = []
+        for journal in journals {
+            guard let hasSubJournal = journal.hasSubJournal,
+                  hasSubJournal != false
+            else {
+                continue
+            }
+            results.append(journal.date ?? Date())
+        }
+        return results
+    }
+    
     func updateHasSubJournal(userId: String, from date: Date, hasSubJournal: Bool = true) async throws {
         let journal = try await getJournal(userId: userId, from: date)
         let updatedData: [String: Any] = [
@@ -385,10 +401,10 @@ extension UserManager: HabitUseCase {
 
 extension UserManager: PomodoroUseCase {
     // DONE
-    func createNewPomodoro(userId: String, pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, repeatPomodoro: [Int], reminderPomodoro: String) async throws {
+    func createNewPomodoro(userId: String, pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: String) async throws {
         let journalDocument = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
         let (document, id) = generateDocumentID(userId: userId, type: .pomodoro)
-        let pomodoro = PomodoroDB(id: id, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderPomodoro, dateCreated: Date())
+        let pomodoro = PomodoroDB(id: id, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderPomodoro, dateCreated: Date())
         try document.setData(from: pomodoro, merge: false)
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: id, type: .pomodoro, method: .generate, repeatHabit: repeatPomodoro, frequencyCount: session)
         if checkIfTodayIsMatching(repeatDays: repeatPomodoro) {

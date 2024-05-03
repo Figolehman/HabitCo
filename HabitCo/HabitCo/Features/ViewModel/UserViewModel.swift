@@ -15,6 +15,7 @@ final class UserViewModel: ObservableObject {
     @Published private(set) var subJournals: [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)]? = nil
     @Published private(set) var streakCount: Int = 0
     @Published var selectedLabels: [String]?
+    @Published var hasHabit: [Date]?
     @Published var isAscending: Bool?
          
     private let firebaseProvider: FirebaseAuthProvider
@@ -187,6 +188,15 @@ extension UserViewModel{
                 getStreak()
             }
             getSubJournals(from: date)
+        }
+    }
+    
+    func checkHasSubJournal() {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            let journal = try await userManager.checkHasSubJournals(userId: userId)
+            print("\(journal)\n", journal?.count)
+            self.hasHabit = journal
         }
     }
     

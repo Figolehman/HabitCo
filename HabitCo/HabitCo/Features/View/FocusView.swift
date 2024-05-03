@@ -30,6 +30,18 @@ struct FocusView: View {
     @State var currentPomodoroTime: PomodoroTime = .focusTime
     @State var currentSession: Int = 1
     
+    @StateObject private var userViewModel = UserViewModel()
+    
+    let pomodoro: PomodoroDB?
+    let subJournal: SubJournalDB?
+    let date: Date
+    
+    init(pomodoro: PomodoroDB?, subJournal: SubJournalDB?, date: Date) {
+        self.pomodoro = pomodoro
+        self.subJournal = subJournal
+        self.date = date
+    }
+    
     var body: some View {
         ScrollView (showsIndicators: false) {
             VStack (spacing: 40) {
@@ -37,7 +49,7 @@ struct FocusView: View {
                     PomodoroTimer(timer: $timer, totalTime: $totalTime, isRunning: $isRunning, duration: $currentTime, isDone: $isDone) {
                         if currentSession < maxSession {
                             if currentPomodoroTime != .focusTime {
-                                currentPomodoroTime = getNextPomodoroTime(time: currentPomodoroTime, currentSession: currentSession)
+                                currentPomodoroTime = getNextPomodoroTime(time: currentPomodoroTime, currentSession: pomodoro?.session ?? 0)
                                 currentSession = currentSession + 1
                                 currentTime = getCurrentPomodoroDuration(currentPomodoroTime)
                                 totalTime = currentTime
@@ -60,6 +72,7 @@ struct FocusView: View {
                     HStack(alignment: .bottom, spacing: 24) {
                         ControlButton(color: .getAppColor(.primary), buttonSize: .secondaryControl, buttonImage: .backward) {
                             currentTime = totalTime
+                            userViewModel.undoCountSubJournal(subJournalId: subJournal?.id ?? "", from: date)
                         }
                         ControlButton(color: .getAppColor(.primary), buttonSize: .mainControl, buttonImage: isRunning ? .pause : .play) {
                             if isRunning {
@@ -72,6 +85,7 @@ struct FocusView: View {
                         }
                         ControlButton(color: .getAppColor(.primary), buttonSize: .secondaryControl, buttonImage: .forward) {
                             currentTime = 0
+                            userViewModel.updateCountSubJournal(subJournalId: subJournal?.id ?? "", from: date)
                         }
                     }
                 }
@@ -93,7 +107,7 @@ struct FocusView: View {
                         HStack {
                             Text("Session")
                             Spacer()
-                            Text("\(maxSession)")
+                            Text("\(pomodoro?.session ?? 0)")
                         }
                     }
                     
@@ -101,7 +115,7 @@ struct FocusView: View {
                         HStack {
                             Text("Focus Time")
                             Spacer()
-                            Text("\(pomodoroTime.0) Minutes")
+                            Text("\(pomodoro?.focusTime ?? 0) Minutes")
                         }
                     }
                     
@@ -109,7 +123,7 @@ struct FocusView: View {
                         HStack {
                             Text("Break Time")
                             Spacer()
-                            Text("\(pomodoroTime.1) Minutes")
+                            Text("\(pomodoro?.breakTime ?? 0) Minutes")
                         }
                     }
                     
@@ -117,7 +131,7 @@ struct FocusView: View {
                         HStack {
                             Text("Long Break Time")
                             Spacer()
-                            Text("\(pomodoroTime.2) Minutes")
+                            Text("\(pomodoro?.longBreakTime ?? 0) Minutes")
                         }
                     }
                     
@@ -173,6 +187,6 @@ extension FocusView {
 
 #Preview {
     NavigationView {
-        FocusView()
+        FocusView(pomodoro: PomodoroDB(pomodoroName: "", description: "", label: "", session: 0, focusTime: 0, breakTime: 0, longBreakTime: 0, repeatPomodoro: [], reminderPomodoro: "", dateCreated: Date()), subJournal: SubJournalDB(id: "", habitPomodoroId: "", subJournalType: .pomodoro, label: "", frequencyCount: 0, startFrequency: 0, fraction: 0.0, isCompleted: false), date: Date())
     }
 }

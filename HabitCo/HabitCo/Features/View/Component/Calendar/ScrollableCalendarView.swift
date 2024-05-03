@@ -13,7 +13,6 @@ struct ScrollableCalendarView: View {
     var hasHabit: [Date] = []
     let spacing: CGFloat = 12
     
-    @StateObject private var userViewModel = UserViewModel()
     @State var days: [Date] = []
     @Binding var selectedDate: Date
     
@@ -93,12 +92,11 @@ extension ScrollableCalendarView {
                 Text("\(day.get(.day))")
                     .frame(maxWidth: .infinity)
                     .font(day.isSameDay(currentDate) ? .title3.weight(.heavy) : .title3)
-                
                 if hasHabit.contains(day) {
                     Circle()
                         .frame(width: 6, height: 6)
                         .offset(y: 16)
-                }
+                } 
             }
             
             

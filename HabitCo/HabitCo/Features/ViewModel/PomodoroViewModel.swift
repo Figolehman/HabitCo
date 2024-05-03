@@ -29,7 +29,7 @@ final class PomodoroViewModel: ObservableObject {
 extension PomodoroViewModel {
    
     // Done
-    public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date?){
+    public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date?){
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             guard !pomodoroName.isEmpty,
@@ -45,7 +45,7 @@ extension PomodoroViewModel {
                 return
             }
             let timeString = DateFormatUtil.shared.dateToString(date: reminderPomodoro ?? Date(), to: "HH:mm")
-            try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString)
+            try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString)
         }
     }
     

@@ -57,7 +57,7 @@ struct JournalView: View {
                 .padding(.horizontal, 16)
 
                 Group {
-                    ScrollableCalendarView(hasHabit: [], selectedDate: $selectedDate)
+                    ScrollableCalendarView(hasHabit: userViewModel.hasHabit ?? [], selectedDate: $selectedDate)
 
                     VStack (spacing: 24) {
                         HStack (spacing: 16) {
@@ -89,7 +89,10 @@ struct JournalView: View {
                                             NavigationLink(destination: HabitDetailView(habit: item.habit), tag: .habitDetail, selection: $navigateTo) {
                                                 EmptyView()
                                             }
-                                            NavigationLink(destination: FocusView(), tag: .focus, selection: $navigateTo) {
+                                            NavigationLink(destination: PomodoroDetailView(pomodoro: item.pomodoro), tag: .pomodoroDetail, selection: $navigateTo) {
+                                                EmptyView()
+                                            }
+                                            NavigationLink(destination: FocusView(pomodoro: item.pomodoro, subJournal: item.subJournal, date: selectedDate), tag: .focus, selection: $navigateTo) {
                                                 EmptyView()
                                             }
                                             if item.subJournal.subJournalType == .habit {
@@ -148,6 +151,7 @@ struct JournalView: View {
                     userViewModel.generateJournalEntries()
                     userViewModel.checkIsStreak()
                     userViewModel.getSubJournals(from: selectedDate)
+                    userViewModel.checkHasSubJournal()
                 } catch {
                     print("No Journal")
                 }

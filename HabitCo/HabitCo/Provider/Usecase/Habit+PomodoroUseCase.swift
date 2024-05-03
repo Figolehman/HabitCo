@@ -15,7 +15,7 @@ protocol HabitUseCase{
 }
 
 protocol PomodoroUseCase{
-    func createNewPomodoro(userId: String, pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, repeatPomodoro: [Int], reminderPomodoro: String) async throws
+    func createNewPomodoro(userId: String, pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: String) async throws
     func getPomodoroDetail(userId: String, pomodoroId: String) async throws -> PomodoroDB?
     func editPomodoro(userId: String, pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, repeatPomodoro: [Int]?, reminderPomodoro: String?) async throws -> PomodoroDB?
     func deletePomodoro(userId: String, pomodoroId: String) async throws
