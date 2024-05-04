@@ -17,6 +17,7 @@ final class UserViewModel: ObservableObject {
     @Published var selectedLabels: [String]?
     @Published var hasHabit: [Date]?
     @Published var isAscending: Bool?
+    @Published var isUserStreak: Bool?
          
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
@@ -30,7 +31,7 @@ final class UserViewModel: ObservableObject {
 
 extension UserViewModel{
     
-    // DONE
+    // DONE -> Buat dapetin data user
     func getCurrentUserData(completion: @escaping () -> ()) throws {
         Task {
             guard let userAuthInfo = firebaseProvider.getAuthenticatedUser() else { return }
@@ -43,7 +44,7 @@ extension UserViewModel{
         }
     }
     
-    // DONE
+    // DONE -> Generate initial di setting view
     func generateInitial() -> String {
         guard let user else { return Prompt.id }
         var initial = ""
@@ -60,7 +61,7 @@ extension UserViewModel{
         return initial.uppercased()
     }
     
-    // DONE
+    // DONE -> Cretate journal entries
     func generateJournalEntries() {
         let lastEntryDate = UserDefaultManager.lastEntryDate
         let calendar = Calendar.current
@@ -86,7 +87,7 @@ extension UserViewModel{
         }
     }
     
-    // DONE
+    // DONE -> Filter subjournal by label
     func filterSubJournalsByLabels(date: Date, labels: [String]?) {
         Task {
             self.selectedLabels = labels
@@ -94,7 +95,7 @@ extension UserViewModel{
         }
     }
     
-    // DONE
+    // DONE -> Filter subJournal by progressnya
     func filterSubJournalsByProgress(from date: Date, isAscending: Bool?) {
         Task {
             self.isAscending = isAscending
@@ -102,7 +103,7 @@ extension UserViewModel{
         }
     }
     
-    // DONE
+    // DONE -> Get Streak data
     func getStreak() {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -110,7 +111,7 @@ extension UserViewModel{
         }
     }
 
-    // DONE
+    // DONE -> Get sub journal data
     func getSubJournals(from date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -126,7 +127,15 @@ extension UserViewModel{
         }
     }
     
-    // DONE
+    // DONE -> Check apakah user streak atau tidak buat trigger di overlay card StreakGain
+    func checkIsUserStreak() {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            self.isUserStreak = try await userManager.checkIsUserStreak(userId: userId)
+        }
+    }
+    
+    // DONE -> Undo count subjournal buat kurang
     func undoCountSubJournal(subJournalId: String, from date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -145,6 +154,7 @@ extension UserViewModel{
                     try await userManager.updateHasUndo(userId: userId, from: date, isUndo: true)
                 } else {
                     try await userManager.deleteStreak(userId: userId)
+                    try await userManager.updateUserStreak(userId: userId)
                 }
                 try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: false)
             }
@@ -153,6 +163,7 @@ extension UserViewModel{
         }
     }
 
+    // DONE -> Update count subjournal buat nambah
     func updateCountSubJournal(subJournalId: String, from date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -167,6 +178,7 @@ extension UserViewModel{
                     try await userManager.updateHasUndo(userId: userId, from: date)
                 } else {
                     try await userManager.createStreak(userId: userId, description: "")
+                    try await userManager.updateUserStreak(userId: userId, isStreak: true)
                     try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
                     try await userManager.updateHasUndo(userId: userId, from: date)
                 }
@@ -177,10 +189,13 @@ extension UserViewModel{
         }
     }
     
+    // Ini cuman buat ngeprint day yang di ScrollableCalendarView -> bisa di apus kalo udah selesai
     func printDay(date: Date) {
         print("Day: \(date)")
     }
     
+    // Ini buat ngecek kalo si journal punya sub journal atau ga di ScrollableCalendarView
+    // Kalau ada dia bulet, Returnnya [Date] sesuai hasHabit
     func checkHasSubJournal() {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -190,7 +205,7 @@ extension UserViewModel{
         }
     }
     
-    // DONE
+    // DONE -> Ini buat ngecek apakah dia lagi streak atau ga perhari
     func checkIsStreak() {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -207,6 +222,7 @@ extension UserViewModel{
                 !formattedDate.isSameDay(startDate ?? formattedDate)
             {
                 try await userManager.deleteStreak(userId: userId)
+                try await userManager.updateUserStreak(userId: userId)
                 getStreak()
             }
         }
@@ -216,7 +232,7 @@ extension UserViewModel{
 
 private extension UserViewModel {
     
-    // DONE
+    // DONE -> Cuman fetch journal biasa, kepake di GetSubJournal
     func fetchSubJournal(userId: String, subJournals: [SubJournalDB]) async throws -> [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)] {
         var localArray: [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)] = []
         for subJournal in subJournals {
@@ -233,7 +249,7 @@ private extension UserViewModel {
         return localArray
     }
     
-    // DONE
+    // DONE -> Cuman fungsi update count biasa kepake di UpdateCountSubJournal
     func updateCountStreak(date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }

@@ -89,7 +89,7 @@ struct PomodoroDetailView: View {
         }
         .navigationTitle("\(pomodoro?.pomodoroName ?? "")")
         .onAppear {
-//            pomodoroVM.getProgressHabit(habitId: pomodoro?.id ?? "")
+            pomodoroVM.getPomodoroDetail(pomodoroId: pomodoro?.id ?? "")
         }
     }
 }

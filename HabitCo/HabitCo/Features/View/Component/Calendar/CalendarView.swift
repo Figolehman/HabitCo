@@ -81,7 +81,7 @@ struct CalendarView: View {
             }
         }
         .onAppear{
-            habitVM.getProgressHabit(habitId: habitId)
+            habitVM.getProgressHabit(habitId: habitId, date: Date())
         }
         .padding()
         .onChange(of: currentDate, perform: { _ in

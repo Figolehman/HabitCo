@@ -27,7 +27,7 @@ final class HabitViewModel: ObservableObject {
 
 extension HabitViewModel {
    
-    // Done
+    // Done -> Cuman create user habit
     public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date?) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -46,15 +46,17 @@ extension HabitViewModel {
         }
     }
     
-    func getProgressHabit(habitId: String) {
+    // Buat get progressnya selama satu bulan
+    func getProgressHabit(habitId: String, date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            let progress = try await userManager.getProgressHabit(userId: userId, habitId: habitId, month: Date().formattedDate(to: .fullMonthName))
+            let progress = try await userManager.getProgressHabit(userId: userId, habitId: habitId, month: date.formattedDate(to: .fullMonthName))
             print(progress)
             self.progress = progress
         }
     }
     
+    // DONE -> Buat get habit detail waktu masuk ke view HabitDetailView
     public func getHabitDetail(habitId: String){
         Task{
             guard let userId = UserDefaultManager.userID,
@@ -70,6 +72,7 @@ extension HabitViewModel {
         }
     }
     
+    // DONE -> Edit Habit
     public func editHabit(habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: String?) {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
@@ -77,6 +80,7 @@ extension HabitViewModel {
         }
     }
     
+    // DONE -> Delete Habit
     public func deleteHabit(habitId: String){
         Task{
             guard let userId = UserDefaultManager.userID else { return }
