@@ -16,11 +16,14 @@ private enum Navigator {
 struct JournalView: View {
 
     @State private var navigateTo: Navigator? = Navigator.none
+    @State private var habitNavigationArg: HabitDB?
+    @State private var pomodoroNavigationArg: PomodoroDB?
+    @State private var focusNavigationArg: (PomodoroDB?, SubJournalDB?, Date)?
 
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var habitViewModel = HabitViewModel()
     @StateObject private var pomodoroViewModel = PomodoroViewModel()
-    
+
     @State var selectedDate = Date()
     @State var showSettings = false
     @State var showCreateHabit = false
@@ -30,7 +33,7 @@ struct JournalView: View {
     @State var showTermsAndConditions = false
     @State var showFilter = false
     @State var showAlert = false
-    
+
     @Environment(\.auth) var auth
     @EnvironmentObject var appRootManager: AppRootManager
 
@@ -53,6 +56,15 @@ struct JournalView: View {
                     NavigationLink(destination: CreatePomodoroView(pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
                         EmptyView()
                     }
+                    NavigationLink(destination: HabitDetailView(habit: habitNavigationArg), tag: .habitDetail, selection: $navigateTo) {
+                        EmptyView()
+                    }
+                    NavigationLink(destination: PomodoroDetailView(pomodoro: pomodoroNavigationArg), tag: .pomodoroDetail, selection: $navigateTo) {
+                        EmptyView()
+                    }
+                    NavigationLink(destination: FocusView(pomodoro: focusNavigationArg!.0, subJournal: focusNavigationArg!.1, date: focusNavigationArg!.2), tag: .focus, selection: $navigateTo) {
+                        EmptyView()
+                    }
                 }
                 .padding(.horizontal, 16)
 
@@ -66,13 +78,13 @@ struct JournalView: View {
                                     showFilter = true
                                 }
                             }
-                            
+
                             SortButton(label: "Progress", isDisabled: .constant(false), imageType: .unsort) {
                                 //
                             }
-                            
+
                             Spacer()
-                            
+
                             Button {
                                 showCreateHabit = true
                             } label: {
@@ -81,36 +93,30 @@ struct JournalView: View {
                             }
                         }
 
+                        
+
                         ScrollView {
                             if let _ = userViewModel.subJournals {
                                 VStack (spacing: .getResponsiveHeight(24)) {
                                     ForEach(userViewModel.subJournals ?? [], id: \.subJournal.id) { item in
-                                        ZStack {
-                                            NavigationLink(destination: HabitDetailView(habit: item.habit), tag: .habitDetail, selection: $navigateTo) {
-                                                EmptyView()
+                                        if item.subJournal.subJournalType == .habit {
+                                            HabitItem(habitType: .pomodoro, habitName: item.habit?.habitName ?? "NO NAME", label: item.habit?.label ?? "", fraction: item.subJournal.fraction ?? 0.0, progress: item.subJournal.startFrequency ?? 0) {
+                                                habitNavigationArg = item.habit
+                                                navigateTo = .habitDetail
+                                            } action: {
+                                                userViewModel.updateCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                            } undoAction: {
+                                                userViewModel.undoCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                             }
-                                            NavigationLink(destination: PomodoroDetailView(pomodoro: item.pomodoro), tag: .pomodoroDetail, selection: $navigateTo) {
-                                                EmptyView()
-                                            }
-                                            NavigationLink(destination: FocusView(pomodoro: item.pomodoro, subJournal: item.subJournal, date: selectedDate), tag: .focus, selection: $navigateTo) {
-                                                EmptyView()
-                                            }
-                                            if item.subJournal.subJournalType == .habit {
-                                                HabitItem(habitType: .pomodoro, habitName: item.habit?.habitName ?? "NO NAME", label: item.habit?.label ?? "", fraction: item.subJournal.fraction ?? 0.0, progress: item.subJournal.startFrequency ?? 0) {
-                                                    navigateTo = .habitDetail
-                                                } action: {
-                                                    userViewModel.updateCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
-                                                } undoAction: {
-                                                    userViewModel.undoCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
-                                                }
-                                            } else {
-                                                HabitItem(habitType: .regular, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", label: item.pomodoro?.label ?? "", progress: item.subJournal.startFrequency ?? 0) {
-                                                    navigateTo = .pomodoroDetail
-                                                } action: {
-                                                    navigateTo = .focus
-                                                } undoAction: {
-                                                    userViewModel.undoCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
-                                                }
+                                        } else {
+                                            HabitItem(habitType: .regular, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", label: item.pomodoro?.label ?? "", progress: item.subJournal.startFrequency ?? 0) {
+                                                pomodoroNavigationArg = item.pomodoro
+                                                navigateTo = .pomodoroDetail
+                                            } action: {
+                                                focusNavigationArg = (item.pomodoro, item.subJournal, selectedDate)
+                                                navigateTo = .focus
+                                            } undoAction: {
+                                                userViewModel.undoCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                             }
                                         }
                                     }
@@ -216,8 +222,8 @@ struct JournalView: View {
                 }
             }
         })
-         .onChange(of: selectedDate) { newValue in
-             userViewModel.getSubJournals(from: newValue)
-         }
+        .onChange(of: selectedDate) { newValue in
+            userViewModel.getSubJournals(from: newValue)
+        }
     }
 }
