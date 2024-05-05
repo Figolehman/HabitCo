@@ -11,13 +11,13 @@ import SwiftUI
 struct CalendarView: View {
     let today = Date()
     let dummyDays = 1..<32
-    
+
     @State var currentDate = Date()
     @State var days = [Date]()
     @State var selectedDate: Int?
-    
+
     @StateObject private var habitVM = HabitViewModel()
-    
+
     let habitId: String
 
     var currentMonth: Int {
@@ -30,44 +30,44 @@ struct CalendarView: View {
             currentDate.get(.year)
         }
     }
-    
+
     init(habitId: String) {
         self.habitId = habitId
-        
+
         self._days = State(initialValue: currentDate.calendarDisplayDate)
     }
-    
-    
+
+
     var body: some View {
-        
+
         VStack {
             HStack {
                 Text("\(getMonthName(currentMonth)) " + String(currentYear))
                     .font(.body)
-                
+
                 Spacer()
-                
+
                 Button {
                     currentDate = currentDate.startOfPreviousMonth
-                    
+
                 } label: {
                     Image(systemName: "chevron.left")
                         .foregroundColor(.black)
                 }
-                
+
                 Button {
                     currentDate = currentDate.startOfNextMonth
-                    
+
                 } label: {
                     Image(systemName: "chevron.right")
                         .foregroundColor(.black)
                         .padding(.horizontal, 12)
                 }
-                
-                
+
+
             }
             .padding(.vertical, 7)
-            
+
             HStack {
                 ForEach(DateName.allCases, id: \.self) { day in
                     Text(day.rawValue)
@@ -76,12 +76,16 @@ struct CalendarView: View {
                         .foregroundColor(Color(UIColor.tertiaryLabel))
                 }
             }
-            if let progress = habitVM.progress {
-                calendarView(fraction: progress.first ?? 0.8)
-            }
+
+
+
+            calendarView(fractionForDate: habitVM.progress ?? [:])
+//            if let progress = habitVM.progress {
+//                calendarView(fraction: progress.first ?? 0.8)
+//            }
         }
         .onAppear{
-            habitVM.getProgressHabit(habitId: habitId, date: Date())
+            habitVM.getProgressHabit(habitId: habitId, date: currentDate)
         }
         .padding()
         .onChange(of: currentDate, perform: { _ in
@@ -96,11 +100,11 @@ struct CalendarView: View {
 // MARK: - View Builder
 extension CalendarView {
     @ViewBuilder
-    func calendarView(fraction: CGFloat) -> some View {
+    func calendarView(fractionForDate: [Int: CGFloat]) -> some View {
         let columns = Array(repeating: GridItem(.flexible()), count: 7)
-        
+
         let emptyDays = currentDate.startOfMonth.get(.weekday) - 1
-        
+
         LazyVGrid(columns: columns, spacing: 20, content: {
             ForEach((-10..<emptyDays-10), id: \.self) { i in
                 Text("")
@@ -112,7 +116,7 @@ extension CalendarView {
                         text.font(.title3.bold())
                     })
                     .font(.title3)
-                    .modifier(DateMarking(fraction: fraction, isSelected: selectedDate == dayDate))
+                    .modifier(DateMarking(fraction: fractionForDate[dayDate] ?? 0, isSelected: selectedDate == dayDate))
                     .onTapGesture {
                         selectedDate = dayDate
                     }
@@ -123,7 +127,7 @@ extension CalendarView {
 
 // MARK: - Functions
 extension CalendarView {
-    
+
     func getMonthName(_ month: Int) -> String {
         switch month {
         case 1:
@@ -158,26 +162,26 @@ extension CalendarView {
 
 // MARK: - Date Marking
 struct DateMarking: ViewModifier {
-    
+
     let size: CGFloat = 40
-    
+
     let fraction: CGFloat
     let midPoint: CGFloat = 0.5
     let startPoint: CGFloat
     let endPoint: CGFloat
     let isSelected: Bool
-    
+
     init(fraction: CGFloat = 1, isSelected: Bool) {
         self.fraction = fraction
-        
+
         // Calculate start and end point
         let halfFraction = fraction/2
         self.startPoint = midPoint - halfFraction
         self.endPoint = midPoint + halfFraction
-        
+
         self.isSelected = isSelected
     }
-    
+
     func body(content: Content) -> some View {
         content
             .background(
@@ -187,7 +191,7 @@ struct DateMarking: ViewModifier {
                         .rotation(.degrees(-90))
                         .foregroundColor(Color(red: 0.58, green: 0.89, blue: 0.99))
                         .frame(width: size, height: size)
-                    
+
                     if isSelected {
                         Circle()
                             .stroke(Color.black, lineWidth: 1)

@@ -12,7 +12,7 @@ final class HabitViewModel: ObservableObject {
     
     @Published private(set) var habits: [HabitDB]? = []
     @Published private(set) var habit: HabitDB? = nil
-    @Published private(set) var progress: [CGFloat]? = nil
+    @Published private(set) var progress: [Int: CGFloat]? = nil
     @Published private(set) var errorMessage: String? = nil
     
     private let firebaseProvider: FirebaseAuthProvider

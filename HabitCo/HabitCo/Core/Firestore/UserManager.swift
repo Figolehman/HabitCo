@@ -369,32 +369,27 @@ extension UserManager: HabitUseCase {
     }
     
     // DONE -> Dapetin progress habit buat di HabitDetailView yang calendar
-    func getProgressHabit(userId: String, habitId: String, month: Date) async throws -> [CGFloat]? {
-        var progressValues: [CGFloat] = []
-        
-        let calendar = Calendar.current
-        guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: month)),
-              let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)
-        else {
-            return nil
-        }
-        print(startOfMonth, endOfMonth)
+    func getProgressHabit(userId: String, habitId: String, month: Date) async throws -> [Int: CGFloat]? {
+        var progressValues: [Int: CGFloat] = [:]
+
         guard let journalDocuments = try await getJournalForOneMonth(userId: userId, forMonth: month) else {
             return nil
         }
         for journalDocument in journalDocuments {
+            // dapetin subjournal yang punya habit pomodoro id sama kek habit id
             guard let subJournalDocuments = try await userSubJournalCollection(userId: userId, journalId: journalDocument.id ?? "")
                     .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitId)
                     .getAllDocuments(as: SubJournalDB.self), subJournalDocuments.count != 0
             else {
-                progressValues.append(0.0)
+                // subjournal ga ada di hari itu
+                progressValues[journalDocument.date!.get(.day)] = 0.0
                 continue
             }
             
             for subJournalDocument in subJournalDocuments {
                 if subJournalDocument.frequencyCount != 0 {
                     let progress = Float(subJournalDocument.startFrequency ?? 0) / Float(subJournalDocument.frequencyCount ?? 0)
-                    progressValues.append(CGFloat(progress))
+                    progressValues[journalDocument.date!.get(.day)] = CGFloat(progress)
                 }
             }
         }
