@@ -9,9 +9,11 @@ import SwiftUI
 
 struct CreateHabitView: View {
 
+    let notify = NotificationHandler()
+
     @State private var habitName: String = ""
     @State private var description: String = ""
-    @State private var selected: Color.FilterColors? = nil
+    @State private var label: Color.FilterColors? = nil
     @State private var frequency: Int = 1
     
     @State private var isRepeatOn = false
@@ -23,7 +25,7 @@ struct CreateHabitView: View {
     
     @State private var repeatDate: Set<RepeatDay> = []
     @State private var reminderTime: Date = Date()
-    
+
     @ObservedObject var habitVM: HabitViewModel
     
     @Environment(\.presentationMode) var presentationMode
@@ -45,7 +47,7 @@ struct CreateHabitView: View {
                                 Rectangle()
                                     .cornerRadius(12)
                                     .frame(width: .getResponsiveWidth(124), height: .getResponsiveHeight(46))
-                                    .foregroundColor((selected == nil) ? .getAppColor(.primary2) : Color(selected!.rawValue))
+                                    .foregroundColor((label == nil) ? .getAppColor(.primary2) : Color(label!.rawValue))
                                     .onTapGesture {
                                         withAnimation {
                                             isLabelFolded.toggle()
@@ -55,7 +57,7 @@ struct CreateHabitView: View {
                             if !isLabelFolded {
                                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), content: {
                                     ForEach(Color.FilterColors.allCases, id: \.self) { filter in
-                                        LabelButton(tag: filter, selection: $selected, color: Color(filter.rawValue))
+                                        LabelButton(tag: filter, selection: $label, color: Color(filter.rawValue))
                                     }
                                 })
                             }
@@ -142,23 +144,23 @@ struct CreateHabitView: View {
                 }
                 let repeatDateInt: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
-                    if isSavable() {
-                        habitVM.createUserHabit(habitName: habitName, description: description, label: selected?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime)
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
+                    guard isSavable() else { return }
+//                    notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "Buruan kerjain anjing", withIdentifier: "" /*masukin jumlah habit*/)
+                    habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime)
+                    self.presentationMode.wrappedValue.dismiss()
                 }
                 .padding(.top, 4)
             }
         }
         .padding(.top, 36)
-        .navigationTitle("Create Habit Form")
+        .navigationTitle("\(description)")
         .navigationBarTitleDisplayMode(.large)
     }
 }
 
 extension CreateHabitView {
     func isSavable() -> Bool {
-        return isRepeatOn && isReminderOn
+        return isRepeatOn && isReminderOn && !repeatDate.isEmpty && !habitName.isEmpty && label != nil
     }
 }
 

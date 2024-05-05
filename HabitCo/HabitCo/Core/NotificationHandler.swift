@@ -34,8 +34,8 @@ class NotificationHandler {
             content.body = body
             content.sound = UNNotificationSound.default
             
-            let request = UNNotificationRequest(identifier: "\(id)\(day)", content: content, trigger: trigger)
-            
+            let request = UNNotificationRequest(identifier: "\(id)-\(day)", content: content, trigger: trigger)
+
             UNUserNotificationCenter.current().add(request)
         }
         UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in
@@ -78,7 +78,7 @@ class NotificationHandler {
     func removeNotification(withIdentifier: String) {
         var identifiers = [String]()
         for i in 1...7 {
-            identifiers.append("\(withIdentifier)\(i)")
+            identifiers.append("\(withIdentifier)-\(i)")
         }
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
     }
@@ -92,7 +92,7 @@ class NotificationHandler {
         var selectedNotification = [UNNotificationRequest]()
         UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in
             selectedNotification = notifications.filter {
-                $0.identifier.starts(with: "\(id)")
+                $0.identifier.starts(with: "\(id)-")
             }
             if selectedNotification.count == 0 {
                 return
