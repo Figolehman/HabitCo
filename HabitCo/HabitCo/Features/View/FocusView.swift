@@ -21,8 +21,8 @@ struct FocusView: View {
     @State var promptIndex: Int = Int.random(in: 0...3)
     
     @State var isDone = false
-    @State var currentTime: Int = 3
-    @State var totalTime: Int = 3
+    @State var currentTime: Int
+    @State var totalTime: Int
     
     let pomodoroTime: (Int, Int, Int) = (1, 1, 1)
     let maxSession = 5
@@ -40,6 +40,9 @@ struct FocusView: View {
         self.pomodoro = pomodoro
         self.subJournal = subJournal
         self.date = date
+
+        _currentTime = State(initialValue: pomodoro!.focusTime!)
+        _totalTime = State(initialValue: pomodoro!.focusTime!)
     }
     
     var body: some View {
@@ -147,11 +150,11 @@ extension FocusView {
     func getCurrentPomodoroDuration(_ time: PomodoroTime) -> Int {
         switch time {
         case .focusTime:
-            pomodoroTime.0 * 3
+            pomodoroTime.0 * pomodoro!.focusTime!
         case .breakTime:
-            pomodoroTime.1 * 3
+            pomodoroTime.1 * pomodoro!.breakTime!
         case .longBreakTime:
-            pomodoroTime.2 * 5
+            pomodoroTime.2 * pomodoro!.longBreakTime!
         }
     }
     
