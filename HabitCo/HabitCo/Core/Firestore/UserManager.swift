@@ -330,13 +330,18 @@ extension UserManager: SubJournalUseCase {
     
     // DONE -> Dapetin seluruh subjournals berdasarkan date, label, dan isAscending
     func getSubJournals(userId: String, from date: Date, label: [String]?, isAscending: Bool?) async throws -> [SubJournalDB]? {
+        print("Trigger")
         if let label, let isAscending {
+            print("A")
             return try await getFilteredAndSortedAllSubJournals(userId: userId, from: date, label: label, isAscending: isAscending)
         } else if let isAscending {
+            print("B")
             return try await getFilteredSubJournalByProgress(userId: userId, from: date, isAscending: isAscending)
         } else if let label {
+            print("C")
             return try await getFilterSubJournalByLabel(userId: userId, from: date, label: label)
         } else {
+            print("D")
             return try await getAllSubJournalsByDate(userId: userId, from: date)
         }
     }
