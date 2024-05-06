@@ -123,6 +123,7 @@ extension UserViewModel{
                 return
             }
             self.subJournals = try await fetchSubJournal(userId: userId, subJournals: subJournals)
+            checkHasSubJournal()
             getStreak()
         }
     }
@@ -200,7 +201,7 @@ extension UserViewModel{
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             let journal = try await userManager.checkHasSubJournals(userId: userId)
-            print("Journal: \(journal))\n", "Count: \(journal?.count)")
+            print("Journal: \(journal)", "Count: \(journal?.count)")
             self.hasHabit = journal
         }
     }

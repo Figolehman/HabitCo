@@ -149,7 +149,6 @@ struct JournalView: View {
                 userViewModel.generateJournalEntries()
                 userViewModel.checkIsStreak()
                 userViewModel.getSubJournals(from: selectedDate)
-                userViewModel.checkHasSubJournal()
             }
             .toolbar {
 

@@ -183,6 +183,7 @@ extension UserManager: JournalUseCase {
     
     // DONE -> Update apakah si journal punya subjournal atau ga, kalo ada update true
     func updateHasSubJournal(userId: String, from date: Date, hasSubJournal: Bool = true) async throws {
+        print("Trigger")
         let journal = try await getJournal(userId: userId, from: date)
         let updatedData: [String: Any] = [
             JournalDB.CodingKeys.hasSubJournal.rawValue: hasSubJournal
@@ -353,6 +354,7 @@ extension UserManager: HabitUseCase {
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: id, type: .habit, method: .generate, repeatHabit: repeatHabit, frequencyCount: frequency)
         if checkIfTodayIsMatching(repeatDays: repeatHabit) {
             try await generateSubJournal(userId: userId, journalId: journalDocument?.id ?? "No ID", type: .habit, habitPomodoroId: id, label: label, frequencyCount: frequency)
+            try await updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
         }
     }
     
@@ -438,6 +440,7 @@ extension UserManager: PomodoroUseCase {
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: id, type: .pomodoro, method: .generate, repeatHabit: repeatPomodoro, frequencyCount: session)
         if checkIfTodayIsMatching(repeatDays: repeatPomodoro) {
             try await generateSubJournal(userId: userId, journalId: journalDocument?.id ?? "No ID", type: .pomodoro, habitPomodoroId: id, label: label, frequencyCount: session)
+            try await updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
         }
     }
     
