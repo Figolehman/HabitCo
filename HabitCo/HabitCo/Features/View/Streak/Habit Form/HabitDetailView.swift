@@ -64,6 +64,13 @@ struct HabitDetailView: View {
             .padding(24)
         }
         .navigationTitle("\(habit?.habitName ?? "")")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                NavigationLink(destination: EditHabitView(habit: habit!)) {
+                    Image(systemName: "square.and.pencil")
+                }
+            }
+        }
     }
 }
 

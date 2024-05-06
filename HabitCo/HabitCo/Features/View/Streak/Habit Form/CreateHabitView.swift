@@ -162,7 +162,7 @@ struct CreateHabitView: View {
 
 extension CreateHabitView {
     func isSavable() -> Bool {
-        return isRepeatOn && isReminderOn && !repeatDate.isEmpty && !habitName.isEmpty && label != nil
+        return isRepeatOn && !repeatDate.isEmpty && !habitName.isEmpty && label != nil
     }
 }
 
