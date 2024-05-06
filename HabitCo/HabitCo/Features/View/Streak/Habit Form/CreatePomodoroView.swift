@@ -343,6 +343,6 @@ extension CreatePomodoroView {
 
 #Preview {
     NavigationView {
-        CreatePomodoroView(pomodoroVM: PomodoroViewModel())
+        CreatePomodoroView(habitNotificationId: "0", pomodoroVM: PomodoroViewModel())
     }
 }

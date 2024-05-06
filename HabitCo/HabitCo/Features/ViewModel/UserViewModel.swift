@@ -21,6 +21,9 @@ final class UserViewModel: ObservableObject {
     @Published var isUserStreak: Bool?
     @Published var habitNotificationId: String?
 
+    @Published var isStreakJustDeleted = false
+    @Published var isStreakJustAdded = false
+
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
     
@@ -179,6 +182,7 @@ extension UserViewModel{
                 } else {
                     try await userManager.deleteStreak(userId: userId)
                     try await userManager.updateUserStreak(userId: userId)
+                    isStreakJustDeleted = true
                 }
                 try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: false)
             }
@@ -205,6 +209,7 @@ extension UserViewModel{
                     try await userManager.updateUserStreak(userId: userId, isStreak: true)
                     try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
                     try await userManager.updateHasUndo(userId: userId, from: date)
+                    isStreakJustAdded = true
                 }
                 try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
                 getStreak()
@@ -229,8 +234,8 @@ extension UserViewModel{
             let calendar = Calendar.current
             let formattedDate = Date().formattedDate(to: .fullMonthName)
             let yesterday = calendar.date(byAdding: .day, value: -1, to: formattedDate)
-            let startDate = calendar.date(byAdding: .day, value: 0, to: UserDefaultManager.lastEntryDate)
-            
+            let startDate = UserDefaultManager.lastEntryDate
+
             let countHasSubJournalAndCompleted = try await userManager.checkHasSubJournalAndIsComepleted(userId: userId, startDate: startDate ?? formattedDate, endDate: yesterday ?? formattedDate)
             let hasStreak = (try await userManager.getStreak(userId: userId) != nil)
             
@@ -240,6 +245,7 @@ extension UserViewModel{
             {
                 try await userManager.deleteStreak(userId: userId)
                 try await userManager.updateUserStreak(userId: userId)
+               isStreakJustDeleted = true
                 getStreak()
             }
         }
@@ -294,6 +300,7 @@ private extension UserViewModel {
             {
                 try await userManager.updateCountStreak(userId: userId)
                 try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
+               isStreakJustAdded = true
             }
         }
     }

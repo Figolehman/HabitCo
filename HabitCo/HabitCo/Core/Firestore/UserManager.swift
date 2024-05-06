@@ -605,6 +605,7 @@ extension UserManager: StreakUseCase {
     
     // DONE -> Delete Streak
     func deleteStreak(userId: String) async throws {
+        
         let data: [String: Any?] = [
             UserDB.CodingKeys.streak.rawValue: nil
         ]
