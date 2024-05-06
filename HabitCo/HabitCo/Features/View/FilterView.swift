@@ -14,6 +14,8 @@ struct FilterView: View {
     
     @ObservedObject var userVM: UserViewModel
     
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         let columns = Array(repeating: GridItem(.flexible()), count: 6)
         
@@ -21,12 +23,13 @@ struct FilterView: View {
             LazyVGrid(columns: columns, alignment: .center, spacing: .getResponsiveWidth(12)){
                 ForEach(Color.FilterColors.allCases, id: \.self) { filter in
                     LabelButton(tag: filter, selection: $selectedFilter, color: Color(filter.rawValue))
-                        
                 }
             }.padding(.horizontal, 24)
+            
             let selectedLabel = selectedFilter.map { $0.rawValue }
             AppButton(label: "Save", sizeType: .submit, action: {
                 userVM.filterSubJournalsByLabels(date: date, labels: selectedLabel)
+                self.presentationMode.wrappedValue.dismiss()
             })
         }
     }

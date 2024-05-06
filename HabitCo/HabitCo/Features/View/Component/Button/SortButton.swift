@@ -11,6 +11,17 @@ enum SortImage: String {
     case unsort = "arrow.up.arrow.down"
     case ascending = "arrow.down"
     case descending = "arrow.up"
+    
+    var isAscending: Bool? {
+        switch self {
+        case .unsort:
+            return nil
+        case .ascending:
+            return true
+        case .descending:
+            return false
+        }
+    }
 }
 
 struct SortButton: View {

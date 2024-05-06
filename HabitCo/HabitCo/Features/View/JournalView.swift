@@ -9,7 +9,7 @@ import SwiftUI
 import WidgetKit
 
 private enum Navigator {
-    case createHabit, createPomodoro, habitDetail, pomodoroDetail
+    case createHabit, createPomodoro, habitDetail, pomodoroDetail, focus
     case none
 }
 
@@ -20,17 +20,19 @@ struct JournalView: View {
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var habitViewModel = HabitViewModel()
     @StateObject private var pomodoroViewModel = PomodoroViewModel()
+    
     @State var selectedDate = Date()
     @State var showSettings = false
     @State var showCreateHabit = false
     @State private var isDataLoaded = false
-    @Environment(\.auth) var auth
-    @EnvironmentObject var appRootManager: AppRootManager
     @State var showStreak = false
     @State var showPrivacyPolicy = false
     @State var showTermsAndConditions = false
     @State var showFilter = false
     @State var showAlert = false
+    
+    @Environment(\.auth) var auth
+    @EnvironmentObject var appRootManager: AppRootManager
 
     var body: some View {
         NavigationView{
@@ -64,13 +66,13 @@ struct JournalView: View {
                                     showFilter = true
                                 }
                             }
-
+                            
                             SortButton(label: "Progress", isDisabled: .constant(false), imageType: .unsort) {
-
+                                //userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: SortImage.)
                             }
-
+                            
                             Spacer()
-
+                            
                             Button {
                                 showCreateHabit = true
                             } label: {
@@ -79,69 +81,51 @@ struct JournalView: View {
                             }
                         }
 
-                        //                    VStack (spacing: .getResponsiveHeight(16)) {
-                        //                        Image(systemName: "leaf")
-                        //                            .font(.largeTitle)
-                        //                        Text("There’s no habit recorded yet.")
-                        //                    }
-                        //                    .foregroundColor(.getAppColor(.neutral))
-                        //                    .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
-
-                        //                    Button {
-                        //                        habitViewModel.editHabit(habitId: "")
-                        //                    } label: {
-                        //                        Text("Update Habit")
-                        //                    }
-
-
-                        //                    Button {
-                        //                        userViewModel.getDetailJournal(from: Date())
-                        //                    } label: {
-                        //                        Text("Get Detail Journal")
-                        //                    }
-                        //
-
                         ScrollView {
-                            VStack (spacing: .getResponsiveHeight(24)) {
-                                ForEach(userViewModel.subJournals ?? [], id: \.subJournal.id) { item in
-
-
-                                    ZStack {
-                                        NavigationLink(destination: HabitDetailView(habit: item.habit), tag: .habitDetail, selection: $navigateTo) {
-                                            EmptyView()
-                                        }
-                                        //                    NavigationLink(destination: DetailView, tag: .pomodoroDetail, selection: $navigateTo) {
-                                        //                        EmptyView()
-                                        //                    }
-                                        if item.subJournal.subJournalType == .habit {
-                                            Button {
-                                                //                                            userViewModel.updateCountStreak()
-                                            } label: {
-                                                HabitItem(habitType: .pomodoro, habitName: item.habit?.habitName ?? "NO NAME")
+                            if let _ = userViewModel.subJournals {
+                                VStack (spacing: .getResponsiveHeight(24)) {
+                                    ForEach(userViewModel.subJournals ?? [], id: \.subJournal.id) { item in
+                                        ZStack {
+                                            NavigationLink(destination: HabitDetailView(habit: item.habit), tag: .habitDetail, selection: $navigateTo) {
+                                                EmptyView()
                                             }
-                                        } else {
-                                            HabitItem(habitType: .regular, habitName: item.habit?.habitName ?? "NO NAME", fraction: 0.5, progress: 0) {
-                                                navigateTo = .habitDetail
-                                            } action: {
-                                                // action
+                                            NavigationLink(destination: FocusView(), tag: .focus, selection: $navigateTo) {
+                                                EmptyView()
                                             }
-
+                                            if item.subJournal.subJournalType == .habit {
+                                                HabitItem(habitType: .pomodoro, habitName: item.habit?.habitName ?? "NO NAME", label: item.habit?.label ?? "", fraction: item.subJournal.fraction ?? 0.0, progress: item.subJournal.startFrequency ?? 0) {
+                                                    navigateTo = .habitDetail
+                                                } action: {
+                                                    userViewModel.updateFreqeuncySubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                                } undoAction: {
+                                                    userViewModel.undoCount(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                                }
+                                            } else {
+                                                HabitItem(habitType: .regular, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", label: item.pomodoro?.label ?? "", progress: item.subJournal.startFrequency ?? 0) {
+                                                    navigateTo = .focus
+                                                } action: {
+                                                    // action
+                                                } undoAction: {
+                                                    userViewModel.undoCount(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                                }
+                                            }
                                         }
                                     }
                                 }
+                            } else {
+                                VStack (spacing: .getResponsiveHeight(16)) {
+                                    Image(systemName: "leaf")
+                                        .font(.largeTitle)
+                                    Text("There’s no habit recorded yet.")
+                                }
+                                .foregroundColor(.getAppColor(.neutral))
+                                .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
                             }
                         }
-                        // VStack (spacing: .getResponsiveHeight(16)) {
-                        //     Image(systemName: "leaf")
-                        //         .font(.largeTitle)
-                        //     Text("There’s no habit recorded yet.")
-                        // }
-                        // .foregroundColor(.getAppColor(.neutral))
-                        // .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
                     }
                 }
                 .padding(.horizontal, 24)
-            } /**/
+            }
             .padding(.top, 8)
             .background(
                 Image("blobsJournal")
@@ -152,15 +136,6 @@ struct JournalView: View {
                 let customNavigation = UINavigationBarAppearance()
                 customNavigation.titleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
                 customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
-
-                userViewModel.generateJournalEntries()
-                userViewModel.getSubJournals(from: Date())
-                //            userViewModel.generateJournalEntries {
-                //                userViewModel.addListenerForSubJournals(from: Date())
-                //            }
-                //            userViewModel.addListenerForSubJournals(from: Date())
-
-                UserDefaultManager.lastEntryDate = DateFormatUtil.shared.formattedDate(date: Date(), to: .fullMonthName)
 
                 UINavigationBar.appearance().standardAppearance = customNavigation
                 do {
@@ -223,9 +198,9 @@ struct JournalView: View {
                 }
             })
         })
-        //        .customSheet($showFilter, sheetType: .filters, content: {
-        //            FilterView()
-        //        })
+        .customSheet($showFilter, sheetType: .filters, content: {
+            FilterView(date: $selectedDate, userVM: userViewModel)
+        })
         .alertOverlay($showStreak, content: {
             StreakGainView(isShown: $showStreak)
         })
@@ -246,8 +221,8 @@ struct JournalView: View {
                 }
             }
         })
-        // .onChange(of: selectedDate) { newValue in
-        //     userViewModel.getSubJournals(from: newValue)
-        // }
+         .onChange(of: selectedDate) { newValue in
+             userViewModel.getSubJournals(from: newValue)
+         }
     }
 }

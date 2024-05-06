@@ -37,7 +37,6 @@ struct CreatePomodoroView: View {
     @ObservedObject var pomodoroVM: PomodoroViewModel
     
     @Environment(\.presentationMode) var presentationMode
-    //@EnvironmentObject var appRootManager: AppRootManager
 
     private enum DefaultPomodoro: CaseIterable {
         case type1, type2, type3
@@ -120,7 +119,6 @@ struct CreatePomodoroView: View {
                                             isRepeatFolded = true
                                         }
                                     }
-                                    
                                 }
                             }
                             if !isRepeatFolded {
@@ -134,9 +132,7 @@ struct CreatePomodoroView: View {
                                     }
                                 }
                             }
-                            
                         }
-                        
                     }
                     
                     CardView {
@@ -173,7 +169,6 @@ struct CreatePomodoroView: View {
                                 }
                             }
                         }
-                        
                     }
                     
                     CardView {
@@ -247,7 +242,6 @@ struct CreatePomodoroView: View {
                                 )
                                 .environment(\.colorScheme, .dark)
                             }
-//
                         }
                     }
                     
@@ -284,7 +278,6 @@ struct CreatePomodoroView: View {
                                 )
                                 .environment(\.colorScheme, .dark)
                             }
-//
                         }
                     }
                     
@@ -321,27 +314,20 @@ struct CreatePomodoroView: View {
                                 )
                                 .environment(\.colorScheme, .dark)
                             }
-//
                         }
                     }
-                    //if let error = habitVM.errorMessage {
-                    //                        HStack {
-                    //                            Text(error)
-                    //                                .foregroundColor(.danger)
-                    //                            Spacer()
-                    //                        }
-                    //                        .padding()
-                    //                    }
                 }
                 let repeatPomodoro: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
-                    pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderTime)
-                    //self.appRootManager.currentRoot = .journalView
+                    if isSavable() {
+                        pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderTime)
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
                 }
                 .padding(.top, 4)
             }
         }
-        .navigationTitle("Create Habit Form")
+        .navigationTitle("Create Pomodoro Form")
     }
 }
 

@@ -150,7 +150,7 @@ extension UserManager: SubJournalUseCase {
     // DONE - For Generate Sub Journal
     func generateSubJournal(userId: String, journalId: String, type: SubJournalType, habitPomodoroId: String, label: String, frequencyCount: Int) async throws {
         let (document, id) = generateDocumentID(userId: userId, journalId: journalId, type: .subJournal)
-        let subJournal = SubJournalDB(id: id, habitPomodoroId: habitPomodoroId, subJournalType: type, label: label, frequencyCount: frequencyCount, startFrequency: 0, isCompleted: false)
+        let subJournal = SubJournalDB(id: id, habitPomodoroId: habitPomodoroId, subJournalType: type, label: label, frequencyCount: frequencyCount, startFrequency: 0, fraction: 0, isCompleted: false)
         try document.setData(from: subJournal, merge: false)
     }
     
@@ -158,10 +158,14 @@ extension UserManager: SubJournalUseCase {
     func updateCountSubJournal(userId: String, journalId: String, subJournalId: String) async throws {
         let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
         guard var count = subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int,
-              count < subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue] as? Int ?? 0 else { return }
+              count < subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue] as? Int ?? 0,
+              var frequency = subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue] as? Double
+        else { return }
         count += 1
+       let newFraction = floor(Double(count) / frequency * 10) / 10
         let data: [String: Any] = [
-            SubJournalDB.CodingKeys.startFrequency.rawValue: count
+            SubJournalDB.CodingKeys.startFrequency.rawValue: count,
+            SubJournalDB.CodingKeys.fraction.rawValue: newFraction
         ]
         try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).updateData(data)
     }
@@ -171,18 +175,20 @@ extension UserManager: SubJournalUseCase {
         let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
         guard var count = subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int,
               count <= subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue] as? Int ?? 0,
-              count > 0
+              count > 0,
+              var frequency = subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue] as? Double
         else { return }
         count -= 1
+        let newFraction = floor(Double(count) / frequency * 10) / 10
         let data: [String: Any] = [
-            SubJournalDB.CodingKeys.startFrequency.rawValue: count
+            SubJournalDB.CodingKeys.startFrequency.rawValue: count,
+            SubJournalDB.CodingKeys.fraction.rawValue: newFraction
         ]
         try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).updateData(data)
         try await updateSubJournalCompleted(userId: userId, journalId: journalId, subJournalId: subJournalId, isCompleted: false)
     }
     
     func checkCompletedSubJournal(userId: String, from date: Date) async throws -> Bool {
-        print("from userManager: \(date)")
         guard let journal = try await getJournal(userId: userId, from: date) else { return false }
         let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").whereField(SubJournalDB.CodingKeys.isCompleted.rawValue, isEqualTo: true).getDocuments()
         if let document = snapshot.documents.first {
@@ -204,6 +210,11 @@ extension UserManager: SubJournalUseCase {
     func isSubJournalComplete(userId: String, journalId: String, subJournalId: String) async throws -> Bool {
         let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
         return subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int == (((subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue]) as? Int ?? 0) - 1 )
+    }
+    
+    func checkStartFrequencyIsZero(userId: String, journalId: String, subJournalId: String) async throws -> Bool {
+        let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
+        return subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int == 0
     }
     
     func hasSubJournal(userId: String, from date: Date) async throws -> Bool {
@@ -371,16 +382,25 @@ extension UserManager: StreakUseCase {
         return userDoc.streak
     }
     
-    func updateCountStreak(userId: String) async throws {
+    func checkIsFirstStreak(userId: String) async throws -> Bool {
+        let streak = try await getStreak(userId: userId)
+        return streak?.streaksCount == 1
+    }
+    
+    func updateCountStreak(userId: String, undo: Bool = false) async throws {
         let userDoc = try await userDocument(userId: userId).getDocument()
-        if let streak = userDoc.data()?[UserDB.CodingKeys.streak.rawValue] as? [String: Any],
+        if var streak = userDoc.data()?[UserDB.CodingKeys.streak.rawValue] as? [String: Any],
            let streakCount = streak[StreakDB.CodingKeys.streaksCount.rawValue] as? Int
         {
-            let newStreakCount = streakCount + 1
-            var updateStreak = streak
-            updateStreak[StreakDB.CodingKeys.streaksCount.rawValue] = newStreakCount
+            var newStreakCount = 0
+            if undo {
+                newStreakCount = max(0, streakCount - 1) 
+            } else {
+                newStreakCount = streakCount + 1
+            }
+            streak[StreakDB.CodingKeys.streaksCount.rawValue] = newStreakCount
             let data: [String: Any] = [
-                UserDB.CodingKeys.streak.rawValue: updateStreak
+                UserDB.CodingKeys.streak.rawValue: streak
             ]
             try await userDocument(userId: userId).updateData(data)
         }

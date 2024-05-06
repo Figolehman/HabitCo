@@ -27,7 +27,6 @@ struct CreateHabitView: View {
     @ObservedObject var habitVM: HabitViewModel
     
     @Environment(\.presentationMode) var presentationMode
-    //@EnvironmentObject var appRootManager: AppRootManager
 
     var body: some View {
         ScrollView (showsIndicators: false) {
@@ -70,7 +69,7 @@ struct CreateHabitView: View {
                             LabeledStepper(frequency: $frequency )
                         }
                     }
-//                    
+                    
                     CardView {
                         VStack (spacing: 12) {
                             HStack {
@@ -103,7 +102,6 @@ struct CreateHabitView: View {
                             }
                             
                         }
-                        
                     }
                     
                     CardView {
@@ -141,19 +139,13 @@ struct CreateHabitView: View {
                             }
                         }
                     }
-//                    if let error = habitVM.errorMessage {
-//                        HStack {
-//                            Text(error)
-//                                .foregroundColor(.danger)
-//                            Spacer()
-//                        }
-//                        .padding()
-//                    }
                 }
                 let repeatDateInt: [Int] = repeatDate.map { $0.weekday }
-                AppButton(label: "Save", sizeType: .submit) {
-                    habitVM.createUserHabit(habitName: habitName, description: description, label: selected?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime)
-                    self.presentationMode.wrappedValue.dismiss()
+                AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
+                    if isSavable() {
+                        habitVM.createUserHabit(habitName: habitName, description: description, label: selected?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime)
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
                 }
                 .padding(.top, 4)
             }
@@ -164,7 +156,11 @@ struct CreateHabitView: View {
     }
 }
 
-
+extension CreateHabitView {
+    func isSavable() -> Bool {
+        return isRepeatOn && isReminderOn
+    }
+}
 
 #Preview {
     NavigationView {

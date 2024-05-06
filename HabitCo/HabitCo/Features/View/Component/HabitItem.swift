@@ -21,17 +21,21 @@ struct HabitItem: View {
     let habitName: String
     let fraction: Double
     let progress: Int
+    let label: String
     
     let navigate: () -> Void
     let action: () -> Void
+    let undoAction: () -> Void
     
-    init(habitType: HabitType, habitName: String, fraction: Double = 1, progress: Int = 2, navigate: @escaping () -> Void = {}, action: @escaping () -> Void = {}) {
+    init(habitType: HabitType, habitName: String, label: String, fraction: Double = 0.0, progress: Int = 2, navigate: @escaping () -> Void = {}, action: @escaping () -> Void = {}, undoAction: @escaping () -> Void = {}) {
         self.habitType = habitType
         self.habitName = habitName
+        self.label = label
         self.fraction = fraction
         self.progress = progress
         self.navigate = navigate
         self.action = action
+        self.undoAction = undoAction
     }
     
     var body: some View {
@@ -42,7 +46,7 @@ struct HabitItem: View {
                 } label: {
                     HStack (spacing: 16){
                         Rectangle()
-                            .foregroundColor(.yellow)
+                            .foregroundColor(Color(label))
                             .frame(width: 20, height: 20)
                             .cornerRadius(4)
                         
@@ -57,9 +61,7 @@ struct HabitItem: View {
                         Color.getAppColor(.primary)
                     )
                 }
-                
-    //            .cornerRadius(12)
-                
+                                
                     Button {
                         action()
                     } label: {
@@ -115,7 +117,7 @@ struct HabitItem: View {
             
             
             Button {
-                
+                undoAction()
             } label: {
                 Text("Undo")
                     .foregroundColor(Color.getAppColor(.neutral3))
@@ -153,8 +155,8 @@ struct HabitItem: View {
 #Preview {
     NavigationView {
         VStack {
-            HabitItem(habitType: .regular, habitName: "test", fraction: 0.5)
-            HabitItem(habitType: .pomodoro, habitName: "test", fraction: 0.5)
+            HabitItem(habitType: .regular, habitName: "test", label: "blossom", fraction: 0.5)
+            HabitItem(habitType: .pomodoro, habitName: "test", label: "blossom", fraction: 0.5)
         }
     }
 }

@@ -148,10 +148,23 @@ extension UserViewModel{
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             let journal = try await userManager.getJournal(userId: userId, from: date)
+            print(UserDefaultManager.hasUndoStreak)
             try await userManager.undoCountSubJournal(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
-            if try await !userManager.checkCompletedSubJournal(userId: userId, from: Date()) {
+            if try await !userManager.checkCompletedSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
+            {
+                if try await !userManager.checkIsFirstStreak(userId: userId),
+                   try await !userManager.checkStartFrequencyIsZero(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
+                {
+                    try await userManager.updateCountStreak(userId: userId, undo: true)
+                    UserDefaultManager.hasUndoStreak = true
+                    print("undo")
+                } else {
+                    try await userManager.deleteStreak(userId: userId)
+                    print("delete")
+                }
                 UserDefaultManager.hasTodayStreak = false
             }
+            getStreak()
             getSubJournals(from: date)
         }
     }
@@ -172,7 +185,7 @@ extension UserViewModel{
                 } else {
                     try await userManager.createStreak(userId: userId, description: "")
                     UserDefaultManager.hasTodayStreak = true
-                    UserDefaultManager.isFirstStreak = true
+                    UserDefaultManager.hasUndoStreak = false
                 }
                 try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
                 getStreak()
