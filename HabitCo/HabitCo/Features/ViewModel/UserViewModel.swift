@@ -19,7 +19,8 @@ final class UserViewModel: ObservableObject {
     @Published var hasHabit: [Date]?
     @Published var isAscending: Bool?
     @Published var isUserStreak: Bool?
-         
+    @Published var habitNotificationId: String?
+
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
     
@@ -31,7 +32,14 @@ final class UserViewModel: ObservableObject {
 }
 
 extension UserViewModel{
-    
+
+    func getHabitNotificationId() {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            self.habitNotificationId = try await userManager.getHabitNotificationId(userId: userId)
+        }
+    }
+
     // DONE -> Buat dapetin data user
     func getCurrentUserData(completion: @escaping () -> ()) throws {
         Task {

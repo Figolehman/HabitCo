@@ -27,7 +27,7 @@ enum SortImage: String {
 struct SortButton: View {
     var label: String
     @Binding var isDisabled: Bool
-    var imageType: SortImage
+    @Binding var imageType: SortImage
     var action: () -> ()
     
     var imageName: String {
@@ -38,6 +38,7 @@ struct SortButton: View {
     
     var body: some View {
         Button(label, systemImage: imageType.rawValue) {
+            changeSort()
             action()
         }
         .font(.body)
@@ -48,8 +49,19 @@ struct SortButton: View {
         .cornerRadius(12)
         .disabled(isDisabled)
     }
+
+    private func changeSort() {
+        switch imageType {
+        case .unsort:
+            imageType = .ascending
+        case .ascending:
+            imageType = .descending
+        case .descending:
+            imageType = .ascending
+        }
+    }
 }
 
 #Preview {
-    SortButton(label: "Progress", isDisabled: .constant(false), imageType: .unsort) {}
+    SortButton(label: "Progress", isDisabled: .constant(false), imageType: .constant(.unsort)) {}
 }

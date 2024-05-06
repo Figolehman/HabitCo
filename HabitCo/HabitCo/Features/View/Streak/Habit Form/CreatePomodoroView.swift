@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct CreatePomodoroView: View {
-    
+
+    let habitNotificationId: String
+
     @State private var pomodoroName: String = ""
     @State private var description: String = ""
     @State private var selected: Color.FilterColors? = nil

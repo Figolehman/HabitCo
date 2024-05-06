@@ -346,7 +346,7 @@ extension UserManager: SubJournalUseCase {
     
     // DONE -> Dapetin seluruh subjournals berdasarkan date, label, dan isAscending
     func getSubJournals(userId: String, from date: Date, label: [String]?, isAscending: Bool?) async throws -> [SubJournalDB]? {
-        if let label, let isAscending {
+        if let label, !label.isEmpty, let isAscending {
             return try await getFilteredAndSortedAllSubJournals(userId: userId, from: date, label: label, isAscending: isAscending)
         } else if let isAscending {
             return try await getFilteredSubJournalByProgress(userId: userId, from: date, isAscending: isAscending)
@@ -814,7 +814,7 @@ private extension UserManager {
             .sorted {
                 let progress1 = Float($0.startFrequency ?? 0) / Float($0.frequencyCount ?? 1)
                 let progress2 = Float($1.startFrequency ?? 0) / Float($1.frequencyCount ?? 1)
-                return isAscending ? progress1 < progress2 : progress1 > progress2
+                return !isAscending ? progress1 < progress2 : progress1 > progress2
             }
         return sortedSubJournals
     }

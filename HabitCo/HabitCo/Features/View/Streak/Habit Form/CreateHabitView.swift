@@ -11,6 +11,8 @@ struct CreateHabitView: View {
 
     let notify = NotificationHandler()
 
+    let habitNotificationId: String
+
     @State private var habitName: String = ""
     @State private var description: String = ""
     @State private var label: Color.FilterColors? = nil
@@ -145,7 +147,7 @@ struct CreateHabitView: View {
                 let repeatDateInt: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     guard isSavable() else { return }
-//                    notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "Buruan kerjain anjing", withIdentifier: "" /*masukin jumlah habit*/)
+                    notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "Buruan kerjain anjing", withIdentifier: "\(habitNotificationId)" /*masukin jumlah habit*/)
                     habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime)
                     self.presentationMode.wrappedValue.dismiss()
                 }
@@ -166,6 +168,6 @@ extension CreateHabitView {
 
 #Preview {
     NavigationView {
-        CreateHabitView(habitVM: HabitViewModel())
+        CreateHabitView(habitNotificationId: "0", habitVM: HabitViewModel())
     }
 }

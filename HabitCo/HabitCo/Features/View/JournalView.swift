@@ -15,10 +15,14 @@ private enum Navigator {
 
 struct JournalView: View {
 
+    let userManager = UserManager.shared
+
     @State private var navigateTo: Navigator? = Navigator.none
     @State private var habitNavigationArg: HabitDB?
     @State private var pomodoroNavigationArg: PomodoroDB?
     @State private var focusNavigationArg: (PomodoroDB?, SubJournalDB?, Date)?
+
+    @State private var sortType = SortImage.unsort
 
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var habitViewModel = HabitViewModel()
@@ -50,10 +54,10 @@ struct JournalView: View {
 
                     Spacer()
                     // MARK: - navigation links
-                    NavigationLink(destination: CreateHabitView(habitVM: habitViewModel), tag: .createHabit, selection: $navigateTo) {
+                    NavigationLink(destination: CreateHabitView(habitNotificationId: userViewModel.habitNotificationId ?? "", habitVM: habitViewModel), tag: .createHabit, selection: $navigateTo) {
                         EmptyView()
                     }
-                    NavigationLink(destination: CreatePomodoroView(pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
+                    NavigationLink(destination: CreatePomodoroView(habitNotificationId: userViewModel.habitNotificationId ?? "", pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
                         EmptyView()
                     }
                     NavigationLink(destination: HabitDetailView(habit: habitNavigationArg), tag: .habitDetail, selection: $navigateTo) {
@@ -81,8 +85,8 @@ struct JournalView: View {
                                 }
                             }
 
-                            SortButton(label: "Progress", isDisabled: .constant(false), imageType: .unsort) {
-                                //
+                            SortButton(label: "Progress", isDisabled: .constant(false), imageType: $sortType) {
+                                sortJournal()
                             }
 
                             Spacer()
@@ -152,10 +156,7 @@ struct JournalView: View {
                 } catch {
                     print("No Authenticated User")
                 }
-                userViewModel.generateJournalEntries()
-                userViewModel.checkIsStreak()
-                userViewModel.getSubJournals(from: selectedDate)
-                userViewModel.getSubFutureJournals()
+                userViewModelInitiation()
             }
             .toolbar {
 
@@ -226,5 +227,24 @@ struct JournalView: View {
         .onChange(of: selectedDate) { newValue in
             userViewModel.getSubJournals(from: newValue)
         }
+    }
+
+    private func sortJournal() {
+        switch sortType {
+        case .unsort:
+            userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: nil)
+        case .ascending:
+            userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: true)
+        case .descending:
+            userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: false)
+        }
+    }
+
+    private func userViewModelInitiation() {
+        userViewModel.generateJournalEntries()
+        userViewModel.checkIsStreak()
+        userViewModel.getSubJournals(from: selectedDate)
+        userViewModel.getSubFutureJournals()
+        userViewModel.getHabitNotificationId()
     }
 }
