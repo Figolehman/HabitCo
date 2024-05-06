@@ -68,6 +68,8 @@ struct HabitDetailView: View {
         .navigationTitle("\(habit?.habitName ?? "")")
         .onAppear {
             habitVM.getProgressHabit(habitId: habit?.id ?? "")
+            habitVM.getProgressHabit2(habitId: habit?.id ?? "")
+            habitVM.printHabit(name: habit?.habitName ?? "", habitId: habit?.id ?? "")
         }
     }
 }

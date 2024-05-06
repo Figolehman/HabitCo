@@ -68,7 +68,7 @@ struct JournalView: View {
                             }
                             
                             SortButton(label: "Progress", isDisabled: .constant(false), imageType: .unsort) {
-                                //userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: SortImage.)
+                                //
                             }
                             
                             Spacer()
@@ -148,7 +148,6 @@ struct JournalView: View {
                     userViewModel.generateJournalEntries()
                     userViewModel.checkIsStreak()
                     userViewModel.getSubJournals(from: selectedDate)
-                    userViewModel.getStreak()
                 } catch {
                     print("No Journal")
                 }

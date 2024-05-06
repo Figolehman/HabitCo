@@ -72,12 +72,17 @@ extension UserViewModel{
                     if let missedDate = calendar.date(byAdding: .day, value: -i, to: currentDate)
                     {
                         try await userManager.generateJournal(userId: UserDefaultManager.userID ?? "", date: missedDate)
+                        checkIsStreak()
                         getSubJournals(from: currentDate)
                     }
                 }
+                UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
+
             } else {
                 try await userManager.generateJournal(userId: UserDefaultManager.userID ?? "", date: currentDate)
+                checkIsStreak()
                 getSubJournals(from: currentDate)
+                UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
             }
         }
     }
@@ -128,10 +133,11 @@ extension UserViewModel{
                   !subJournals.isEmpty
             else {
                 self.subJournals = nil
+                getStreak()
                 return
             }
             self.subJournals = try await fetchSubJournal(userId: userId, subJournals: subJournals)
-            UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
+            getStreak()
         }
     }
     
@@ -195,12 +201,12 @@ extension UserViewModel{
             let yesterday = calendar.date(byAdding: .day, value: -1, to: formattedDate)
             let startDate = calendar.date(byAdding: .day, value: 0, to: UserDefaultManager.lastEntryDate)
             
-            let checkYesterdayJournalCompleted = try await userManager.checkCompletedSubJournal(userId: userId, from: yesterday ?? Date())
-            let hasSubJournal = try await userManager.checkHasSubJournal(userId: userId, startDate: startDate ?? formattedDate, endDate: formattedDate)
-            if (try await userManager.getStreak(userId: userId) != nil),
-               !checkYesterdayJournalCompleted,
-               hasSubJournal,
-               !formattedDate.isSameDay(UserDefaultManager.lastEntryDate)
+            let countHasSubJournalAndCompleted = try await userManager.checkHasSubJournalAndIsComepleted(userId: userId, startDate: startDate ?? formattedDate, endDate: yesterday ?? formattedDate)
+            let hasStreak = (try await userManager.getStreak(userId: userId) != nil)
+            
+            if  hasStreak,
+                !countHasSubJournalAndCompleted,
+                !formattedDate.isSameDay(startDate ?? formattedDate)
             {
                 try await userManager.deleteStreak(userId: userId)
                 getStreak()

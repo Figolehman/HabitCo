@@ -43,7 +43,7 @@ final class UserManager {
 // MARK: CRUD For USER - DONE
 extension UserManager: UserUseCase{
     // Create User to Firestore
-    func addUser(user: UserDB) async throws{
+    func addUser(user: UserDB) async throws {
         let document = try await userDocument(userId: user.id).getDocument()
         if document.exists {
             let data: [String: Any] = [ UserDB.CodingKeys.lastSignIn.rawValue: Date()]
@@ -58,7 +58,7 @@ extension UserManager: UserUseCase{
     func getUserDB(userId: String) async throws -> UserDB {
         try await userDocument(userId: userId).getDocument(as: UserDB.self)
     }
-
+    
 }
 
 // MARK: CRUD For FutureJournal - DONE
@@ -130,16 +130,21 @@ extension UserManager: JournalUseCase {
                 try await updateHasSubJournal(userId: userId, from: date)
             }
         }
-        
     }
     
-    func checkHasSubJournal(userId: String, startDate: Date, endDate: Date) async throws -> Bool {
-        let snapshot = try await userJournalCollection(userId: userId)
+    func checkHasSubJournalAndIsComepleted(userId: String, startDate: Date, endDate: Date) async throws -> Bool {
+        let snapshotHasSubJournal = try await userJournalCollection(userId: userId)
             .whereField(JournalDB.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startDate)
             .whereField(JournalDB.CodingKeys.date.rawValue, isLessThanOrEqualTo: endDate)
             .whereField(JournalDB.CodingKeys.hasSubJournal.rawValue, isEqualTo: true)
             .getDocuments()
-        return !snapshot.isEmpty
+        
+        let snapshotTodayStreak = try await userJournalCollection(userId: userId)
+            .whereField(JournalDB.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startDate)
+            .whereField(JournalDB.CodingKeys.date.rawValue, isLessThanOrEqualTo: endDate)
+            .whereField(JournalDB.CodingKeys.todayStreak.rawValue, isEqualTo: true)
+            .getDocuments()
+        return snapshotTodayStreak.count == snapshotHasSubJournal.count
     }
     
     func updateHasSubJournal(userId: String, from date: Date, hasSubJournal: Bool = true) async throws {
@@ -188,6 +193,22 @@ extension UserManager: JournalUseCase {
         } else {
             return nil
         }
+    }
+    
+    func getJournalForOneMonth(userId: String, forMonth date: Date) async throws -> [JournalDB]? {
+        let calendar = Calendar.current
+        let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: date))
+        guard let startOfMonth = startOfMonth else {
+            return nil
+        }
+        let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)
+
+        let journalDocuments = try await userJournalCollection(userId: userId)
+            .whereField(JournalDB.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startOfMonth)
+            .whereField(JournalDB.CodingKeys.date.rawValue, isLessThanOrEqualTo: endOfMonth ?? startOfMonth)
+            .getAllDocuments(as: JournalDB.self)
+
+        return journalDocuments
     }
 }
 
@@ -262,15 +283,6 @@ extension UserManager: SubJournalUseCase {
         return subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int == 0
     }
     
-    func hasSubJournal(userId: String, from date: Date) async throws -> Bool {
-        if let subJournals = try await getAllSubJournalsByDate(userId: userId, from: date),
-            subJournals.count != 0
-        {
-            return true
-        }
-        return false
-    }
-    
     // DONE
     func getSubJournals(userId: String, from date: Date, label: [String]?, isAscending: Bool?) async throws -> [SubJournalDB]? {
         if let label, let isAscending {
@@ -304,6 +316,44 @@ extension UserManager: HabitUseCase {
     func getHabitDetail(userId: String, habitId: String) async throws -> HabitDB? {
         return try await userHabitDocument(userId: userId, habitId: habitId).getDocument(as: HabitDB.self)
     }
+    
+    func getProgress2(userId: String, habitId: String, month: Date) async throws -> [Float]? {
+        var progressValues: [Float] = []
+        
+        let calendar = Calendar.current
+        guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: month)),
+              let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)
+        else {
+            return nil
+        }
+        
+        guard let journalDocuments = try await getJournalForOneMonth(userId: userId, forMonth: month) else {
+            return nil
+        }
+        
+        for journalDocument in journalDocuments {
+            guard let subJournalDocuments = try await userSubJournalCollection(userId: userId, journalId: journalDocument.id ?? "")
+                    .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitId)
+                    .getAllDocuments(as: SubJournalDB.self)
+            else {
+                continue
+            }
+            
+            for subJournalDocument in subJournalDocuments {
+                if subJournalDocument.frequencyCount != 0 {
+                    let progress = Float(subJournalDocument.startFrequency ?? 0) / Float(subJournalDocument.frequencyCount ?? 0)
+                    progressValues.append(progress)
+                }
+            }
+        }
+        for progressValue in progressValues {
+            print(progressValue)
+        }
+        
+        return progressValues.isEmpty ? nil : progressValues
+    }
+
+
     
     // NOT YET TEST - Functionality is DONE, but for APP not tested
     func getProgressHabit(userId: String, habitId: String) async throws -> Float? {
@@ -414,7 +464,7 @@ extension UserManager: PomodoroUseCase {
 // MARK: - CRUD for Streak - DONE
 extension UserManager: StreakUseCase {
         func createStreak(userId: String, description: String) async throws {
-        let streak = StreakDB(streaksCount: 1, description: description, dateCreated: Date())
+        let streak = StreakDB(streaksCount: 1, dateCreated: Date())
         guard let data = try? encoder.encode(streak) else { return }
         let dict: [String: Any] = [
             UserDB.CodingKeys.streak.rawValue: data
