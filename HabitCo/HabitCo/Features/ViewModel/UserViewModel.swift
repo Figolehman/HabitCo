@@ -37,6 +37,8 @@ extension UserViewModel{
             guard let userAuthInfo = firebaseProvider.getAuthenticatedUser() else { return }
             do {
                 self.user = try await userManager.getUserDB(userId: userAuthInfo.uid)
+                print("Undo: \(UserDefaultManager.hasUndoStreak)")
+                print("Today Streak: \(UserDefaultManager.hasTodayStreak)")
                 completion()
             } catch {
                 debugPrint("Error fetching user data: \(error.localizedDescription)")
@@ -155,9 +157,12 @@ extension UserViewModel{
                 if try await !userManager.checkIsFirstStreak(userId: userId),
                    try await !userManager.checkStartFrequencyIsZero(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
                 {
-                    try await userManager.updateCountStreak(userId: userId, undo: true)
-                    UserDefaultManager.hasUndoStreak = true
-                    print("undo")
+                    if !UserDefaultManager.hasUndoStreak {
+                        try await userManager.updateCountStreak(userId: userId, undo: true)
+                        UserDefaultManager.hasUndoStreak = true
+                        print("undo")
+                    }
+                    print("Not undo")
                 } else {
                     try await userManager.deleteStreak(userId: userId)
                     print("delete")
@@ -204,7 +209,6 @@ extension UserViewModel{
             let checkYesterdayJournalCompleted = try await userManager.checkCompletedSubJournal(userId: userId, from: yesterday ?? Date())
             let hasSubJournal = try await userManager.hasSubJournal(userId: userId, from: yesterday ?? Date())
             print("Journal Completed yesterday: \(checkYesterdayJournalCompleted)")
-            print("yesterday: \(String(describing: yesterday))")
             print("has Sub Journal: \(String(describing: hasSubJournal))\n")
             if (try await userManager.getStreak(userId: userId) != nil),
                !checkYesterdayJournalCompleted,
