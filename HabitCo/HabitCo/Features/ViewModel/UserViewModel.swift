@@ -13,6 +13,7 @@ final class UserViewModel: ObservableObject {
     @Published private(set) var user: UserDB? = nil
     @Published private(set) var journals: [JournalDB]? = nil
     @Published private(set) var subJournals: [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)]? = nil
+    @Published private(set) var futureSubJournals: [(futureSubJournal: SubFutureJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)]? = nil
     @Published private(set) var streakCount: Int = 0
     @Published var selectedLabels: [String]?
     @Published var hasHabit: [Date]?
@@ -110,6 +111,19 @@ extension UserViewModel{
             self.streakCount = try await userManager.getStreak(userId: userId)?.streaksCount ?? 0
         }
     }
+    
+    func getSubFutureJournals() {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            guard let futureSubJournals = try await userManager.getAllSubFutureJournalsByDateName(userId: userId),
+                  !futureSubJournals.isEmpty
+            else {
+                self.futureSubJournals = nil
+                return
+            }
+            self.futureSubJournals = try await fetchFutureJournal(userId: userId, futureSubJournals: futureSubJournals["MON"]!)
+        }
+    }
 
     // DONE -> Get sub journal data
     func getSubJournals(from date: Date) {
@@ -191,19 +205,12 @@ extension UserViewModel{
         }
     }
     
-    // Ini cuman buat ngeprint day yang di ScrollableCalendarView -> bisa di apus kalo udah selesai
-    func printDay(date: Date) {
-        print("Day: \(date)")
-    }
-    
     // Ini buat ngecek kalo si journal punya sub journal atau ga di ScrollableCalendarView
     // Kalau ada dia bulet, Returnnya [Date] sesuai hasHabit
     func checkHasSubJournal() {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            let journal = try await userManager.checkHasSubJournals(userId: userId)
-            print("Journal: \(journal)", "Count: \(journal?.count)")
-            self.hasHabit = journal
+            self.hasHabit = try await userManager.checkHasSubJournals(userId: userId)
         }
     }
     
@@ -251,6 +258,26 @@ private extension UserViewModel {
         return localArray
     }
     
+    func fetchFutureJournal(userId: String, futureSubJournals: [SubFutureJournalDB]) async throws -> [(futureSubJournal: SubFutureJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)] {
+        var localArray: [(futureSubJournal: SubFutureJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)] = []
+        
+        for futureSubJournal in futureSubJournals {
+            if futureSubJournal.subJournalType == .habit {
+                if let habitDB = try await userManager.getHabitDetail(userId: userId, habitId: futureSubJournal.habitPomodoroId ?? "") {
+                    localArray.append((futureSubJournal, habitDB, nil))
+                }
+            } else {
+                if let pomodoroId = futureSubJournal.habitPomodoroId {
+                    if let pomodoroDB = try await userManager.getPomodoroDetail(userId: userId, pomodoroId: pomodoroId) {
+                        localArray.append((futureSubJournal, nil, pomodoroDB))
+                    }
+                }
+            }
+        }
+        getStreak()
+        return localArray
+    }
+
     // DONE -> Cuman fungsi update count biasa kepake di UpdateCountSubJournal
     func updateCountStreak(date: Date) {
         Task {

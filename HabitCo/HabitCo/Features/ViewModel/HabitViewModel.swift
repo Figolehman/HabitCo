@@ -50,9 +50,7 @@ extension HabitViewModel {
     func getProgressHabit(habitId: String, date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            let progress = try await userManager.getProgressHabit(userId: userId, habitId: habitId, month: date.formattedDate(to: .fullMonthName))
-            print(progress)
-            self.progress = progress
+            self.progress = try await userManager.getProgressHabit(userId: userId, habitId: habitId, month: date.formattedDate(to: .fullMonthName))
         }
     }
     
@@ -77,6 +75,7 @@ extension HabitViewModel {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
             try await userManager.editHabit(userId: userId, habitId: habitId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminderHabit)
+            getHabitDetail(habitId: habitId)
         }
     }
     

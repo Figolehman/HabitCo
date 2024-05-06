@@ -50,7 +50,6 @@ struct ScrollableCalendarView: View {
                                     if day == days.last {
                                         days.append(contentsOf: Date.getDatesInRange(of: Calendar.current.date(byAdding: .day, value: 1, to: days.last!)!, to: Calendar.current.date(byAdding: .year, value: 1, to: days.last!)!))
                                     }
-                                    userVM.printDay(date: day.formattedDate(to: .fullMonthName))
                                 }
                         } else {
                             selectedDate(day: day)

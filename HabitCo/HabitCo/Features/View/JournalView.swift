@@ -95,8 +95,6 @@ struct JournalView: View {
                             }
                         }
 
-                        
-
                         ScrollView {
                             if let _ = userViewModel.subJournals {
                                 VStack (spacing: .getResponsiveHeight(24)) {
@@ -157,6 +155,7 @@ struct JournalView: View {
                 userViewModel.generateJournalEntries()
                 userViewModel.checkIsStreak()
                 userViewModel.getSubJournals(from: selectedDate)
+                userViewModel.getSubFutureJournals()
             }
             .toolbar {
 
