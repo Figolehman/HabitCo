@@ -9,14 +9,14 @@ import Foundation
 
 struct HabitDB: Codable{
     var id: String?
-    let habitName: String?
-    let description: String?
-    let label: String?
-    let frequency: Int?
-    let repeatHabit: [Int]?
-    let reminderHabit: String?
-    let dateCreated: Date?
-    
+    var habitName: String?
+    var description: String?
+    var label: String?
+    var frequency: Int?
+    var repeatHabit: [Int]?
+    var reminderHabit: String?
+    var dateCreated: Date?
+
     enum CodingKeys: String, CodingKey {
         case id, description, label, frequency
         case habitName = "habit_name"

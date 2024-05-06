@@ -15,10 +15,17 @@ private enum Navigator {
 
 struct JournalView: View {
 
+    let userManager = UserManager.shared
+
+    @State private var firstOpen = true
+
     @State private var navigateTo: Navigator? = Navigator.none
     @State private var habitNavigationArg: HabitDB?
     @State private var pomodoroNavigationArg: PomodoroDB?
     @State private var focusNavigationArg: (PomodoroDB?, SubJournalDB?, Date)?
+
+    @State private var sortType = SortImage.unsort
+    @State private var isEmpty = true
 
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var habitViewModel = HabitViewModel()
@@ -28,7 +35,6 @@ struct JournalView: View {
     @State var showSettings = false
     @State var showCreateHabit = false
     @State private var isDataLoaded = false
-    @State var showStreak = false
     @State var showPrivacyPolicy = false
     @State var showTermsAndConditions = false
     @State var showFilter = false
@@ -50,10 +56,10 @@ struct JournalView: View {
 
                     Spacer()
                     // MARK: - navigation links
-                    NavigationLink(destination: CreateHabitView(habitVM: habitViewModel), tag: .createHabit, selection: $navigateTo) {
+                    NavigationLink(destination: CreateHabitView(habitNotificationId: userViewModel.habitNotificationId ?? "", habitVM: habitViewModel), tag: .createHabit, selection: $navigateTo) {
                         EmptyView()
                     }
-                    NavigationLink(destination: CreatePomodoroView(pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
+                    NavigationLink(destination: CreatePomodoroView(habitNotificationId: userViewModel.habitNotificationId ?? "", pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
                         EmptyView()
                     }
                     NavigationLink(destination: HabitDetailView(habit: habitNavigationArg), tag: .habitDetail, selection: $navigateTo) {
@@ -75,14 +81,14 @@ struct JournalView: View {
 
                     VStack (spacing: 24) {
                         HStack (spacing: 16) {
-                            FilterButton(isDisabled: .constant(false)) {
+                            FilterButton(isDisabled: $isEmpty) {
                                 withAnimation {
                                     showFilter = true
                                 }
                             }
 
-                            SortButton(label: "Progress", isDisabled: .constant(false), imageType: .unsort) {
-                                //
+                            SortButton(label: "Progress", isDisabled: $isEmpty, imageType: $sortType) {
+                                sortJournal()
                             }
 
                             Spacer()
@@ -121,6 +127,9 @@ struct JournalView: View {
                                         }
                                     }
                                 }
+                                .onAppear {
+                                    isEmpty = false
+                                }
                             } else {
                                 VStack (spacing: .getResponsiveHeight(16)) {
                                     Image(systemName: "leaf")
@@ -129,6 +138,9 @@ struct JournalView: View {
                                 }
                                 .foregroundColor(.getAppColor(.neutral))
                                 .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
+                                .onAppear {
+                                    isEmpty = true
+                                }
                             }
                         }
                     }
@@ -142,6 +154,12 @@ struct JournalView: View {
                     .offset(y: .getResponsiveHeight(-530))
             )
             .onAppear {
+                if firstOpen {
+                    // streak loss view calculation
+
+                } else {
+                    // streak gain view calculation
+                }
                 let customNavigation = UINavigationBarAppearance()
                 customNavigation.titleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
                 customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
@@ -152,10 +170,8 @@ struct JournalView: View {
                 } catch {
                     print("No Authenticated User")
                 }
-                userViewModel.generateJournalEntries()
-                userViewModel.checkIsStreak()
-                userViewModel.getSubJournals(from: selectedDate)
-                userViewModel.getSubFutureJournals()
+                userViewModelInitiation()
+                firstOpen = false
             }
             .toolbar {
 
@@ -203,8 +219,11 @@ struct JournalView: View {
         .customSheet($showFilter, sheetType: .filters, content: {
             FilterView(date: $selectedDate, userVM: userViewModel)
         })
-        .alertOverlay($showStreak, content: {
-            StreakGainView(isShown: $showStreak, streakCount: userViewModel.streakCount)
+        .alertOverlay($userViewModel.isStreakJustAdded, content: {
+            StreakGainView(isShown: $userViewModel.isStreakJustAdded, streakCount: userViewModel.streakCount)
+        })
+        .alertOverlay($userViewModel.isStreakJustDeleted, content: {
+            StreakLossView(isShown: $userViewModel.isStreakJustDeleted)
         })
         .alertOverlay($showCreateHabit, closeOnTap: true, content: {
             VStack (spacing: 24) {
@@ -226,5 +245,24 @@ struct JournalView: View {
         .onChange(of: selectedDate) { newValue in
             userViewModel.getSubJournals(from: newValue)
         }
+    }
+
+    private func sortJournal() {
+        switch sortType {
+        case .unsort:
+            userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: nil)
+        case .ascending:
+            userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: true)
+        case .descending:
+            userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: false)
+        }
+    }
+
+    private func userViewModelInitiation() {
+        userViewModel.generateJournalEntries()
+        userViewModel.checkIsStreak()
+        userViewModel.getSubJournals(from: selectedDate)
+        userViewModel.getSubFutureJournals()
+        userViewModel.getHabitNotificationId()
     }
 }
