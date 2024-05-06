@@ -15,6 +15,7 @@ final class UserViewModel: ObservableObject {
     @Published private(set) var subJournals: [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)]? = nil
     @Published private(set) var futureSubJournals: [(futureSubJournal: SubFutureJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)]? = nil
     @Published private(set) var streakCount: Int = 0
+    @Published private(set) var habitCount: String = ""
     @Published var selectedLabels: [String]?
     @Published var hasHabit: [Date]?
     @Published var isAscending: Bool?
@@ -148,6 +149,13 @@ extension UserViewModel{
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             self.isUserStreak = try await userManager.checkIsUserStreak(userId: userId)
+        }
+    }
+    
+    func getCountHabit() {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            self.habitCount = try await userManager.getHabitNotificationId(userId: userId)
         }
     }
     
