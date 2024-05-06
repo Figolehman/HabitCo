@@ -66,21 +66,21 @@ struct PomodoroDetailView: View {
                         HStack {
                             Text("Focus Time")
                             Spacer()
-                            Text("\(pomodoro?.reminderPomodoro ?? "")")
+                            Text("\(pomodoro?.focusTime ?? 0)")
                         }
                     }
                     CardView(height: .getResponsiveHeight(70)) {
                         HStack {
                             Text("Break Time")
                             Spacer()
-                            Text("\(pomodoro?.reminderPomodoro ?? "")")
+                            Text("\(pomodoro?.breakTime ?? 0)")
                         }
                     }
                     CardView(height: .getResponsiveHeight(70)) {
                         HStack {
                             Text("Long Break Time")
                             Spacer()
-                            Text("\(pomodoro?.reminderPomodoro ?? "")")
+                            Text("\(pomodoro?.longBreakTime ?? 0)")
                         }
                     }
                 }

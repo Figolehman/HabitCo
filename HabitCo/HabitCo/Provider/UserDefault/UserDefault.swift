@@ -11,11 +11,7 @@ final class UserDefaultManager {
     
     private enum Keys: String {
         case isLogin
-        case isJournalCreated
         case lastEntryDate
-        case hasTodayStreak
-        case hasUndoStreak
-        case isFirstStreak
         case userID
     }
 
@@ -27,16 +23,6 @@ final class UserDefaultManager {
     static var lastEntryDate: Date {
         get { UserDefaults.standard.object(forKey: Keys.lastEntryDate.rawValue) as? Date ?? Date() }
         set (newValue) { UserDefaults.standard.setValue(newValue, forKey: Keys.lastEntryDate.rawValue) }
-    }
-    
-    static var hasTodayStreak: Bool {
-        get { UserDefaults.standard.bool(forKey: Keys.hasTodayStreak.rawValue) }
-        set (newValue) { UserDefaults.standard.setValue(newValue, forKey: Keys.hasTodayStreak.rawValue) }
-    }
-    
-    static var hasUndoStreak: Bool {
-        get { UserDefaults.standard.bool(forKey: Keys.hasUndoStreak.rawValue) }
-        set (newValue) { UserDefaults.standard.setValue(newValue, forKey: Keys.hasUndoStreak.rawValue) }
     }
     
     static var userID: String? {

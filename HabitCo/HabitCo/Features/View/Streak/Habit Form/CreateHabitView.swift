@@ -153,7 +153,7 @@ struct CreateHabitView: View {
             }
         }
         .padding(.top, 36)
-        .navigationTitle("\(description)")
+        .navigationTitle("Create Habit Form")
         .navigationBarTitleDisplayMode(.large)
     }
 }

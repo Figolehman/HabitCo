@@ -8,9 +8,9 @@
 import Foundation
 
 extension String {
-    func stringToDate(to format: String) -> Date {
+    func stringToDate(to format: FormatType) -> Date {
         let df = DateFormatter()
-        df.dateFormat = format
+        df.dateFormat = format.rawValue
         
         return df.date(from: self) ?? Date()
     }

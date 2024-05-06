@@ -44,8 +44,8 @@ extension PomodoroViewModel {
                 self.errorMessage = "Please fill all fields"
                 return
             }
-            let timeString = DateFormatUtil.shared.dateToString(date: reminderPomodoro ?? Date(), to: "HH:mm")
-            try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString)
+            let timeString = reminderPomodoro?.dateToString(to: .hourAndMinute)
+            try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString ?? "")
         }
     }
     

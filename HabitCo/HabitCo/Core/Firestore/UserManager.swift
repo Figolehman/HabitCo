@@ -330,18 +330,13 @@ extension UserManager: SubJournalUseCase {
     
     // DONE -> Dapetin seluruh subjournals berdasarkan date, label, dan isAscending
     func getSubJournals(userId: String, from date: Date, label: [String]?, isAscending: Bool?) async throws -> [SubJournalDB]? {
-        print("Trigger")
         if let label, let isAscending {
-            print("A")
             return try await getFilteredAndSortedAllSubJournals(userId: userId, from: date, label: label, isAscending: isAscending)
         } else if let isAscending {
-            print("B")
             return try await getFilteredSubJournalByProgress(userId: userId, from: date, isAscending: isAscending)
         } else if let label {
-            print("C")
             return try await getFilterSubJournalByLabel(userId: userId, from: date, label: label)
         } else {
-            print("D")
             return try await getAllSubJournalsByDate(userId: userId, from: date)
         }
     }
@@ -361,6 +356,11 @@ extension UserManager: HabitUseCase {
             try await generateSubJournal(userId: userId, journalId: journalDocument?.id ?? "No ID", type: .habit, habitPomodoroId: id, label: label, frequencyCount: frequency)
             try await updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
         }
+    }
+    
+    func getHabitCount(userId: String) async throws -> String {
+        let habitDocument = try await userHabitCollection(userId: userId).getAllDocuments(as: HabitDB.self)
+        return "H-\(habitDocument?.count ?? 0)"
     }
     
     // DONE -> Dapetin detail habit
@@ -442,6 +442,11 @@ extension UserManager: PomodoroUseCase {
             try await generateSubJournal(userId: userId, journalId: journalDocument?.id ?? "No ID", type: .pomodoro, habitPomodoroId: id, label: label, frequencyCount: session)
             try await updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
         }
+    }
+    
+    func getPomodoroCount(userId: String) async throws -> String {
+        let pomodoroCount = try await userPomodoroCollection(userId: userId).getAllDocuments(as: HabitDB.self)
+        return "P-\(pomodoroCount?.count ?? 0)"
     }
     
     // DONE -> Buat dapetin progress pomodoro selama 1 bulan, buat di PomodoroDetailView bagian calendar

@@ -6,13 +6,14 @@
 //
 
 import Foundation
-//import SwiftUI
+
+enum FormatType: String {
+    case fullMonthName = "MMMM dd, yyyy"
+    case monthAndYear = "MMMM, yyyy"
+    case hourAndMinute = "HH:mm"
+}
 
 extension Date {
-    
-    enum FormatType: String {
-        case fullMonthName = "MMMM dd, yyyy"
-    }
     
     static func getDatesInRange(of a: Date, to b: Date) -> [Date] {
         guard a < b else { return [] }
@@ -134,21 +135,21 @@ extension Date {
         return a == b
     }
     
-    func dateToString(to format: String) -> String {
+    func dateToString(to format: FormatType) -> String {
         let df = DateFormatter()
-        df.dateFormat = format
+        df.dateFormat = format.rawValue
         
         return df.string(from: self)
     }
     
     func formattedDate(to format: FormatType) -> Date {
-        dateToString(to: format.rawValue).stringToDate(to: format.rawValue)
+        dateToString(to: format).stringToDate(to: format)
     }
     
     func getMonthAndYearString() -> String {
         let calendar = Calendar.current
         if let todayMonthYear = calendar.date(byAdding: .month, value: 0, to: self) {
-            return DateFormatUtil().dateToString(date: todayMonthYear, to: "MMMM, yyyy")
+            return todayMonthYear.dateToString(to: .monthAndYear)
         }
         return ""
     }

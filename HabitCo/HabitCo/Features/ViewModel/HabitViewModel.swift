@@ -41,8 +41,8 @@ extension HabitViewModel {
                 self.errorMessage = "Please fill all fields"
                 return
             }
-            let timeString = DateFormatUtil.shared.dateToString(date: reminderHabit ?? Date(), to: "HH:mm")
-            try await userManager.createNewHabit(userId: userId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString)
+            let timeString = reminderHabit?.dateToString(to: .hourAndMinute)
+            try await userManager.createNewHabit(userId: userId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString ?? "")
         }
     }
     

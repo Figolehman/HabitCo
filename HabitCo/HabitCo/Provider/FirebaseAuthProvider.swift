@@ -31,7 +31,6 @@ struct FirebaseAuthProvider: AuthProvider {
                 } else {
                     UserDefaultManager.isLogin = false
                     UserDefaultManager.userID = nil
-                    UserDefaultManager.hasTodayStreak = false
                     print("Logout")
                     continuation.yield(nil)
                 }
