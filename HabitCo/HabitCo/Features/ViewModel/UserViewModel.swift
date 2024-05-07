@@ -119,6 +119,7 @@ extension UserViewModel{
                   !subJournals.isEmpty
             else {
                 self.subJournals = nil
+                checkHasSubJournal()
                 getStreak()
                 return
             }
