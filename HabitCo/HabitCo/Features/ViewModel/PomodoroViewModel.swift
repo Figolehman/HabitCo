@@ -28,7 +28,7 @@ final class PomodoroViewModel: ObservableObject {
 
 extension PomodoroViewModel {
    
-    // Done -> Cuman create user pomodoro
+    // Create pomodoro
     public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date?){
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -49,7 +49,7 @@ extension PomodoroViewModel {
         }
     }
     
-    // Cuman get progress Pomodoro sebulan
+    // Get progress for one month
     func getProgressPomodoro(pomodoroId: String, date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -57,7 +57,7 @@ extension PomodoroViewModel {
         }
     }
     
-    // DONE -> Get pomodoro detail di halaman PomodoroDetailView
+    // Get pomodoro detail
     public func getPomodoroDetail(pomodoroId: String){
         Task {
             guard let user = self.user else { return }
@@ -72,7 +72,7 @@ extension PomodoroViewModel {
         }
     }
     
-    // DONE -> Delete pomodoro
+    // Delete pomodoro
     public func deletePomodoro(pomodoroId: String) {
         Task {
             guard let user = self.user else { return }

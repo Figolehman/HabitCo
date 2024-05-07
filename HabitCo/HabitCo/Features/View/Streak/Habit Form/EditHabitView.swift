@@ -9,6 +9,8 @@ import SwiftUI
 
 struct EditHabitView: View {
     
+    var habit: HabitDB
+    
     @State private var selected: Color.FilterColors?
     @State private var frequency: Int
     
@@ -19,13 +21,18 @@ struct EditHabitView: View {
     @State private var isReminderFolded = true
     @State private var isLabelFolded = false
 
+    @State var showAlert = false
+    
     @State private var repeatDate: Set<RepeatDay>
     @State private var reminderTime: Date = Date()
     
-    var habit: HabitDB
 
     @State var habitName: String
     @State var description: String
+    
+    @StateObject private var habitVM = HabitViewModel()
+    
+    @Environment(\.presentationMode) var presentationMode
 
     init(habit: HabitDB) {
         self.habit = habit
@@ -162,15 +169,33 @@ struct EditHabitView: View {
                         
                     }
                 }
-                
+                let repeatHabit = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit) {
-                    // Save Action Here
-                    
+                    habitVM.editHabit(habitId: habit.id ?? "", habitName: habitName, description: description, label: selected?.rawValue, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminderTime)
+                    self.presentationMode.wrappedValue.dismiss()
                 }
                 .padding(.top, 4)
             }
         }
-        .navigationTitle("Create Habit Form")
+        .alertOverlay($showAlert, content: {
+            CustomAlertView(title: "Are you sure you want to Delete this habit?", message: "Any progress and data linked to this will be lost permanently, and you wont be able to recover it", dismiss: "Cancel", destruct: "Delete", dismissAction: {
+                showAlert = false
+            }, destructAction: {
+                habitVM.deleteHabit(habitId: habit.id ?? "")
+                self.presentationMode.wrappedValue.dismiss()
+            })
+        })
+        .navigationTitle("Edit Habit Form")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showAlert = true
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                }
+            }
+        }
         .onAppear {
             for habitDay in habit.repeatHabit! {
                for day in RepeatDay.allCases {

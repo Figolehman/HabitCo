@@ -15,8 +15,6 @@ private enum Navigator {
 
 struct JournalView: View {
 
-    let userManager = UserManager.shared
-
     @State private var firstOpen = true
 
     @State private var navigateTo: Navigator? = Navigator.none
@@ -223,7 +221,7 @@ struct JournalView: View {
             StreakGainView(isShown: $userViewModel.isStreakJustAdded, streakCount: userViewModel.streakCount)
         })
         .alertOverlay($userViewModel.isStreakJustDeleted, content: {
-            StreakLossView(isShown: $userViewModel.isStreakJustDeleted)
+            StreakLossView(streakCount: userViewModel.streakCount, isShown: $userViewModel.isStreakJustDeleted)
         })
         .alertOverlay($showCreateHabit, closeOnTap: true, content: {
             VStack (spacing: 24) {

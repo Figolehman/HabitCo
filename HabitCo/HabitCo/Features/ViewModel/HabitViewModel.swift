@@ -27,7 +27,7 @@ final class HabitViewModel: ObservableObject {
 
 extension HabitViewModel {
    
-    // Done -> Cuman create user habit
+    // Create user habit
     public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date?) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -46,7 +46,7 @@ extension HabitViewModel {
         }
     }
     
-    // Buat get progressnya selama satu bulan
+    // Get Progress Habit
     func getProgressHabit(habitId: String, date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -54,7 +54,7 @@ extension HabitViewModel {
         }
     }
     
-    // DONE -> Buat get habit detail waktu masuk ke view HabitDetailView
+    // Get Habit Detail
     public func getHabitDetail(habitId: String){
         Task{
             guard let userId = UserDefaultManager.userID,
@@ -70,16 +70,16 @@ extension HabitViewModel {
         }
     }
     
-    // DONE -> Edit Habit
-    public func editHabit(habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: String?) {
+    // Edit Habit
+    public func editHabit(habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: Date?) {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
-            try await userManager.editHabit(userId: userId, habitId: habitId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminderHabit)
-            getHabitDetail(habitId: habitId)
+            let reminder = reminderHabit?.dateToString(to: .hourAndMinute)
+            self.habit = try await userManager.editHabit(userId: userId, habitId: habitId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminder)
         }
     }
     
-    // DONE -> Delete Habit
+    // Delete Habit
     public func deleteHabit(habitId: String){
         Task{
             guard let userId = UserDefaultManager.userID else { return }

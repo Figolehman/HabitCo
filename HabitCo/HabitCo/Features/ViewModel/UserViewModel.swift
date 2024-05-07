@@ -49,7 +49,7 @@ extension UserViewModel{
         Task {
             guard let userAuthInfo = firebaseProvider.getAuthenticatedUser() else { return }
             do {
-                self.user = try await userManager.getUserDB(userId: userAuthInfo.uid)
+                self.user = try await userManager.getUserData(userId: userAuthInfo.uid)
                 completion()
             } catch {
                 debugPrint("Error fetching user data: \(error.localizedDescription)")
@@ -85,14 +85,14 @@ extension UserViewModel{
                 for i in 0...missedDay {
                     if let missedDate = calendar.date(byAdding: .day, value: -i, to: currentDate)
                     {
-                        try await userManager.generateJournal(userId: UserDefaultManager.userID ?? "", date: missedDate)
+                        try await userManager.createJournal(userId: UserDefaultManager.userID ?? "", date: missedDate)
                         checkIsStreak()
                         getSubJournals(from: currentDate)
                     }
                 }
                 UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
             } else {
-                try await userManager.generateJournal(userId: UserDefaultManager.userID ?? "", date: currentDate)
+                try await userManager.createJournal(userId: UserDefaultManager.userID ?? "", date: currentDate)
                 checkIsStreak()
                 getSubJournals(from: currentDate)
                 UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
@@ -159,7 +159,7 @@ extension UserViewModel{
     func checkIsUserStreak() {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            self.isUserStreak = try await userManager.checkIsUserStreak(userId: userId)
+            self.isUserStreak = try await userManager.isUserHaveStreak(userId: userId)
         }
     }
     
@@ -180,16 +180,15 @@ extension UserViewModel{
             
             try await userManager.undoCountSubJournal(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
             if try await !userManager.checkCompletedSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName)),
-                try await !userManager.checkHasUndo(userId: userId, from: date)
+                try await !userManager.checkHasUndoStreak(userId: userId, from: date)
             {
                 if !isFirstStreak,
                    !isStartFrequencyIsZero
                 {
                     try await userManager.updateCountStreak(userId: userId, undo: true)
-                    try await userManager.updateHasUndo(userId: userId, from: date, isUndo: true)
+                    try await userManager.updateHasUndoStreak(userId: userId, from: date, isUndo: true)
                 } else {
                     try await userManager.deleteStreak(userId: userId)
-                    try await userManager.updateUserStreak(userId: userId)
                     isStreakJustDeleted = true
                 }
                 try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: false)
@@ -204,19 +203,18 @@ extension UserViewModel{
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             let journal = try await userManager.getJournal(userId: userId, from: date)
-            let complete = try await userManager.isSubJournalComplete(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
+            let complete = try await userManager.checkSubJournalisComplete(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
             try await userManager.updateCountSubJournal(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
             if complete,
                date.isSameDay(UserDefaultManager.lastEntryDate.formattedDate(to: .fullMonthName))
             {
                 if (try await userManager.getStreak(userId: userId) != nil) {
                     updateCountStreak(date: date)
-                    try await userManager.updateHasUndo(userId: userId, from: date)
+                    try await userManager.updateHasUndoStreak(userId: userId, from: date)
                 } else {
                     try await userManager.createStreak(userId: userId, description: "")
-                    try await userManager.updateUserStreak(userId: userId, isStreak: true)
                     try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
-                    try await userManager.updateHasUndo(userId: userId, from: date)
+                    try await userManager.updateHasUndoStreak(userId: userId, from: date)
                     isStreakJustAdded = true
                 }
                 try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
@@ -244,15 +242,14 @@ extension UserViewModel{
             let yesterday = calendar.date(byAdding: .day, value: -1, to: formattedDate)
             let startDate = UserDefaultManager.lastEntryDate
 
-            let countHasSubJournalAndCompleted = try await userManager.checkHasSubJournalAndIsComepleted(userId: userId, startDate: startDate ?? formattedDate, endDate: yesterday ?? formattedDate)
+            let countHasSubJournalAndCompleted = try await userManager.checkHasSubJournalAndHasTodayStreak(userId: userId, startDate: startDate ,endDate: yesterday ?? formattedDate)
             let hasStreak = (try await userManager.getStreak(userId: userId) != nil)
             
             if  hasStreak,
                 !countHasSubJournalAndCompleted,
-                !formattedDate.isSameDay(startDate ?? formattedDate)
+                !formattedDate.isSameDay(startDate)
             {
                 try await userManager.deleteStreak(userId: userId)
-                try await userManager.updateUserStreak(userId: userId)
                isStreakJustDeleted = true
                 getStreak()
             }

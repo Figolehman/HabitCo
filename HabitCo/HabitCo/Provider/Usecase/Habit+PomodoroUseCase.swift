@@ -10,7 +10,7 @@ import Foundation
 protocol HabitUseCase{
     func createNewHabit(userId: String, habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: String) async throws
     func getHabitDetail(userId: String, habitId: String) async throws -> HabitDB?
-    func editHabit(userId: String, habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: String?) async throws
+    func editHabit(userId: String, habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: String?) async throws -> HabitDB?
     func deleteHabit(userId: String, habitId: String) async throws
 }
 

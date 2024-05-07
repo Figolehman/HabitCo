@@ -40,11 +40,12 @@ final class UserManager {
 }
 
 
-// MARK: CRUD For USER - DONE
+// MARK: CRUD For USER
 extension UserManager: UserUseCase{
     // Create User to Firestore
-    func addUser(user: UserDB) async throws {
+    func createUser(user: UserDB) async throws {
         let document = try await userDocument(userId: user.id).getDocument()
+        // If user already registered, just update the user last sign in
         if document.exists {
             let data: [String: Any] = [ UserDB.CodingKeys.lastSignIn.rawValue: Date()]
             try await userDocument(userId: user.id).updateData(data)
@@ -54,43 +55,44 @@ extension UserManager: UserUseCase{
         }
     }
     
-    // Check if user has a streak in firestore
-    func checkIsUserStreak(userId: String) async throws -> Bool {
-        let userDoc = try await getUserDB(userId: userId)
-        return ((userDoc.streak?.id.isEmpty) != nil)
-    }
-    
-    // Update is User Streak or not
-    func updateUserStreak(userId: String, isStreak: Bool = false) async throws {
-        let updatedData: [String: Any] = [
-            UserDB.CodingKeys.isStreak.rawValue: isStreak
-        ]
-        try await userDocument(userId: userId).updateData(updatedData)
-    }
-    
     // Get User DB from Firestore than convert it to UserDB
-    func getUserDB(userId: String) async throws -> UserDB {
+    func getUserData(userId: String) async throws -> UserDB {
         try await userDocument(userId: userId).getDocument(as: UserDB.self)
+    }
+    
+    // Get Total Count for notification Habit
+    func getHabitNotificationId(userId: String) async throws -> String {
+        let habitDocument = try await userHabitCollection(userId: userId).getAllDocuments(as: HabitDB.self)
+        let pomodoroDocument = try await userHabitCollection(userId: userId).getAllDocuments(as: PomodoroDB.self)
+        return "\((habitDocument?.count ?? 0) + (pomodoroDocument?.count ?? 0))"
+    }
+    
+    // * Not Used will be delete in the future *
+    // Check if User have a streak or not from Firestore
+    func isUserHaveStreak(userId: String) async throws -> Bool {
+        let userDoc = try await getUserData(userId: userId)
+        return ((userDoc.streak?.id.isEmpty) != nil)
     }
     
 }
 
-// MARK: CRUD For FutureJournal - DONE
+// MARK: CRUD For FutureJournal
 extension UserManager: FutureJournalUseCase {
-    // DONE -> Create Future Journal to Firestore
-    func generateFutureJournal(userId: String, dateName: String) async throws {
+    // Create Future Journal to Firestore
+    // Only create once when user register
+    func createFutureJournal(userId: String, dateName: String) async throws {
         let (document, id) = generateDocumentID(userId: userId, type: .futureJournal)
         let futureJournal = FutureJournalDB(id: id, dateName: dateName)
         try document.setData(from: futureJournal, merge: false)
     }
     
-    // DONE -> Get All Future Journal DB from FireStore
+    // Get All Future Journal from FireStore
     func getAllFutureJournals(userId: String) async throws -> [FutureJournalDB]? {
         try await userFutureJournalCollection(userId: userId).getAllDocuments(as: FutureJournalDB.self)
     }
     
-    // DONE -> Get Specify Future Journal DB from Firestore, tapi ga kepake
-    func getFutureJournal(userId: String, from date: Date) async throws -> FutureJournalDB? {
+    // Get Specific Future Journal By Given Date
+    func getFutureJournalByDate(userId: String, _ date: Date) async throws -> FutureJournalDB? {
         let snapshot = try await userFutureJournalCollection(userId: userId).whereField(FutureJournalDB.CodingKeys.dateName.rawValue, isEqualTo: date.getDayName).getDocuments()
         if let document = snapshot.documents.first {
             return try document.data(as: FutureJournalDB.self)
@@ -101,148 +103,84 @@ extension UserManager: FutureJournalUseCase {
 
 // MARK: - CRUD For SubFutureJournal
 extension UserManager: SubFutureJournalUseCase {
-    // DONE -> Create subfuture journal
-    func generateSubFutureJournal(userId: String, futureJournalId: String, subJournalType: SubJournalType, habitPomodoroId: String) async throws {
+    // Create Sub Future journal
+    func createSubFutureJournal(userId: String, futureJournalId: String, subJournalType: SubJournalType, habitPomodoroId: String) async throws {
         let (document, id) = generateDocumentID(userId: userId, futureJournalId: futureJournalId, type: .subFutureJournal)
         let subFutureJournal = SubFutureJournalDB(id: id, habitPomodoroId: habitPomodoroId, subJournalType: subJournalType)
         try document.setData(from: subFutureJournal, merge: false)
     }
     
+    // Get All Sub Future Journals for Scrollable Calendar View
+    // Return ["Mon": [SubFutureJournalDB], "Tue": [SubFutureJournalDB]]
     func getAllSubFutureJournalsByDateName(userId: String) async throws -> [String: [SubFutureJournalDB]]? {
-        var subFutureJournalsByDateName: [String: [SubFutureJournalDB]] = [:]
+        var subFutureJournals: [String: [SubFutureJournalDB]] = [:]
 
+        // Get all future journals
         guard let futureJournals = try await getAllFutureJournals(userId: userId) else {
-            return subFutureJournalsByDateName
+            return subFutureJournals
         }
 
+        // Check if future journal has a sub journal or not
         for futureJournal in futureJournals {
-            guard let subFutureJournals = try await userSubFutureJournalCollection(userId: userId, futureJournalId: futureJournal.id ?? "").getAllDocuments(as: SubFutureJournalDB.self) else {
+            // Get All Sub Future Journals DB
+            guard let subFutureJournalsDB = try await userSubFutureJournalCollection(userId: userId, futureJournalId: futureJournal.id ?? "").getAllDocuments(as: SubFutureJournalDB.self) else {
                 continue
             }
-            subFutureJournalsByDateName[futureJournal.dateName ?? "", default: []].append(contentsOf: subFutureJournals)
+            // Append ["Mon": [SubJournalsDB]
+            subFutureJournals[futureJournal.dateName ?? "", default: []].append(contentsOf: subFutureJournalsDB)
         }
-        print(subFutureJournalsByDateName)
-        return subFutureJournalsByDateName
+        print(subFutureJournals)
+        return subFutureJournals
     }
 
     
-    // DONE
-    func getAllSubFutureJournals(userId: String, from date: Date) async throws -> [SubFutureJournalDB]? {
-        let futureJournal = try await getFutureJournal(userId: userId, from: date)
+    // Get All Sub Future Journals By Give Date
+    func getAllSubFutureJournalsByDate(userId: String, from date: Date) async throws -> [SubFutureJournalDB]? {
+        let futureJournal = try await getFutureJournalByDate(userId: userId, date)
         if let futureJournal {
             return try await userSubFutureJournalCollection(userId: userId, futureJournalId: futureJournal.id ?? "").getAllDocuments(as: SubFutureJournalDB.self)
         }
         return nil
     }
     
-    // DONE -> Delete subFutureJournal
+    // Delete Sub Future Journal For Edit Repeat Date
     func deleteSubFutureJournal(userId: String, futureJournalId: String, subFutureJournalId: String) async throws {
         try await userSubFutureJournalDocument(userId: userId, futureJournalId: futureJournalId, subFutureJournalId: subFutureJournalId).delete()
     }
 }
 
-// MARK: - For Journal Use Case - DONE
+// MARK: - For Journal Use Case
 extension UserManager: JournalUseCase {
-    // DONE -> Create Journal aja
-    func generateJournal(userId: String, date: Date) async throws {
-        guard let subFutureJournals = try await getAllSubFutureJournals(userId: userId, from: date),
+    
+    // Create Journal DB From Given Date
+    func createJournal(userId: String, date: Date) async throws {
+        guard let subFutureJournals = try await getAllSubFutureJournalsByDate(userId: userId, from: date),
               try await (getJournal(userId: userId, from: date) == nil)
         else { return }
         let (document, id) = generateDocumentID(userId: userId, type: nil)
         let journal = JournalDB(id: id, date: date, dateName: date.getDayName, undoStreak: false, todayStreak: false, hasSubJournal: false)
         try document.setData(from: journal, merge: false)
         
+        // When journal is created, Sub Journal also created in the same day
         for subFutureJournal in subFutureJournals {
             if subFutureJournal.subJournalType == .habit {
                 let habit = try await getHabitDetail(userId: userId, habitId: subFutureJournal.habitPomodoroId ?? "")
-                try await generateSubJournal(userId: userId, journalId: id, type: subFutureJournal.subJournalType ?? .habit, habitPomodoroId: subFutureJournal.habitPomodoroId ?? "", label: habit?.label ?? "", frequencyCount: habit?.frequency ?? 0)
+                try await createSubJournal(userId: userId, journalId: id, type: subFutureJournal.subJournalType ?? .habit, habitPomodoroId: subFutureJournal.habitPomodoroId ?? "", label: habit?.label ?? "", frequencyCount: habit?.frequency ?? 0)
                 try await updateHasSubJournal(userId: userId, from: date)
             } else {
                 let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: subFutureJournal.habitPomodoroId ?? "")
-                try await generateSubJournal(userId: userId, journalId: id, type: subFutureJournal.subJournalType ?? .pomodoro, habitPomodoroId: subFutureJournal.habitPomodoroId ?? "", label: pomodoro?.label ?? "", frequencyCount: pomodoro?.session ?? 0)
+                try await createSubJournal(userId: userId, journalId: id, type: subFutureJournal.subJournalType ?? .pomodoro, habitPomodoroId: subFutureJournal.habitPomodoroId ?? "", label: pomodoro?.label ?? "", frequencyCount: pomodoro?.session ?? 0)
                 try await updateHasSubJournal(userId: userId, from: date)
             }
         }
     }
     
-    // DONE -> Ngecek apakah journal punya subjournal dan apakah journal itu ada yang complete atau ga -> Ini buat di checkIsStreak
-    func checkHasSubJournalAndIsComepleted(userId: String, startDate: Date, endDate: Date) async throws -> Bool {
-        let snapshotHasSubJournal = try await userJournalCollection(userId: userId)
-            .whereField(JournalDB.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startDate)
-            .whereField(JournalDB.CodingKeys.date.rawValue, isLessThanOrEqualTo: endDate)
-            .whereField(JournalDB.CodingKeys.hasSubJournal.rawValue, isEqualTo: true)
-            .getDocuments()
-        
-        let snapshotTodayStreak = try await userJournalCollection(userId: userId)
-            .whereField(JournalDB.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startDate)
-            .whereField(JournalDB.CodingKeys.date.rawValue, isLessThanOrEqualTo: endDate)
-            .whereField(JournalDB.CodingKeys.todayStreak.rawValue, isEqualTo: true)
-            .getDocuments()
-        return snapshotTodayStreak.count == snapshotHasSubJournal.count
-    }
-    
-    // DONE -> Ngecek apakah si journal punya subjournal atau ga
-    func checkHasSubJournals(userId: String) async throws -> [Date]? {
-        guard let journals = try await getAllJournal(userId: userId) else {
-            return []
-        }
-        var results: [Date] = []
-        for journal in journals {
-            guard let hasSubJournal = journal.hasSubJournal,
-                  hasSubJournal != false
-            else {
-                continue
-            }
-            results.append(journal.date ?? Date())
-        }
-        return results
-    }
-    
-    // DONE -> Update apakah si journal punya subjournal atau ga, kalo ada update true
-    func updateHasSubJournal(userId: String, from date: Date, hasSubJournal: Bool = true) async throws {
-        let journal = try await getJournal(userId: userId, from: date)
-        let updatedData: [String: Any] = [
-            JournalDB.CodingKeys.hasSubJournal.rawValue: hasSubJournal
-        ]
-        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
-    }
-    
-    // DONE -> Ngecek apakah user pada hari itu pernah undo si journal atau ga
-    func checkHasUndo(userId: String, from date: Date) async throws -> Bool {
-        let journal = try await getJournal(userId: userId, from: date)
-        return journal?.undoStreak ?? false
-    }
-    
-    // DONE -> update apakah user pada hari itu pernah undo si journal atau ga
-    func updateHasUndo(userId: String, from date: Date, isUndo: Bool = false) async throws {
-        let journal = try await getJournal(userId: userId, from: date)
-        let updatedData: [String: Any] = [
-            JournalDB.CodingKeys.undoStreak.rawValue: isUndo
-        ]
-        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
-    }
-    
-    // DONE -> Ngecek apakah user pada hari itu ngelakuin Streak atau ga
-    func checkTodayStreak(userId: String, from date: Date) async throws -> Bool {
-        let journal = try await getJournal(userId: userId, from: date)
-        return journal?.todayStreak ?? false
-    }
-    
-    // DONE -> update apakah user pada hari itu ngelakuin streak atau ga, kalo dia ngelakuin streak dia true
-    func updateTodayStreak(userId: String, from date: Date, isTodayStreak: Bool = false) async throws {
-        let journal = try await getJournal(userId: userId, from: date)
-        let updatedData: [String: Any] = [
-            JournalDB.CodingKeys.todayStreak.rawValue: isTodayStreak
-        ]
-        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
-    }
-    
-    // DONE -> Dapetin semua journal, keknya gakepake
+    // Get All Journal
     func getAllJournal(userId: String) async throws -> [JournalDB]? {
         return try await userJournalCollection(userId: userId).order(by: JournalDB.CodingKeys.date.rawValue, descending: false).getAllDocuments(as: JournalDB.self)
     }
     
-    // DONE -> Dapetin journal spesifik berdasarkan date yang diberikan
+    // Get Spesific Journal from the given date
     func getJournal(userId: String, from date: Date) async throws -> JournalDB? {
         let snapshot = try await userJournalCollection(userId: userId).whereDateField(JournalDB.CodingKeys.date.rawValue, isEqualToDate: date).getDocuments()
         if let document = snapshot.documents.first {
@@ -253,7 +191,7 @@ extension UserManager: JournalUseCase {
         }
     }
     
-    // DONE -> Dapetin semua journal selama 1 bulan
+    // Get Journal for one month
     func getJournalForOneMonth(userId: String, forMonth date: Date) async throws -> [JournalDB]? {
         let calendar = Calendar.current
         let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: date))
@@ -269,18 +207,155 @@ extension UserManager: JournalUseCase {
 
         return journalDocuments
     }
+    
+    // Check if the journal has sub journal and the journal already has a streak in that day or not for checkIsStreak function by given date
+    func checkHasSubJournalAndHasTodayStreak(userId: String, startDate: Date, endDate: Date) async throws -> Bool {
+        // Check if the Journal has a sub journal or not
+        let snapshotHasSubJournal = try await userJournalCollection(userId: userId)
+            .whereField(JournalDB.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startDate)
+            .whereField(JournalDB.CodingKeys.date.rawValue, isLessThanOrEqualTo: endDate)
+            .whereField(JournalDB.CodingKeys.hasSubJournal.rawValue, isEqualTo: true)
+            .getDocuments()
+        
+        // Check if the Journal has already streak or not in that day
+        let snapshotTodayStreak = try await userJournalCollection(userId: userId)
+            .whereField(JournalDB.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startDate)
+            .whereField(JournalDB.CodingKeys.date.rawValue, isLessThanOrEqualTo: endDate)
+            .whereField(JournalDB.CodingKeys.todayStreak.rawValue, isEqualTo: true)
+            .getDocuments()
+        return snapshotTodayStreak.count == snapshotHasSubJournal.count
+    }
+    
+    // Check if journal has a sub journals or not for circle scrollableView
+    func checkHasSubJournals(userId: String) async throws -> [Date]? {
+        guard let journals = try await getAllJournal(userId: userId) else {
+            return []
+        }
+        var results: [Date] = []
+        // If Journal has a subJournal, append that Date
+        for journal in journals {
+            guard let hasSubJournal = journal.hasSubJournal,
+                  hasSubJournal != false
+            else {
+                continue
+            }
+            results.append(journal.date ?? Date())
+        }
+        return results
+    }
+    
+    // Check if streak is already undoed or not in that day
+    // This validation check streak is already undoed onece per day
+    func checkHasUndoStreak(userId: String, from date: Date) async throws -> Bool {
+        let journal = try await getJournal(userId: userId, from: date)
+        return journal?.undoStreak ?? false
+    }
+    
+    
+    // Check if user is already streak or not in that day
+    // This validation check update streak only trigger once per day
+    func checkTodayStreak(userId: String, from date: Date) async throws -> Bool {
+        let journal = try await getJournal(userId: userId, from: date)
+        return journal?.todayStreak ?? false
+    }
+    
+    // Update field hasSubJournal in firestore
+    func updateHasSubJournal(userId: String, from date: Date, hasSubJournal: Bool = true) async throws {
+        let journal = try await getJournal(userId: userId, from: date)
+        let updatedData: [String: Any] = [
+            JournalDB.CodingKeys.hasSubJournal.rawValue: hasSubJournal
+        ]
+        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
+    }
+    
+    //  Update if streak is already undoed or not in that day
+    func updateHasUndoStreak(userId: String, from date: Date, isUndo: Bool = false) async throws {
+        let journal = try await getJournal(userId: userId, from: date)
+        let updatedData: [String: Any] = [
+            JournalDB.CodingKeys.undoStreak.rawValue: isUndo
+        ]
+        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
+    }
+    
+    // Update if user is already streak or not in that day
+    func updateTodayStreak(userId: String, from date: Date, isTodayStreak: Bool = false) async throws {
+        let journal = try await getJournal(userId: userId, from: date)
+        let updatedData: [String: Any] = [
+            JournalDB.CodingKeys.todayStreak.rawValue: isTodayStreak
+        ]
+        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
+    }
 }
 
-// MARK: - For SubJournal Use Case - WIP
+// MARK: - For SubJournal Use Case
 extension UserManager: SubJournalUseCase {
-    // DONE - For Generate Sub Journal
-    func generateSubJournal(userId: String, journalId: String, type: SubJournalType, habitPomodoroId: String, label: String, frequencyCount: Int) async throws {
+    // Create Sub Journal
+    func createSubJournal(userId: String, journalId: String, type: SubJournalType, habitPomodoroId: String, label: String, frequencyCount: Int) async throws {
         let (document, id) = generateDocumentID(userId: userId, journalId: journalId, type: .subJournal)
         let subJournal = SubJournalDB(id: id, habitPomodoroId: habitPomodoroId, subJournalType: type, label: label, frequencyCount: frequencyCount, startFrequency: 0, fraction: 0, isCompleted: false)
         try document.setData(from: subJournal, merge: false)
     }
     
-    //DONE -> Update count si subjournal yang ada di card"nya itu
+    // Get All Sub Journals based on date, label, and isAscending
+    func getSubJournals(userId: String, from date: Date, label: [String]?, isAscending: Bool?) async throws -> [SubJournalDB]? {
+        if let label, !label.isEmpty, let isAscending {
+            return try await getFilteredAndSortedAllSubJournals(userId: userId, from: date, label: label, isAscending: isAscending)
+        } else if let isAscending {
+            return try await getSortedSubJournalByProgress(userId: userId, from: date, isAscending: isAscending)
+        } else if let label {
+            return try await getFilterSubJournalByLabel(userId: userId, from: date, label: label)
+        } else {
+            return try await getAllSubJournalsByDate(userId: userId, from: date)
+        }
+    }
+    
+    // Get spesific SubJournal based on Habit ID
+    func getSubJournalByHabitID(userId: String, habitId: String) async throws -> DocumentReference? {
+        let journal = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
+        let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "")
+            .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitId)
+            .getDocuments()
+        if let document = snapshot.documents.first {
+            return document.reference
+        }
+        return nil
+    }
+    
+    // Get spesific SubJournal based on Pomodoro ID
+    func getSubJournalByPomodoroID(userId: String, pomodoroID: String) async throws -> DocumentReference? {
+        let journal = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
+        let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "")
+            .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: pomodoroID)
+            .getDocuments()
+        if let document = snapshot.documents.first {
+            return document.reference
+        }
+        return nil
+    }
+    
+    // Get all sub journal from the journal and filter is there any completed journal or not
+    func checkCompletedSubJournal(userId: String, from date: Date) async throws -> Bool {
+        guard let journal = try await getJournal(userId: userId, from: date) else { return false }
+        let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").whereField(SubJournalDB.CodingKeys.isCompleted.rawValue, isEqualTo: true).getDocuments()
+        if let document = snapshot.documents.first {
+            return document.exists
+        }
+        return false
+    }
+    
+    // Check if the spesific subJournal already complete or not based on startFrequenct / frequencyCount
+    func checkSubJournalisComplete(userId: String, journalId: String, subJournalId: String) async throws -> Bool {
+        let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
+        return subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int == (((subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue]) as? Int ?? 0) - 1 )
+    }
+    
+    // Check if the startFrequency is already zero
+    func checkStartFrequencyIsZero(userId: String, journalId: String, subJournalId: String) async throws -> Bool {
+        let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
+        return subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int == 0
+    }
+    
+    // Update frequency count for subJournal -> Card
     func updateCountSubJournal(userId: String, journalId: String, subJournalId: String) async throws {
         let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
         guard var count = subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int,
@@ -296,7 +371,7 @@ extension UserManager: SubJournalUseCase {
         try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).updateData(data)
     }
     
-    // DONE -> Undo count si subjournal yang ada di card"nya itu
+    // Undo frequency count for subJournal
     func undoCountSubJournal(userId: String, journalId: String, subJournalId: String) async throws {
         let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
         guard var count = subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int,
@@ -314,17 +389,7 @@ extension UserManager: SubJournalUseCase {
         try await updateSubJournalCompleted(userId: userId, journalId: journalId, subJournalId: subJournalId, isCompleted: false)
     }
     
-    // DONE -> Ngecek apakah ada subJournal yang complete dari si journal dari date yang diberikan
-    func checkCompletedSubJournal(userId: String, from date: Date) async throws -> Bool {
-        guard let journal = try await getJournal(userId: userId, from: date) else { return false }
-        let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").whereField(SubJournalDB.CodingKeys.isCompleted.rawValue, isEqualTo: true).getDocuments()
-        if let document = snapshot.documents.first {
-            return document.exists
-        }
-        return false
-    }
-    
-    // DONE -> Ngelakuin update kalau dari journal tersebut si subJournalnya ada yang complete
+    // Update when subJournal is already completed
     func updateSubJournalCompleted(userId: String, journalId: String, subJournalId: String, isCompleted: Bool = true) async throws {
         let data: [String: Any] = [
             SubJournalDB.CodingKeys.isCompleted.rawValue: isCompleted
@@ -332,82 +397,34 @@ extension UserManager: SubJournalUseCase {
         try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).updateData(data)
     }
     
-    // DONE -> Cari tau apakah journal tersebut sudah complete atau belum dari pembagian startFrequency/frequencyCount
-    func isSubJournalComplete(userId: String, journalId: String, subJournalId: String) async throws -> Bool {
-        let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
-        return subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int == (((subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue]) as? Int ?? 0) - 1 )
-    }
-    
-    // DONE -> Ngasih tau kalau si startFrequency udah 0, tujuannya kalo udah 0 gabisa di undo lagi
-    func checkStartFrequencyIsZero(userId: String, journalId: String, subJournalId: String) async throws -> Bool {
-        let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
-        return subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int == 0
-    }
-    
-    // DONE -> Dapetin seluruh subjournals berdasarkan date, label, dan isAscending
-    func getSubJournals(userId: String, from date: Date, label: [String]?, isAscending: Bool?) async throws -> [SubJournalDB]? {
-        if let label, !label.isEmpty, let isAscending {
-            return try await getFilteredAndSortedAllSubJournals(userId: userId, from: date, label: label, isAscending: isAscending)
-        } else if let isAscending {
-            return try await getFilteredSubJournalByProgress(userId: userId, from: date, isAscending: isAscending)
-        } else if let label {
-            return try await getFilterSubJournalByLabel(userId: userId, from: date, label: label)
-        } else {
-            return try await getAllSubJournalsByDate(userId: userId, from: date)
-        }
-    }
-    
-    func getSubJournalByHabitID(userId: String, habitId: String) async throws -> DocumentReference? {
-        let journal = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
-        let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "")
-            .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitId)
-            .getDocuments()
-        if let document = snapshot.documents.first {
-            return document.reference
-        }
-        return nil
-    }
-    
-    func getSubJournalByPomodoroID(userId: String, pomodoroID: String) async throws -> DocumentReference? {
-        let journal = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
-        let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "")
-            .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: pomodoroID)
-            .getDocuments()
-        if let document = snapshot.documents.first {
-            return document.reference
-        }
-        return nil
-    }
 }
 
 // MARK: - For Habit Use Case
 extension UserManager: HabitUseCase {
     
-    // DONE -> Create habit baru
+    // Create new habit
     func createNewHabit(userId: String, habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: String) async throws {
         let journalDocument = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
         let (document, id) = generateDocumentID(userId: userId, type: .habit)
         let habit = HabitDB(id: id, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminderHabit, dateCreated: Date())
         try document.setData(from: habit, merge: false)
+        
+        // Create habit in Sub Future Journal
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: id, type: .habit, method: .generate, repeatHabit: repeatHabit, frequencyCount: frequency)
+        
+        // Check if today is matching with [repeatHabit]
         if checkIfTodayIsMatching(repeatDays: repeatHabit) {
-            try await generateSubJournal(userId: userId, journalId: journalDocument?.id ?? "No ID", type: .habit, habitPomodoroId: id, label: label, frequencyCount: frequency)
+            try await createSubJournal(userId: userId, journalId: journalDocument?.id ?? "No ID", type: .habit, habitPomodoroId: id, label: label, frequencyCount: frequency)
             try await updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
         }
     }
     
-    func getHabitNotificationId(userId: String) async throws -> String {
-        let habitDocument = try await userHabitCollection(userId: userId).getAllDocuments(as: HabitDB.self)
-        let pomodoroDocument = try await userHabitCollection(userId: userId).getAllDocuments(as: PomodoroDB.self)
-        return "\((habitDocument?.count ?? 0) + (pomodoroDocument?.count ?? 0))"
-    }
-    
-    // DONE -> Dapetin detail habit
+    // Get habit detail from habit ID
     func getHabitDetail(userId: String, habitId: String) async throws -> HabitDB? {
         return try await userHabitDocument(userId: userId, habitId: habitId).getDocument(as: HabitDB.self)
     }
     
-    // DONE -> Dapetin progress habit buat di HabitDetailView yang calendar
+    // Get progress habit for one month
     func getProgressHabit(userId: String, habitId: String, month: Date) async throws -> [Int: CGFloat]? {
         var progressValues: [Int: CGFloat] = [:]
 
@@ -415,12 +432,12 @@ extension UserManager: HabitUseCase {
             return nil
         }
         for journalDocument in journalDocuments {
-            // dapetin subjournal yang punya habit pomodoro id sama kek habit id
+            // Get SubJournal if habitPomodoroId == habitId
             guard let subJournalDocuments = try await userSubJournalCollection(userId: userId, journalId: journalDocument.id ?? "")
                     .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitId)
                     .getAllDocuments(as: SubJournalDB.self), subJournalDocuments.count != 0
             else {
-                // subjournal ga ada di hari itu
+                // if subJournal == nil, append progress = 0.0
                 progressValues[journalDocument.date!.get(.day)] = 0.0
                 continue
             }
@@ -435,8 +452,8 @@ extension UserManager: HabitUseCase {
         return progressValues.isEmpty ? nil : progressValues
     }
     
-    // Buat edit habit
-    func editHabit(userId: String, habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: String?) async throws  {
+    // Edit Habit from the given parameter
+    func editHabit(userId: String, habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: String?) async throws  -> HabitDB? {
         let habit = try await getHabitDetail(userId: userId, habitId: habitId)
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: habitId, method: .delete, repeatHabit: habit?.repeatHabit ?? [])
         var updatedData: [String: Any] = [:]
@@ -459,10 +476,11 @@ extension UserManager: HabitUseCase {
             updatedData[HabitDB.CodingKeys.reminderHabit.rawValue] = reminderHabit
         }
         try await userHabitDocument(userId: userId, habitId: habitId).updateData(updatedData)
-        try await manageSubFutureJournal(userId: userId, habitPomodoroId: habitId, method: .generate, repeatHabit: [3, 4])
+        try await manageSubFutureJournal(userId: userId, habitPomodoroId: habitId, method: .generate, repeatHabit: repeatHabit ?? [])
+        return try await getHabitDetail(userId: userId, habitId: habitId)
     }
     
-    // DONE -> Buat delete habit
+    // Delete Habit
     func deleteHabit(userId: String, habitId: String) async throws {
         try await userHabitDocument(userId: userId, habitId: habitId).delete()
         try await getSubJournalByHabitID(userId: userId, habitId: habitId)?.delete()
@@ -472,20 +490,29 @@ extension UserManager: HabitUseCase {
 }
 
 extension UserManager: PomodoroUseCase {
-    // DONE -> Buat create pomodoro baru
+    // Create Pomodoro
     func createNewPomodoro(userId: String, pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: String) async throws {
         let journalDocument = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
         let (document, id) = generateDocumentID(userId: userId, type: .pomodoro)
         let pomodoro = PomodoroDB(id: id, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderPomodoro, dateCreated: Date())
         try document.setData(from: pomodoro, merge: false)
+        
+        // Create Pomodoro in SubFutureJournal
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: id, type: .pomodoro, method: .generate, repeatHabit: repeatPomodoro, frequencyCount: session)
+        
+        // Check if today is matching with [repeatHabit]
         if checkIfTodayIsMatching(repeatDays: repeatPomodoro) {
-            try await generateSubJournal(userId: userId, journalId: journalDocument?.id ?? "No ID", type: .pomodoro, habitPomodoroId: id, label: label, frequencyCount: session)
+            try await createSubJournal(userId: userId, journalId: journalDocument?.id ?? "No ID", type: .pomodoro, habitPomodoroId: id, label: label, frequencyCount: session)
             try await updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
         }
     }
     
-    // DONE -> Buat dapetin progress pomodoro selama 1 bulan, buat di PomodoroDetailView bagian calendar
+    // Get pomodoro detail
+    func getPomodoroDetail(userId: String, pomodoroId: String) async throws -> PomodoroDB? {
+        return try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).getDocument(as: PomodoroDB.self)
+    }
+    
+    // Get progress pomodoro for 1 month
     func getProgressPomodoro(userId: String, pomodoroId: String, month: Date) async throws -> [CGFloat]? {
             var progressValues: [CGFloat] = []
             
@@ -511,12 +538,7 @@ extension UserManager: PomodoroUseCase {
             return progressValues.isEmpty ? nil : progressValues
         }
     
-    // DONE -> Buat dapetin pomodoroDetail
-    func getPomodoroDetail(userId: String, pomodoroId: String) async throws -> PomodoroDB? {
-        return try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).getDocument(as: PomodoroDB.self)
-    }
-    
-    // NOT YET TEST - Functionality is DONE, but for APP not tested -> Buat edit pomodoro
+    // Edit Pomodoro
     func editPomodoro(userId: String, pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, repeatPomodoro: [Int]?, reminderPomodoro: String?) async throws -> PomodoroDB? {
         let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: pomodoroId, method: .delete, repeatHabit: pomodoro?.repeatPomodoro ?? [])
@@ -550,7 +572,7 @@ extension UserManager: PomodoroUseCase {
         return try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
     }
     
-    // DONE -> Delete pomodoro
+    // Delete pomodoro
     func deletePomodoro(userId: String, pomodoroId: String) async throws {
         try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).delete()
         try await getSubJournalByPomodoroID(userId: userId, pomodoroID: pomodoroId)?.delete()
@@ -559,9 +581,9 @@ extension UserManager: PomodoroUseCase {
     }
 }
 
-// MARK: - CRUD for Streak - DONE
+// MARK: - CRUD for Streak
 extension UserManager: StreakUseCase {
-    // DONE -> Buat ngecreate streak
+    // Create habit
     func createStreak(userId: String, description: String) async throws {
         let streak = StreakDB(streaksCount: 1, dateCreated: Date())
         guard let data = try? encoder.encode(streak) else { return }
@@ -571,19 +593,19 @@ extension UserManager: StreakUseCase {
         try await userDocument(userId: userId).updateData(dict)
     }
     
-    // DONE -> Buat dapeting data streak
+    // Get Streak Data
     func getStreak(userId: String) async throws -> StreakDB? {
-        let userDoc = try await getUserDB(userId: userId)
+        let userDoc = try await getUserData(userId: userId)
         return userDoc.streak
     }
     
-    // DONE -> Ngecek apakah si streak merupakan streak yang pertama atau bukan
+    // Check streak if streak is first streak or not
     func checkIsFirstStreak(userId: String) async throws -> Bool {
         let streak = try await getStreak(userId: userId)
         return streak?.streaksCount == 1
     }
     
-    // DONE -> Ngeupdate count streak
+    // Update count streak
     func updateCountStreak(userId: String, undo: Bool = false) async throws {
         let userDoc = try await userDocument(userId: userId).getDocument()
         if var streak = userDoc.data()?[UserDB.CodingKeys.streak.rawValue] as? [String: Any],
@@ -603,7 +625,7 @@ extension UserManager: StreakUseCase {
         }
     }
     
-    // DONE -> Delete Streak
+    // Delete Streak
     func deleteStreak(userId: String) async throws {
         
         let data: [String: Any?] = [
@@ -672,7 +694,7 @@ private extension UserManager {
         userPomodoroCollection(userId: userId).document(pomodoroId)
     }
     
-    // Ini buat generateDocumentID aja bawaan dari si firestore
+    // Generate Document ID for firestore
     func generateDocumentID(userId: String, journalId: String? = nil, futureJournalId: String? = nil, type: JournalType?) -> (DocumentReference, String) {
         switch type {
         case .habit:
@@ -696,35 +718,35 @@ private extension UserManager {
         }
     }
     
-    // Buat nge init future journal pertama kali kalo user login
+    // Init Future Journal, only triggered once
     func initFutureJournal(userId: String, repeatDay: [Int]) async throws {
         createJournalByRepeatDay(repeatDay: repeatDay, dateComponent: .weekday, value: 7) { [weak self] date in
-            try await self?.generateFutureJournal(userId: userId, dateName: date.getDayName)
+            try await self?.createFutureJournal(userId: userId, dateName: date.getDayName)
         }
     }
     
-    // Buat dapet si futureJournal berdasarkan dayNamenya
-    func getFutureJournalByDateName(userId: String, dayName: String) async  throws -> QuerySnapshot {
+    // Get Future Journal From Day Name ex: Mon
+    func getFutureJournalByDayName(userId: String, dayName: String) async  throws -> QuerySnapshot {
         try await userFutureJournalCollection(userId: userId)
             .whereField(FutureJournalDB.CodingKeys.dateName.rawValue, isEqualTo: dayName)
             .getDocuments()
     }
     
-    // Buat dapet si futureJournal berdasarkan HabitPomodoroID
+    // Get Sub Future Journal By Habit Pomodoro ID
     func getSubFutureJournalByHabitPomodoroId(userId: String, futureJournalId: String, habitPomodoroId: String) async throws -> QuerySnapshot {
         try await userSubFutureJournalCollection(userId: userId, futureJournalId: futureJournalId)
             .whereField(SubFutureJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitPomodoroId)
             .getDocuments()
     }
      
-    // Buat manage so SubFutureJournal apakah dia bakal ngegenerate atau ngedelete
+    // For Manage subFutureJournal by given method
     func manageSubFutureJournal(userId: String, habitPomodoroId: String, type: SubJournalType? = nil, method: MethodType, repeatHabit: [Int], frequencyCount: Int? = nil) async throws {
         createJournalByRepeatDay(method: method, repeatDay: repeatHabit, dateComponent: .weekday, value: 7) { [weak self] date in
-            guard let snapshot = try await self?.getFutureJournalByDateName(userId: userId, dayName: date.getDayName) else { return }
+            guard let snapshot = try await self?.getFutureJournalByDayName(userId: userId, dayName: date.getDayName) else { return }
             for futureJournalDocument in snapshot.documents {
                 switch method {
                 case .generate:
-                    try await self?.generateSubFutureJournal(userId: userId, futureJournalId: futureJournalDocument.documentID, subJournalType: type ?? .habit, habitPomodoroId: habitPomodoroId)
+                    try await self?.createSubFutureJournal(userId: userId, futureJournalId: futureJournalDocument.documentID, subJournalType: type ?? .habit, habitPomodoroId: habitPomodoroId)
                 case .delete:
                     let subFutureJournalQueryDocument = try await self?.getSubFutureJournalByHabitPomodoroId(userId: userId, futureJournalId: futureJournalDocument.documentID, habitPomodoroId: habitPomodoroId)
                     try await self?.deleteSubFutureJournal(userId: userId, futureJournalId: futureJournalDocument.documentID, subFutureJournalId: subFutureJournalQueryDocument?.documents.first?.documentID ?? "")
@@ -733,7 +755,7 @@ private extension UserManager {
         }
     }
     
-    // Ngecek aja kalo hari ini sama dari si RepeatDays dia bakal ngegenerate si user
+    // Check if today is matching by given repeatDays
     func checkIfTodayIsMatching(repeatDays: [Int]) -> Bool {
         let calendar = Calendar.current
         let todayWeekday = calendar.component(.weekday, from: Date())
@@ -741,7 +763,7 @@ private extension UserManager {
         return repeatDays.contains(todayWeekday)
     }
     
-    // Ngenerate journal berdasarkan repeatDay si Habit
+    // Create Journal By Repeat Day
     func createJournalByRepeatDay(
         method: MethodType? = nil,
         repeatDay: [Int],
@@ -771,20 +793,20 @@ private extension UserManager {
         }
     }
     
-    // Buat dapetin startdate
+    // Get StartDate
     func getStartDate() -> (Calendar, Date) {
         let calendar = Calendar.current
         let currentDate = Date()
         return (calendar, calendar.startOfDay(for: currentDate))
     }
     
-    // DONE -> Buat dapetin seluruh subjournal berdasarkan date
+    // Get All SubJournals From Given date
     func getAllSubJournalsByDate(userId: String, from date: Date) async throws -> [SubJournalDB]? {
         guard let journal = try await getJournal(userId: userId, from: date) else { return nil }
         return try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "NO ID").getAllDocuments(as: SubJournalDB.self)
     }
     
-    // DONE -> Buat filter subjournal berdasarkan label
+    // Get All SubJournals that filtered by Label
     func getFilterSubJournalByLabel(userId: String, from date: Date, label: [String]?) async throws -> [SubJournalDB]? {
         let journal = try await getJournal(userId: userId, from: date)
         if let journal,
@@ -796,19 +818,19 @@ private extension UserManager {
         return try await getAllSubJournalsByDate(userId: userId, from: date)
     }
     
-    // DONE -> Buat filter subjournal berdasarkan progressnya
-    func getFilteredSubJournalByProgress(userId: String, from date: Date, isAscending: Bool) async throws -> [SubJournalDB]? {
+    // Get All SubJournals that filtered by progress
+    func getSortedSubJournalByProgress(userId: String, from date: Date, isAscending: Bool) async throws -> [SubJournalDB]? {
         guard let subJournals = try await getAllSubJournalsByDate(userId: userId, from: date) else { return nil }
         return sortedSubJournals(subJournals, isAscending)
     }
     
-    // DONE -> Buat filter subjournal berdasarkan label dan sorted berdasarkan progress
+    // Get All SubJournals that filtered by label and sorted by progress
     func getFilteredAndSortedAllSubJournals(userId: String, from date: Date, label: [String], isAscending: Bool) async throws -> [SubJournalDB]? {
         guard let subJournals = try await getFilterSubJournalByLabel(userId: userId, from: date, label: label) else { return nil }
         return sortedSubJournals(subJournals, isAscending)
     }
     
-    // DONE -> Sort si subjournal berdasarkan progress
+    //  Sort Sub Journals
     func sortedSubJournals(_ subJournals: [SubJournalDB], _ isAscending: Bool) -> [SubJournalDB]? {
         let sortedSubJournals = subJournals
             .filter { $0.frequencyCount != 0 }

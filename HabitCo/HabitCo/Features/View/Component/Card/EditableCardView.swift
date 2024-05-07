@@ -60,6 +60,7 @@ struct EditableCardView: View {
             }
             
         }
+        .autocorrectionDisabled()
     }
 }
 

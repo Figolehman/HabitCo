@@ -83,7 +83,7 @@ public final class AuthManager {
         // Save user to firestore
         let user = UserDB(user: currentUser.profile ?? UserAuthInfo(uid: currentUser.userId ?? "NO ID"))
         UserDefaultManager.userID = user.id
-        try await UserManager.shared.addUser(user: user)
+        try await UserManager.shared.createUser(user: user)
 
         defer {
             streamSignInChangesIfNeeded()
