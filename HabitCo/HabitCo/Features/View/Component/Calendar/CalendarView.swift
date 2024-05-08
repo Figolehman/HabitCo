@@ -80,9 +80,6 @@ struct CalendarView: View {
 
 
             calendarView(fractionForDate: habitVM.progress ?? [:])
-//            if let progress = habitVM.progress {
-//                calendarView(fraction: progress.first ?? 0.8)
-//            }
         }
         .onAppear{
             habitVM.getProgressHabit(habitId: habitId, date: currentDate)

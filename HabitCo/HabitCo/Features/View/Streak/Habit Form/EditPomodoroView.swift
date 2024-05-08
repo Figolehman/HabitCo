@@ -16,7 +16,7 @@ struct EditPomodoroView: View {
     @State private var selected: Color.FilterColors? = nil
     @State private var session: Int = 1
     
-    @State private var isRepeatOn = false
+    @State private var isRepeatOn = true
     @State private var isReminderOn = false
     
     @State private var focusTime: Int = 0
@@ -346,7 +346,7 @@ struct EditPomodoroView: View {
                 }
                 let repeatPomodoro: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit) {
-                    pomodoroVM.editPomodoro(pomodoroId: pomodoro.id, pomodoroName: pomodoroName, description: description, label: selected?.rawValue, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, reminderHabit: reminderTime)
+                    pomodoroVM.editPomodoro(pomodoroId: pomodoro.id, pomodoroName: pomodoroName, description: description, label: selected?.rawValue, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderHabit: reminderTime)
                     self.presentationMode.wrappedValue.dismiss()
                 }
                 .padding(.top, 4)
@@ -379,7 +379,7 @@ struct EditPomodoroView: View {
                }
             }
         }
-        .navigationTitle("Create Pomodoro Form")
+        .navigationTitle("Edit Pomodoro Form")
         .navigationBarTitleDisplayMode(.large)
     }
     

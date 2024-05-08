@@ -39,6 +39,7 @@ extension HabitViewModel {
     // Get Progress Habit
     func getProgressHabit(habitId: String, date: Date) {
         Task {
+            print("Date: \(date)")
             guard let userId = UserDefaultManager.userID else { return }
             self.progress = try await userManager.getProgressHabit(userId: userId, habitId: habitId, month: date.formattedDate(to: .fullMonthName))
         }

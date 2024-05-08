@@ -25,7 +25,7 @@ struct FocusView: View {
     @State var totalTime: Int
         
     @State var currentPomodoroTime: PomodoroTime = .focusTime
-    @State var currentSession: Int = 1
+    @State var currentSession: Int = 0
     
     @StateObject private var userViewModel = UserViewModel()
     

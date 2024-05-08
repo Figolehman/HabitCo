@@ -535,6 +535,7 @@ extension UserManager: HabitUseCase {
 }
 
 extension UserManager: PomodoroUseCase {
+    
     // Create Pomodoro
     func createNewPomodoro(userId: String, pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: String) async throws {
         let journalDocument = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
@@ -584,7 +585,7 @@ extension UserManager: PomodoroUseCase {
         }
     
     // Edit Pomodoro
-    func editPomodoro(userId: String, pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, repeatPomodoro: [Int]?, reminderPomodoro: String?) async throws -> PomodoroDB? {
+    func editPomodoro(userId: String, pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, repeatPomodoro: [Int]?, longBreakTime: Int?, reminderPomodoro: String?) async throws -> PomodoroDB? {
         let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: pomodoroId, method: .delete, repeatHabit: pomodoro?.repeatPomodoro ?? [])
         var updatedData: [String: Any] = [:]
@@ -602,6 +603,9 @@ extension UserManager: PomodoroUseCase {
         }
         if let focusTime {
             updatedData[PomodoroDB.CodingKeys.focusTime.rawValue] = focusTime
+        }
+        if let longBreakTime {
+            updatedData[PomodoroDB.CodingKeys.longBreakTime.rawValue] = longBreakTime
         }
         if let breakTime {
             updatedData[PomodoroDB.CodingKeys.breakTime.rawValue] = breakTime

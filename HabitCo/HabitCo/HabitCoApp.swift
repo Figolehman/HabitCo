@@ -19,6 +19,7 @@ struct HabitCoApp: App {
     
     init() {
         FirebaseApp.configure()
+        
         let settings = FirestoreSettings()
         settings.cacheSettings = MemoryCacheSettings(garbageCollectorSettings: MemoryLRUGCSettings(sizeBytes: 500 * 1024 * 1024 as NSNumber))
         settings.cacheSettings = PersistentCacheSettings(sizeBytes: 500 * 1024 * 1024 as NSNumber)
@@ -26,7 +27,7 @@ struct HabitCoApp: App {
         if let indexManager = Firestore.firestore().persistentCacheIndexManager {
             indexManager.enableIndexAutoCreation()
         }
-//        UserDefaults.standard.set(false, forKey: "hasOpened")
+        
         if UserDefaults.standard.bool(forKey: "hasOpened") == false {
             do {
                 try Auth.auth().signOut()
