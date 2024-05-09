@@ -74,7 +74,7 @@ extension HabitViewModel {
     public func deleteHabit(habitId: String) {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
-            try? await userManager.deleteHabit(userId: userId, habitId: habitId)
+            try await userManager.deleteHabit(userId: userId, habitId: habitId)
             let currentDate = Date().formattedDate(to: .fullMonthName)
             let hasSubJournalCompleteToday = try await userManager.checkHabitSubJournalIsCompleteByDate(userId: userId, habitId: habitId, date: currentDate)
             let isFirstStreak = try await userManager.checkIsFirstStreak(userId: userId)

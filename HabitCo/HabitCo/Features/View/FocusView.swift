@@ -139,7 +139,7 @@ struct FocusView: View {
                 }
             }
         }
-        .navigationTitle("Habit Name")
+        .navigationTitle("\(pomodoro?.pomodoroName ?? "")")
     }
 }
 
