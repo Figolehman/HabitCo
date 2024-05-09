@@ -92,6 +92,7 @@
 		1BE028B32BA97A9D0042CAC3 /* HabitCo_Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */; };
 		1BE028B52BA97A9F0042CAC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */; };
 		1BE028B92BA97A9F0042CAC3 /* HabitCo WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1BE028AB2BA97A9D0042CAC3 /* HabitCo WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3F06977B2BECB6DD005E1EE0 /* WidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F06977A2BECB6DD005E1EE0 /* WidgetViewModel.swift */; };
 		3F28DD092BD7AF930043CB4F /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F28DD082BD7AF930043CB4F /* String+Extension.swift */; };
 		3F28DD2B2BD8751B0043CB4F /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F28DD2A2BD8751B0043CB4F /* Array+Extension.swift */; };
 		3FAC603B2BAB8C0900448C21 /* HabitDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC603A2BAB8C0900448C21 /* HabitDB.swift */; };
@@ -218,6 +219,7 @@
 		1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCo_Widget.swift; sourceTree = "<group>"; };
 		1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BE028B62BA97A9F0042CAC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3F06977A2BECB6DD005E1EE0 /* WidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetViewModel.swift; sourceTree = "<group>"; };
 		3F28DD082BD7AF930043CB4F /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		3F28DD2A2BD8751B0043CB4F /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		3FAC603A2BAB8C0900448C21 /* HabitDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDB.swift; sourceTree = "<group>"; };
@@ -564,6 +566,7 @@
 				1BC23AF92BAB54F800133C27 /* HabitViewModel.swift */,
 				1BC23AF72BAB54EF00133C27 /* UserViewModel.swift */,
 				3FAC604F2BB12E7400448C21 /* PomodoroViewModel.swift */,
+				3F06977A2BECB6DD005E1EE0 /* WidgetViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -762,6 +765,7 @@
 				3FBCEB432BC8DEDF0057E204 /* SubFutureJournalDB.swift in Sources */,
 				3FAC603B2BAB8C0900448C21 /* HabitDB.swift in Sources */,
 				3FAC60502BB12E7400448C21 /* PomodoroViewModel.swift in Sources */,
+				3F06977B2BECB6DD005E1EE0 /* WidgetViewModel.swift in Sources */,
 				3FBCEB0F2BB1AB7F0057E204 /* UserDefault.swift in Sources */,
 				1B560C8D2BA317F400CE2DC6 /* RepeatButton.swift in Sources */,
 				1B007E362BD0348D00915626 /* AppDelegate.swift in Sources */,
