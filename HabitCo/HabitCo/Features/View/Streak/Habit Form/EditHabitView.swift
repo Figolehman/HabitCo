@@ -185,7 +185,6 @@ struct EditHabitView: View {
                 self.presentationMode.wrappedValue.dismiss()
             })
         })
-        .navigationTitle("Edit Habit Form")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -205,6 +204,8 @@ struct EditHabitView: View {
                }
             }
         }
+        .navigationTitle("Edit Habit Form")
+        .navigationBarTitleDisplayMode(.large)
     }
 }
 

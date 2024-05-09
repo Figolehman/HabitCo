@@ -11,17 +11,17 @@ struct EditPomodoroView: View {
     
     var pomodoro: PomodoroDB
     
-    @State private var pomodoroName: String = ""
-    @State private var description: String = ""
-    @State private var selected: Color.FilterColors? = nil
-    @State private var session: Int = 1
+    @State private var pomodoroName: String
+    @State private var description: String
+    @State private var selected: Color.FilterColors?
+    @State private var session: Int
     
     @State private var isRepeatOn = true
     @State private var isReminderOn = false
     
-    @State private var focusTime: Int = 0
-    @State private var breakTime: Int = 0
-    @State private var longBreakTime: Int = 0
+    @State private var focusTime: Int
+    @State private var breakTime: Int
+    @State private var longBreakTime: Int
     
     @State private var isRepeatFolded = false
     @State private var isReminderFolded = true
@@ -31,7 +31,7 @@ struct EditPomodoroView: View {
     @State private var isBreakTimeFolded = true
     @State private var isLongBreakTimeFolded = true
     
-    @State private var repeatDate: Set<RepeatDay> = []
+    @State private var repeatDate: Set<RepeatDay>
     @State private var reminderTime: Date = Date()
     
     @State var showAlert = false

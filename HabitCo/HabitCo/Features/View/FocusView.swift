@@ -25,7 +25,7 @@ struct FocusView: View {
     @State var totalTime: Int
         
     @State var currentPomodoroTime: PomodoroTime = .focusTime
-    @State var currentSession: Int = 0
+    @State var currentSession: Int
     
     @StateObject private var userViewModel = UserViewModel()
     
@@ -39,6 +39,7 @@ struct FocusView: View {
         self.subJournal = subJournal
         self.date = date
 
+        _currentSession = State(initialValue: subJournal?.startFrequency ?? 0)
         _currentTime = State(initialValue: pomodoro!.focusTime! * minute)
         _totalTime = State(initialValue: pomodoro!.focusTime! * minute)
     }
@@ -54,6 +55,7 @@ struct FocusView: View {
                                 currentSession = currentSession + 1
                                 currentTime = getCurrentPomodoroDuration(currentPomodoroTime)
                                 totalTime = currentTime
+                                userViewModel.updateCountSubJournal(subJournalId: subJournal?.id ?? "", from: Date().formattedDate(to: .fullMonthName))
                             } else {
                                 currentPomodoroTime = getNextPomodoroTime(time: currentPomodoroTime, currentSession: currentSession)
                                 currentTime = getCurrentPomodoroDuration(currentPomodoroTime)
@@ -85,7 +87,6 @@ struct FocusView: View {
                         }
                         ControlButton(color: .getAppColor(.primary), buttonSize: .secondaryControl, buttonImage: .forward) {
                             currentTime = 0
-                            userViewModel.updateCountSubJournal(subJournalId: subJournal?.id ?? "", from: date)
                         }
                     }
                 }

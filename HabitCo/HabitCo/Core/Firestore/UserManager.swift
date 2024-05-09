@@ -587,7 +587,7 @@ extension UserManager: PomodoroUseCase {
     // Edit Pomodoro
     func editPomodoro(userId: String, pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, repeatPomodoro: [Int]?, longBreakTime: Int?, reminderPomodoro: String?) async throws -> PomodoroDB? {
         let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
-        try await manageSubFutureJournal(userId: userId, habitPomodoroId: pomodoroId, method: .delete, repeatHabit: pomodoro?.repeatPomodoro ?? [])
+        try await manageSubFutureJournal(userId: userId, habitPomodoroId: pomodoroId, type: .pomodoro, method: .delete, repeatHabit: pomodoro?.repeatPomodoro ?? [])
         var updatedData: [String: Any] = [:]
         if let pomodoroName {
             updatedData[PomodoroDB.CodingKeys.pomodoroName.rawValue] = pomodoroName
@@ -617,7 +617,7 @@ extension UserManager: PomodoroUseCase {
             updatedData[PomodoroDB.CodingKeys.reminderPomodoro.rawValue] = reminderPomodoro
         }
         try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).updateData(updatedData)
-        try await manageSubFutureJournal(userId: userId, habitPomodoroId: pomodoroId, method: .generate, repeatHabit: [3, 4])
+        try await manageSubFutureJournal(userId: userId, habitPomodoroId: pomodoroId, type: .pomodoro, method: .generate, repeatHabit: repeatPomodoro ?? [])
         return try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
     }
     
