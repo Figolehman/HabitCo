@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CreatePomodoroView: View {
 
+    let notify = NotificationHandler()
+    
     let habitNotificationId: String
 
     @State private var pomodoroName: String = ""
@@ -322,7 +324,12 @@ struct CreatePomodoroView: View {
                 let repeatPomodoro: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     if isSavable() {
-                        pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderTime)
+                        if isReminderFolded {
+                            pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: nil)
+                        } else {
+                            notify.sendNotification(date: reminderTime, weekdays: repeatPomodoro, title: "\(pomodoroName)", body: "Go finish it", withIdentifier: "\(habitNotificationId)")
+                            pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderTime)
+                        }
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
@@ -337,7 +344,7 @@ struct CreatePomodoroView: View {
 // MARK: -
 extension CreatePomodoroView {
     func isSavable() -> Bool {
-        return isRepeatOn && isReminderOn && focusTime != 0 && breakTime != 0 && longBreakTime != 0
+        return isRepeatOn && focusTime != 0 && breakTime != 0 && longBreakTime != 0 && !repeatDate.isEmpty && !pomodoroName.isEmpty && selected != nil
     }
 }
 

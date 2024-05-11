@@ -31,8 +31,8 @@ extension HabitViewModel {
     public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date?) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            let timeString = reminderHabit?.dateToString(to: .hourAndMinute)
-            try await userManager.createNewHabit(userId: userId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString ?? "")
+            let timeString = reminderHabit?.dateToString(to: .hourAndMinute) ?? ""
+            try await userManager.createNewHabit(userId: userId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString)
         }
     }
     

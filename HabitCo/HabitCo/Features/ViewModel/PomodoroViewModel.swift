@@ -32,8 +32,8 @@ extension PomodoroViewModel {
     public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date?){
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            let timeString = reminderPomodoro?.dateToString(to: .hourAndMinute)
-            try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString ?? "")
+            let timeString = reminderPomodoro?.dateToString(to: .hourAndMinute) ?? ""
+            try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString)
         }
     }
     
