@@ -21,8 +21,6 @@ struct JournalView: View {
     @State private var loadingStatus = LoadingType.loading
     @State private var loadingMessage = "Signing Out..."
 
-    @State private var firstOpen = true
-
     @State private var navigateTo: Navigator? = Navigator.none
 //    @State private var habitNavigationArg: HabitDB?
 //    @State private var pomodoroNavigationArg: PomodoroDB?
@@ -34,6 +32,9 @@ struct JournalView: View {
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var habitViewModel = HabitViewModel()
     @StateObject private var pomodoroViewModel = PomodoroViewModel()
+
+    @State private var appliedFilter = [Color.FilterColors]()
+    @State private var selectedFilter = [Color.FilterColors]()
 
     @State private var selectedDate = Date()
     @State private var showSettings = false
@@ -49,7 +50,7 @@ struct JournalView: View {
     @EnvironmentObject var appRootManager: AppRootManager
 
     var body: some View {
-        NavigationView{
+        NavigationView {
 
             VStack(spacing: 48) {
 
@@ -104,6 +105,17 @@ struct JournalView: View {
                                 Image(systemName: "plus")
                                     .foregroundColor(.getAppColor(.primary))
                             }
+                        }
+//
+                        if !appliedFilter.isEmpty {
+                            ScrollView(.horizontal) {
+                                HStack(spacing: .getResponsiveWidth(8)) {
+                                    ForEach(appliedFilter, id: \.self) { filter in
+                                        FilterLabelView(filter: filter)
+                                    }
+                                }
+                            }
+                            .frame(height: .getResponsiveHeight(38))
                         }
 
                         ScrollView {
@@ -166,12 +178,6 @@ struct JournalView: View {
                 }
             )
             .onAppear {
-                if firstOpen {
-                    // streak loss view calculation
-
-                } else {
-                    // streak gain view calculation
-                }
                 let customNavigation = UINavigationBarAppearance()
                 customNavigation.titleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
                 customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
@@ -183,7 +189,6 @@ struct JournalView: View {
                     print("No Authenticated User")
                 }
                 userViewModelInitiation()
-                firstOpen = false
             }
             .toolbar {
 
@@ -244,7 +249,12 @@ struct JournalView: View {
             })
         })
         .customSheet($showFilter, sheetType: .filters, content: {
-            FilterView(date: $selectedDate, userVM: userViewModel)
+            FilterView(selectedFilter: $selectedFilter, appliedFilter: $appliedFilter, date: $selectedDate, userVM: userViewModel)
+                .onDisappear {
+                    if selectedFilter != appliedFilter {
+                        selectedFilter = appliedFilter
+                    }
+                }
         })
         .alertOverlay($userViewModel.isStreakJustAdded, content: {
             StreakGainView(isShown: $userViewModel.isStreakJustAdded, streakCount: userViewModel.streakCount)
