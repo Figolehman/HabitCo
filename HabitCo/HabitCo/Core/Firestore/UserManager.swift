@@ -252,6 +252,12 @@ extension UserManager: JournalUseCase {
         let snapshotHasSubJournal = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "").getDocuments()
         return !snapshotHasSubJournal.isEmpty
     }
+    
+    func checkHasSubJournalByDate(userId: String, date: Date) async throws -> Bool {
+        guard let journal = try await getJournal(userId: userId, from: date) else { return false }
+        let snapshotHasSubJournal = try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").getDocuments()
+        return !snapshotHasSubJournal.isEmpty
+    }
         
     // Check if journal has a sub journals or not for circle scrollableView
     func checkHasSubJournals(userId: String) async throws -> [Date]? {

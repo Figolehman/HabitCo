@@ -23,7 +23,6 @@ struct JournalView: View {
     @State private var focusNavigationArg: (PomodoroDB?, SubJournalDB?, Date)?
 
     @State private var sortType = SortImage.unsort
-    @State private var isEmpty = true
 
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var habitViewModel = HabitViewModel()
@@ -40,7 +39,7 @@ struct JournalView: View {
 
     @Environment(\.auth) var auth
     @EnvironmentObject var appRootManager: AppRootManager
-
+    
     var body: some View {
         NavigationView{
 
@@ -79,13 +78,13 @@ struct JournalView: View {
 
                     VStack (spacing: 24) {
                         HStack (spacing: 16) {
-                            FilterButton(isDisabled: $isEmpty) {
+                            FilterButton(isDisabled: $userViewModel.hasSubJournal) {
                                 withAnimation {
                                     showFilter = true
                                 }
                             }
 
-                            SortButton(label: "Progress", isDisabled: $isEmpty, imageType: $sortType) {
+                            SortButton(label: "Progress", isDisabled: $userViewModel.hasSubJournal, imageType: $sortType) {
                                 sortJournal()
                             }
 
@@ -125,9 +124,6 @@ struct JournalView: View {
                                         }
                                     }
                                 }
-                                .onAppear {
-                                    isEmpty = false
-                                }
                             } else {
                                 VStack (spacing: .getResponsiveHeight(16)) {
                                     Image(systemName: "leaf")
@@ -136,9 +132,6 @@ struct JournalView: View {
                                 }
                                 .foregroundColor(.getAppColor(.neutral))
                                 .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
-                                .onAppear {
-                                    isEmpty = true
-                                }
                             }
                         }
                     }
@@ -242,6 +235,7 @@ struct JournalView: View {
         })
         .onChange(of: selectedDate) { newValue in
             userViewModel.getSubJournals(from: newValue)
+            userViewModel.checkSubJournal(date: newValue)
         }
     }
 
@@ -263,5 +257,6 @@ struct JournalView: View {
         userViewModel.getSubFutureJournals()
         userViewModel.getHabitNotificationId()
         userViewModel.checkFutureJournalThatHasSubJournal()
+        userViewModel.checkSubJournal(date: Date().formattedDate(to: .fullMonthName))
     }
 }

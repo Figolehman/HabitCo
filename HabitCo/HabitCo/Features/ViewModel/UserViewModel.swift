@@ -18,6 +18,7 @@ final class UserViewModel: ObservableObject {
     @Published private(set) var habitCount: String = ""
     @Published var selectedLabels: [String]?
     @Published var hasHabit: [Date]?
+    @Published var hasSubJournal: Bool = false
     @Published var isAscending: Bool?
     @Published var isUserStreak: Bool?
     @Published var habitNotificationId: String?
@@ -152,12 +153,12 @@ extension UserViewModel{
                   !subJournals.isEmpty
             else {
                 self.subJournals = nil
-                checkHasSubJournal()
+                checkHasHabit()
                 getStreak()
                 return
             }
             self.subJournals = try await fetchSubJournal(userId: userId, subJournals: subJournals)
-            checkHasSubJournal()
+            checkHasHabit()
             getStreak()
         }
     }
@@ -233,13 +234,22 @@ extension UserViewModel{
     
     // Ini buat ngecek kalo si journal punya sub journal atau ga di ScrollableCalendarView
     // Kalau ada dia bulet, Returnnya [Date] sesuai hasHabit
-    func checkHasSubJournal() {
+    func checkHasHabit() {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             self.hasHabit = try await userManager.checkHasSubJournals(userId: userId)
             if self.hasHabit == nil {
                 try await userManager.updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName), hasSubJournal: false)
             }
+        }
+    }
+    
+    func checkSubJournal(date: Date) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            let flag = try await userManager.checkHasSubJournalByDate(userId: userId, date: date.formattedDate(to: .fullMonthName))
+            print(flag, date.formattedDate(to: .fullMonthName))
+            self.hasSubJournal = !flag
         }
     }
     
