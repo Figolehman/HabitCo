@@ -111,7 +111,14 @@ struct JournalView: View {
                             ScrollView(.horizontal) {
                                 HStack(spacing: .getResponsiveWidth(8)) {
                                     ForEach(appliedFilter, id: \.self) { filter in
-                                        FilterLabelView(filter: filter)
+                                        Button {
+                                            if let index = appliedFilter.firstIndex(of: filter) {
+                                                appliedFilter.remove(at: index)
+                                                selectedFilter = appliedFilter
+                                            }
+                                        } label: {
+                                            FilterLabelView(filter: filter)
+                                        }
                                     }
                                 }
                             }
