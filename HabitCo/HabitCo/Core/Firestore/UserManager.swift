@@ -260,7 +260,7 @@ extension UserManager: JournalUseCase {
     }
         
     // Check if journal has a sub journals or not for circle scrollableView
-    func checkHasSubJournals(userId: String) async throws -> [Date]? {
+    func checkHasHabit(userId: String) async throws -> [Date]? {
         guard let journals = try await getAllJournal(userId: userId) else {
             return []
         }

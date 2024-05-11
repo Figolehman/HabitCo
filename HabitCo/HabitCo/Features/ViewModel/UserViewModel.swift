@@ -237,7 +237,7 @@ extension UserViewModel{
     func checkHasHabit() {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            self.hasHabit = try await userManager.checkHasSubJournals(userId: userId)
+            self.hasHabit = try await userManager.checkHasHabit(userId: userId)
             if self.hasHabit == nil {
                 try await userManager.updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName), hasSubJournal: false)
             }
