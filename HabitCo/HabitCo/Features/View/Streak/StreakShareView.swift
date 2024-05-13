@@ -11,7 +11,8 @@ struct StreakShareView: View {
     let streak: Int
     let x: Int?
     let y: Int?
-    
+    let index = Date().get(.day) % 2
+
     init(streak: Int, x: Int? = nil, y: Int? = nil) {
         self.streak = streak
         self.x = x
@@ -22,7 +23,7 @@ struct StreakShareView: View {
         VStack (spacing: .getResponsiveHeight(72)) {
             Spacer()
             
-            Image("shareTree-\(Int.random(in: 1...2))")
+            Image("shareTree-\(index + 1)")
             VStack (spacing: .getResponsiveHeight(24)) {
                 Text("\(streak) days streak!")
                 
