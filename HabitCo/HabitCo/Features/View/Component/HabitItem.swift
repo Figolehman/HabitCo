@@ -26,7 +26,11 @@ struct HabitItem: View {
     let navigate: () -> Void
     let action: () -> Void
     let undoAction: () -> Void
-    
+
+    var isDone: Bool {
+        fraction == 1
+    }
+
     init(habitType: HabitType, habitName: String, label: String, fraction: Double = 0.0, progress: Int = 2, navigate: @escaping () -> Void = {}, action: @escaping () -> Void = {}, undoAction: @escaping () -> Void = {}) {
         self.habitType = habitType
         self.habitName = habitName
@@ -51,7 +55,7 @@ struct HabitItem: View {
                             .cornerRadius(4)
                         
                         Text("\(habitName)")
-                            .foregroundColor(Color.getAppColor(.neutral3))
+                            .foregroundColor(isDone ? .getAppColor(.primary2) : .getAppColor(.neutral3))
                             .multilineTextAlignment(.leading)
 
                         Spacer()
@@ -77,6 +81,7 @@ struct HabitItem: View {
                                     Text("\(progress) Session")
                                         .font(.caption2)
                                 }
+                                .foregroundColor(.getAppColor(.primary2))
                                 .padding(.horizontal, 12)
                             case .pomodoro:
                                 ZStack {
@@ -97,7 +102,7 @@ struct HabitItem: View {
                                         .rotationEffect(.degrees(-90))
                                     
                                     Text("\(progress)")
-                                        .foregroundColor(.getAppColor(.neutral3))
+                                        .foregroundColor(isDone ? .getAppColor(.primary2) : .getAppColor(.neutral3))
                                 }
                                 .padding(.horizontal, 12)
                             }
@@ -156,8 +161,8 @@ struct HabitItem: View {
 #Preview {
     NavigationView {
         VStack {
-            HabitItem(habitType: .regular, habitName: "test", label: "blossom", fraction: 0.5)
-            HabitItem(habitType: .pomodoro, habitName: "test", label: "blossom", fraction: 0.5)
+            HabitItem(habitType: .regular, habitName: "test", label: "blossom", fraction: 1)
+            HabitItem(habitType: .pomodoro, habitName: "test", label: "blossom", fraction: 3/4)
         }
     }
 }
