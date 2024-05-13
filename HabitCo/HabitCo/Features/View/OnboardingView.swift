@@ -14,7 +14,10 @@ struct OnboardingView: View {
     @State var index = 0
     @Environment(\.auth) private var userAuth
     @EnvironmentObject var appRootManager: AppRootManager
-    
+
+    @State private var showPrivacyPolicy = false
+    @State private var showTermsAndConditions = false
+
     init () {
         setupPageTabIndicator()
         
@@ -98,15 +101,27 @@ struct OnboardingView: View {
                         }
                         
                         Group {
-                            Text("By signing up, you ") +
-                            Text("Agree ")
-                                .bold() +
-                            Text("to HabitCo ") +
-                            Text("Privacy Policy ")
-                                .bold() +
-                            Text("and ") +
-                            Text("Terms of Service")
-                                .bold()
+                            VStack(spacing: 0) {
+                                HStack(spacing: 0) {
+                                    Text("By signing up, you ") +
+                                    Text("Agree ")
+                                        .bold() +
+                                    Text("to HabitCo ")
+                                    Text("Privacy Policy ")
+                                        .bold()
+                                        .onTapGesture {
+                                            showPrivacyPolicy = true
+                                        }
+                                }
+                                HStack(spacing: 0) {
+                                    Text("and ")
+                                    Text("Terms of Service")
+                                        .bold()
+                                        .onTapGesture {
+                                            showTermsAndConditions = true
+                                        }
+                                }
+                            }
                         }
                         .font(.footnote)
                         .multilineTextAlignment(.center)
@@ -115,6 +130,12 @@ struct OnboardingView: View {
             }
             .frame(width: .getResponsiveWidth(345))
         }
+        .customSheet($showPrivacyPolicy, sheetType: .rules, content: {
+            PrivacyPolicyView()
+        })
+        .customSheet($showTermsAndConditions, sheetType: .rules, content: {
+            TermsAndConditionsView()
+        })
     }
 }
 
