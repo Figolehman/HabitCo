@@ -345,8 +345,8 @@ extension UserManager: SubJournalUseCase {
     }
     
     // Get spesific SubJournal based on Habit ID
-    func getSubJournalByHabitID(userId: String, habitId: String) async throws -> DocumentReference? {
-        let journal = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
+    func getSubJournalByHabitID(userId: String, habitId: String, date: Date) async throws -> DocumentReference? {
+        let journal = try await getJournal(userId: userId, from: date)
         let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "")
             .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitId)
             .getDocuments()
@@ -354,6 +354,32 @@ extension UserManager: SubJournalUseCase {
             return document.reference
         }
         return nil
+    }
+    
+    func deleteSubJournalByHabitID(userId: String, habitId: String) async throws {
+        guard let journals = try await getAllJournal(userId: userId) else { return }
+        for journal in journals {
+            let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "")
+                .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitId)
+                .getDocuments()
+            if let document = snapshot.documents.first {
+                print(document.documentID)
+                try await document.reference.delete()
+            }
+        }
+    }
+    
+    func deleteSubJournalByPomodoroID(userId: String, pomodoroId: String) async throws {
+        guard let journals = try await getAllJournal(userId: userId) else { return }
+        for journal in journals {
+            let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "")
+                .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: pomodoroId)
+                .getDocuments()
+            if let document = snapshot.documents.first {
+                print(document.documentID)
+                try await document.reference.delete()
+            }
+        }
     }
     
     // Get spesific SubJournal based on Pomodoro ID
@@ -425,13 +451,11 @@ extension UserManager: SubJournalUseCase {
         }
     
     func checkHabitSubJournalIsCompleteByDate(userId: String, habitId: String, date: Date) async throws -> Bool {
-        let journal = try await getJournal(userId: userId, from: date)
-        let subJournal = try await getSubJournalByHabitID(userId: userId, habitId: habitId)?.getDocument(as: SubJournalDB.self)
+        let subJournal = try await getSubJournalByHabitID(userId: userId, habitId: habitId, date: date)?.getDocument(as: SubJournalDB.self)
         return subJournal?.isCompleted == true
     }
     
     func checkPomodoroSubJournalIsCompleteByDate(userId: String, pomodoroId: String, date: Date) async throws -> Bool {
-        let journal = try await getJournal(userId: userId, from: date)
         let subJournal = try await getSubJournalByPomodoroID(userId: userId, pomodoroID: pomodoroId)?.getDocument(as: SubJournalDB.self)
         return subJournal?.isCompleted == true
     }
@@ -582,7 +606,7 @@ extension UserManager: HabitUseCase {
     func deleteHabit(userId: String, habitId: String) async throws {
         let habit = try await getHabitDetail(userId: userId, habitId: habitId)
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: habitId, method: .delete, repeatHabit: habit?.repeatHabit ?? [])
-        try await getSubJournalByHabitID(userId: userId, habitId: habitId)?.delete()
+        try await deleteSubJournalByHabitID(userId: userId, habitId: habitId)
         try await userHabitDocument(userId: userId, habitId: habitId).delete()
     }
 }
@@ -693,7 +717,7 @@ extension UserManager: PomodoroUseCase {
     func deletePomodoro(userId: String, pomodoroId: String) async throws {
         let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: pomodoroId, method: .delete, repeatHabit: pomodoro?.repeatPomodoro ?? [])
-        try await getSubJournalByPomodoroID(userId: userId, pomodoroID: pomodoroId)?.delete()
+        try await deleteSubJournalByPomodoroID(userId: userId, pomodoroId: pomodoroId)
         try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).delete()
     }
 }

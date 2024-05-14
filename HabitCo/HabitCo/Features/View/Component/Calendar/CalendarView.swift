@@ -15,6 +15,7 @@ struct CalendarView: View {
     @State var currentDate = Date()
     @State var days = [Date]()
     @State var selectedDate: Int?
+    @State var label = ""
 
     @ObservedObject private var habitVM: HabitViewModel
     @ObservedObject private var pomodoroVM: PomodoroViewModel
@@ -32,20 +33,22 @@ struct CalendarView: View {
         }
     }
 
-    init(habitId: String, pomodoroVM: PomodoroViewModel) {
+    init(habitId: String, label: String, pomodoroVM: PomodoroViewModel) {
         self.habitId = habitId
         self.pomodoroVM = pomodoroVM
         self.habitVM = HabitViewModel()
 
         self._days = State(initialValue: currentDate.calendarDisplayDate)
+        self._label = State(initialValue: label)
     }
 
-    init(habitId: String, habitVM: HabitViewModel) {
+    init(habitId: String, label: String, habitVM: HabitViewModel) {
         self.habitId = habitId
         self.pomodoroVM = PomodoroViewModel()
         self.habitVM = habitVM
 
         self._days = State(initialValue: currentDate.calendarDisplayDate)
+        self._label = State(initialValue: label)
     }
 
 
@@ -88,7 +91,7 @@ struct CalendarView: View {
                 }
             }
 
-            calendarView(fractionForDate: habitVM.progress ?? [:])
+            calendarView(fractionForDate: habitVM.progress ?? [:], label: label)
         }
         .onAppear{
             habitVM.getProgressHabit(habitId: habitId, date: currentDate)
@@ -106,7 +109,7 @@ struct CalendarView: View {
 // MARK: - View Builder
 extension CalendarView {
     @ViewBuilder
-    func calendarView(fractionForDate: [Date: CGFloat]) -> some View {
+    func calendarView(fractionForDate: [Date: CGFloat], label: String) -> some View {
         let columns = Array(repeating: GridItem(.flexible()), count: 7)
 
         let emptyDays = currentDate.startOfMonth.get(.weekday) - 1
@@ -122,7 +125,7 @@ extension CalendarView {
                         text.font(.title3.bold())
                     })
                     .font(.title3)
-                    .modifier(DateMarking(fraction: fractionForDate[day] ?? 0, isSelected: selectedDate == dayDate))
+                    .modifier(DateMarking(fraction: fractionForDate[day] ?? 0, isSelected: selectedDate == dayDate, label: label))
                     .onTapGesture {
                         selectedDate = dayDate
                     }
@@ -176,10 +179,11 @@ struct DateMarking: ViewModifier {
     let startPoint: CGFloat
     let endPoint: CGFloat
     let isSelected: Bool
+    let label: String
 
-    init(fraction: CGFloat = 1, isSelected: Bool) {
+    init(fraction: CGFloat = 1, isSelected: Bool, label: String) {
         self.fraction = fraction
-
+        self.label = label
         // Calculate start and end point
         let halfFraction = fraction/2
         self.startPoint = midPoint - halfFraction
@@ -195,7 +199,7 @@ struct DateMarking: ViewModifier {
                     Circle()
                         .trim(from: startPoint, to: endPoint)
                         .rotation(.degrees(-90))
-                        .foregroundColor(Color(red: 0.58, green: 0.89, blue: 0.99))
+                        .foregroundColor(Color(label))
                         .frame(width: size, height: size)
 
                     if isSelected {

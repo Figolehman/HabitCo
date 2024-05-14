@@ -27,7 +27,7 @@ final class PomodoroViewModel: ObservableObject {
 }
 
 extension PomodoroViewModel {
-   
+    
     // Create pomodoro
     public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date?, completion: @escaping () -> Void = {}){
         Task {
@@ -62,7 +62,8 @@ extension PomodoroViewModel {
     }
     
     public func editPomodoro(pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, longBreakTime: Int?, repeatPomodoro: [Int]?, reminderHabit: Date?, completion: @escaping () -> Void = {}) {
-        Task{
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
             let currentDate = Date().formattedDate(to: .fullMonthName)
             let reminder = reminderHabit?.dateToString(to: .hourAndMinute)
             let editUndo = try await userManager.editSubJournal(userId: userId, from: currentDate, habitId: nil, pomodoroId: pomodoroId, frequency: session ?? 0)
@@ -127,11 +128,16 @@ extension PomodoroViewModel {
                 } else {
                     try await userManager.updateCountStreak(userId: userId, undo: true)
                 }
-            if try await !userManager.checkHasSubJournalToday(userId: userId) {
-                try await userManager.updateHasSubJournal(userId: userId, from: currentDate, hasSubJournal: false)
-            }
+                if try await !userManager.checkHasSubJournalToday(userId: userId) {
+                    try await userManager.updateHasSubJournal(userId: userId, from: currentDate, hasSubJournal: false)
+                }
                 completion()
+            }
         }
+    }
+    
+    public func setPomodoro(pomodoro: PomodoroDB) {
+        self.pomodoro = pomodoro
     }
 }
 
@@ -144,12 +150,7 @@ private extension PomodoroViewModel {
                 try await userManager.updateCountStreak(userId: userId)
                 try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
             }
-                try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
-            }
+            try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
         }
-    }
-
-    public func setPomodoro(pomodoro: PomodoroDB) {
-        self.pomodoro = pomodoro
     }
 }

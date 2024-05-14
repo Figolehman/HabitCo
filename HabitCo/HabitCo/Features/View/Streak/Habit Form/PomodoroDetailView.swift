@@ -20,7 +20,7 @@ struct PomodoroDetailView: View {
             ScrollView {
                 VStack (spacing: 40) {
                     VStack (spacing: 24) {
-                        CalendarView(habitId: pomodoro.id, pomodoroVM: pomodoroVM)
+                        CalendarView(habitId: pomodoro.id, label: pomodoro.label ?? "", pomodoroVM: pomodoroVM)
 
                         CardView {
                             Text("\(pomodoro.description ?? "")")

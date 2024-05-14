@@ -227,6 +227,8 @@ extension UserViewModel{
                 try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
                 getStreak()
             }
+            print("isStreakJustAdded: \(isStreakJustAdded)")
+            print("isStreakJustDeleted: \(isStreakJustDeleted)")
             getSubJournals(from: date)
         }
     }
@@ -243,6 +245,7 @@ extension UserViewModel{
         }
     }
     
+    // Ini buat ngecek perhari ada subjournal atau ga
     func checkSubJournal(date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }

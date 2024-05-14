@@ -20,7 +20,7 @@ struct HabitDetailView: View {
             ScrollView {
                 VStack (spacing: 40) {
                     VStack (spacing: 24) {
-                        CalendarView(habitId: habit.id ?? "", habitVM: habitVM)
+                        CalendarView(habitId: habit.id ?? "", label: habit.label ?? "", habitVM: habitVM)
 
                         CardView {
                             Text("\(habit.description ?? "")")

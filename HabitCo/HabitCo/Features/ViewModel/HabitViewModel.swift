@@ -26,11 +26,11 @@ final class HabitViewModel: ObservableObject {
 }
 
 extension HabitViewModel {
-
+    
     public func setHabit(habit: HabitDB) {
         self.habit = habit
     }
-
+    
     // Create user habit
     public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date?, completion: @escaping () -> Void = {}) {
         Task {
@@ -108,13 +108,12 @@ extension HabitViewModel {
                 }
             }
             completion()
-            }
         }
     }
     
     // Delete Habit
     public func deleteHabit(habitId: String, completion: @escaping () -> Void = {}) {
-        Task{
+        Task {
             guard let userId = UserDefaultManager.userID else { return }
             try await userManager.deleteHabit(userId: userId, habitId: habitId)
             let currentDate = Date().formattedDate(to: .fullMonthName)
@@ -133,9 +132,12 @@ extension HabitViewModel {
                     try await userManager.updateHasSubJournal(userId: userId, from: currentDate, hasSubJournal: false)
                 }
             }
+            completion()
         }
     }
 }
+
+
 
 private extension HabitViewModel {
     func updateCountStreak(date: Date) {
@@ -146,7 +148,6 @@ private extension HabitViewModel {
                 try await userManager.updateCountStreak(userId: userId)
                 try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
             }
-            completion()
         }
     }
 }

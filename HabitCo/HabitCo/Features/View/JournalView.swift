@@ -22,8 +22,6 @@ struct JournalView: View {
     @State private var loadingMessage = "Signing Out..."
 
     @State private var navigateTo: Navigator? = Navigator.none
-//    @State private var habitNavigationArg: HabitDB?
-//    @State private var pomodoroNavigationArg: PomodoroDB?
     @State private var focusNavigationArg: (PomodoroDB?, SubJournalDB?, Date)?
 
     @State private var sortType = SortImage.unsort
@@ -115,6 +113,8 @@ struct JournalView: View {
                                                 appliedFilter.remove(at: index)
                                                 selectedFilter = appliedFilter
                                             }
+                                            let selectedLabel = selectedFilter.map { $0.rawValue }
+                                            userViewModel.filterSubJournalsByLabels(date: selectedDate, labels: selectedLabel)
                                         } label: {
                                             FilterLabelView(filter: filter)
                                         }
@@ -156,7 +156,7 @@ struct JournalView: View {
                                 VStack (spacing: .getResponsiveHeight(16)) {
                                     Image(systemName: "leaf")
                                         .font(.largeTitle)
-                                    Text("There’s no habit recorded yet.")
+                                    Text(userViewModel.hasSubJournal ? "There’s no habit recorded yet." : "There's no habit with this label")
                                 }
                                 .foregroundColor(.getAppColor(.neutral))
                                 .frame(width: .getResponsiveWidth(365), height: .getResponsiveHeight(210))
@@ -191,7 +191,6 @@ struct JournalView: View {
                 userViewModelInitiation()
             }
             .toolbar {
-
                 HStack {
                     Text(selectedDate.getMonthAndYearString())
                         .foregroundColor(.getAppColor(.neutral))
@@ -257,7 +256,7 @@ struct JournalView: View {
                 }
         })
         .alertOverlay($userViewModel.isStreakJustAdded, content: {
-            StreakGainView(isShown: $userViewModel.isStreakJustAdded, streakCount: userViewModel.streakCount)
+            StreakGainView(streakCount: userViewModel.streakCount, isShown: $userViewModel.isStreakJustAdded)
         })
         .alertOverlay($userViewModel.isStreakJustDeleted, content: {
             StreakLossView(streakCount: userViewModel.streakCount, isShown: $userViewModel.isStreakJustDeleted)
