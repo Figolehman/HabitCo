@@ -9,8 +9,12 @@ import SwiftUI
 
 struct EditHabitView: View {
     
-    var habit: HabitDB
-    
+    let habit: HabitDB
+
+    @State private var isLoading = false
+    @State private var loadingMessage = "Saving..."
+    @State private var loadingStatus = LoadingType.loading
+
     @State private var selected: Color.FilterColors?
     @State private var frequency: Int
     
@@ -23,20 +27,20 @@ struct EditHabitView: View {
 
     @State var showAlert = false
     
-    @State private var repeatDate: Set<RepeatDay>
+    @State private var repeatDate: Set<RepeatDay> = []
     @State private var reminderTime: Date = Date()
     
 
     @State var habitName: String
     @State var description: String
     
-    @StateObject private var habitVM = HabitViewModel()
-    
+    @ObservedObject private var habitVM: HabitViewModel
+
     @Environment(\.presentationMode) var presentationMode
 
-    init(habit: HabitDB) {
-        self.habit = habit
-        _repeatDate = State(initialValue: [])
+    init(habitVM: HabitViewModel) {
+        self.habit = habitVM.habit!
+        self.habitVM = habitVM
         _habitName = State(initialValue: habit.habitName!)
         _description = State(initialValue: habit.description!)
 
@@ -158,7 +162,7 @@ struct EditHabitView: View {
                                     DatePicker("", selection: $reminderTime, displayedComponents: [.hourAndMinute])
                                         .datePickerStyle(.wheel)
                                         .background(
-                                            Color.getAppColor(.primary3)
+                                            Color.getAppColor(.primary)
                                                 .cornerRadius(13)
                                         )
                                         .environment(\.colorScheme, .dark)
@@ -171,20 +175,35 @@ struct EditHabitView: View {
                 }
                 let repeatHabit = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit) {
-                    habitVM.editHabit(habitId: habit.id ?? "", habitName: habitName, description: description, label: selected?.rawValue, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminderTime)
-                    self.presentationMode.wrappedValue.dismiss()
+                    isLoading = true
+                    loadingMessage = "Saving..."
+                    habitVM.editHabit(habitId: habit.id ?? "", habitName: habitName, description: description, label: selected?.rawValue, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminderTime) {
+                        loadingSuccess(type: .save)
+                    }
                 }
                 .padding(.top, 4)
             }
         }
+        .background (
+            Color.neutral3
+                .frame(width: ScreenSize.width, height: ScreenSize.height)
+                .ignoresSafeArea()
+        )
         .alertOverlay($showAlert, content: {
             CustomAlertView(title: "Are you sure you want to Delete this habit?", message: "Any progress and data linked to this will be lost permanently, and you wont be able to recover it", dismiss: "Cancel", destruct: "Delete", dismissAction: {
                 showAlert = false
             }, destructAction: {
-                habitVM.deleteHabit(habitId: habit.id ?? "")
-                self.presentationMode.wrappedValue.dismiss()
+                isLoading = true
+                loadingMessage = "Deleting..."
+                habitVM.deleteHabit(habitId: habit.id ?? "") {
+                    loadingSuccess(type: .delete)
+                }
             })
         })
+        .alertOverlay($isLoading, content: {
+            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
+        })
+        .navigationTitle("Edit Habit Form")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -206,5 +225,25 @@ struct EditHabitView: View {
         }
         .navigationTitle("Edit Habit Form")
         .navigationBarTitleDisplayMode(.large)
+    }
+}
+
+fileprivate enum QueryType {
+    case delete, save
+}
+
+private extension EditHabitView {
+    func loadingSuccess(type: QueryType) {
+        switch type {
+        case .delete:
+            loadingMessage = "Deleted"
+        case .save:
+            loadingMessage = "Saved"
+        }
+        loadingStatus = .success
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isLoading = false
+            self.presentationMode.wrappedValue.dismiss()
+        }
     }
 }

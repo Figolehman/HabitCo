@@ -52,7 +52,8 @@ struct HabitItem: View {
                         
                         Text("\(habitName)")
                             .foregroundColor(Color.getAppColor(.neutral3))
-                        
+                            .multilineTextAlignment(.leading)
+
                         Spacer()
                     }
                     .padding(.horizontal, 16)

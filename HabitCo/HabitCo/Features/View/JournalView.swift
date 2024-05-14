@@ -15,11 +15,15 @@ private enum Navigator {
 
 struct JournalView: View {
 
-    @State private var firstOpen = true
+    @State private var undoArg: (String, Date)?
+
+    @State private var isLoading = false
+    @State private var loadingStatus = LoadingType.loading
+    @State private var loadingMessage = "Signing Out..."
 
     @State private var navigateTo: Navigator? = Navigator.none
-    @State private var habitNavigationArg: HabitDB?
-    @State private var pomodoroNavigationArg: PomodoroDB?
+//    @State private var habitNavigationArg: HabitDB?
+//    @State private var pomodoroNavigationArg: PomodoroDB?
     @State private var focusNavigationArg: (PomodoroDB?, SubJournalDB?, Date)?
 
     @State private var sortType = SortImage.unsort
@@ -28,20 +32,24 @@ struct JournalView: View {
     @StateObject private var habitViewModel = HabitViewModel()
     @StateObject private var pomodoroViewModel = PomodoroViewModel()
 
-    @State var selectedDate = Date()
-    @State var showSettings = false
-    @State var showCreateHabit = false
+    @State private var appliedFilter = [Color.FilterColors]()
+    @State private var selectedFilter = [Color.FilterColors]()
+
+    @State private var selectedDate = Date()
+    @State private var showSettings = false
+    @State private var showCreateHabit = false
     @State private var isDataLoaded = false
-    @State var showPrivacyPolicy = false
-    @State var showTermsAndConditions = false
-    @State var showFilter = false
-    @State var showAlert = false
+    @State private var showPrivacyPolicy = false
+    @State private var showTermsAndConditions = false
+    @State private var showFilter = false
+    @State private var showSignOutAlert = false
+    @State private var showUndoAlert = false
 
     @Environment(\.auth) var auth
     @EnvironmentObject var appRootManager: AppRootManager
     
     var body: some View {
-        NavigationView{
+        NavigationView {
 
             VStack(spacing: 48) {
 
@@ -59,10 +67,10 @@ struct JournalView: View {
                     NavigationLink(destination: CreatePomodoroView(habitNotificationId: userViewModel.habitNotificationId ?? "", pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
                         EmptyView()
                     }
-                    NavigationLink(destination: HabitDetailView(habit: habitNavigationArg), tag: .habitDetail, selection: $navigateTo) {
+                    NavigationLink(destination: HabitDetailView(habitVM: habitViewModel), tag: .habitDetail, selection: $navigateTo) {
                         EmptyView()
                     }
-                    NavigationLink(destination: PomodoroDetailView(pomodoro: pomodoroNavigationArg), tag: .pomodoroDetail, selection: $navigateTo) {
+                  NavigationLink(destination: PomodoroDetailView(pomodoroVM: pomodoroViewModel), tag: .pomodoroDetail, selection: $navigateTo) {
                         EmptyView()
                     }
                     if focusNavigationArg != nil {
@@ -97,6 +105,24 @@ struct JournalView: View {
                                     .foregroundColor(.getAppColor(.primary))
                             }
                         }
+//
+                        if !appliedFilter.isEmpty {
+                            ScrollView(.horizontal) {
+                                HStack(spacing: .getResponsiveWidth(8)) {
+                                    ForEach(appliedFilter, id: \.self) { filter in
+                                        Button {
+                                            if let index = appliedFilter.firstIndex(of: filter) {
+                                                appliedFilter.remove(at: index)
+                                                selectedFilter = appliedFilter
+                                            }
+                                        } label: {
+                                            FilterLabelView(filter: filter)
+                                        }
+                                    }
+                                }
+                            }
+                            .frame(height: .getResponsiveHeight(38))
+                        }
 
                         ScrollView {
                             if let _ = userViewModel.subJournals {
@@ -104,22 +130,24 @@ struct JournalView: View {
                                     ForEach(userViewModel.subJournals ?? [], id: \.subJournal.id) { item in
                                         if item.subJournal.subJournalType == .habit {
                                             HabitItem(habitType: .pomodoro, habitName: item.habit?.habitName ?? "NO NAME", label: item.habit?.label ?? "", fraction: item.subJournal.fraction ?? 0.0, progress: item.subJournal.startFrequency ?? 0) {
-                                                habitNavigationArg = item.habit
+                                                habitViewModel.setHabit(habit: item.habit!)
                                                 navigateTo = .habitDetail
                                             } action: {
                                                 userViewModel.updateCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                             } undoAction: {
-                                                userViewModel.undoCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                                showUndoAlert = true
+                                                undoArg = (item.subJournal.id ?? "", selectedDate)
                                             }
                                         } else {
                                             HabitItem(habitType: .regular, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", label: item.pomodoro?.label ?? "", progress: item.subJournal.startFrequency ?? 0) {
-                                                pomodoroNavigationArg = item.pomodoro
+                                                pomodoroViewModel.setPomodoro(pomodoro: item.pomodoro!)
                                                 navigateTo = .pomodoroDetail
                                             } action: {
                                                 focusNavigationArg = (item.pomodoro, item.subJournal, selectedDate)
                                                 navigateTo = .focus
                                             } undoAction: {
-                                                userViewModel.undoCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                                showUndoAlert = true
+                                                undoArg = (item.subJournal.id ?? "", selectedDate)
                                             }
                                         }
                                     }
@@ -140,17 +168,16 @@ struct JournalView: View {
             }
             .padding(.top, 8)
             .background(
-                Image("blobsJournal")
-                    .frame(width: .getResponsiveWidth(558.86658), height: .getResponsiveHeight(509.7464))
-                    .offset(y: .getResponsiveHeight(-530))
+                ZStack {
+                    Color.getAppColor(.neutral3)
+                        .ignoresSafeArea()
+
+                    Image("blobsJournal")
+                        .frame(width: .getResponsiveWidth(558.86658), height: .getResponsiveHeight(509.7464))
+                        .offset(y: .getResponsiveHeight(-530))
+                }
             )
             .onAppear {
-                if firstOpen {
-                    // streak loss view calculation
-
-                } else {
-                    // streak gain view calculation
-                }
                 let customNavigation = UINavigationBarAppearance()
                 customNavigation.titleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
                 customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
@@ -162,7 +189,6 @@ struct JournalView: View {
                     print("No Authenticated User")
                 }
                 userViewModelInitiation()
-                firstOpen = false
             }
             .toolbar {
 
@@ -186,8 +212,10 @@ struct JournalView: View {
                 .frame(width: ScreenSize.width)
             }
         }
+        .accentColor(.getAppColor(.primary))
+        .navigationViewStyle(.stack)
         .customSheet($showSettings, sheetType: .settings, content: {
-            SettingsView(username: userViewModel.user?.fullName ?? "Full Name", userEmail: "Apple ID", initial: userViewModel.generateInitial(), showAlert: $showAlert, showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
+            SettingsView(username: userViewModel.user?.fullName ?? "Full Name", userEmail: "Apple ID", initial: userViewModel.generateInitial(), showAlert: $showSignOutAlert, showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
         })
         .customSheet($showPrivacyPolicy, sheetType: .rules, content: {
             PrivacyPolicyView()
@@ -195,20 +223,38 @@ struct JournalView: View {
         .customSheet($showTermsAndConditions, sheetType: .rules, content: {
             TermsAndConditionsView()
         })
-        .alertOverlay($showAlert, content: {
+        .alertOverlay($showUndoAlert, content: {
+            CustomAlertView(title: "Are you sure you want to Undo your progress?", message: "Every step forward matters. Are you sure you want to go back?", dismiss: "Cancel", destruct: "Undo") {
+                showUndoAlert = false
+            } destructAction: {
+                guard let undoArg else { return }
+                userViewModel.undoCountSubJournal(subJournalId: undoArg.0, from: undoArg.1)
+                self.undoArg = nil
+                showUndoAlert = false
+            }
+
+        })
+        .alertOverlay($showSignOutAlert, content: {
             CustomAlertView(title: "Are you sure you want to Sign Out?", message: "Signing out means that you will need to sign in again when you open the apps.", dismiss: "Cancel", destruct: "Sign Out", dismissAction: {
-                showAlert = false
+                showSignOutAlert = false
             }, destructAction: {
                 do {
+                    showSignOutAlert = false
+                    isLoading = true
                     try auth.signOut()
-                    appRootManager.currentRoot = .onBoardingView
+                    loadingSuccess()
                 } catch {
                     print(error)
                 }
             })
         })
         .customSheet($showFilter, sheetType: .filters, content: {
-            FilterView(date: $selectedDate, userVM: userViewModel)
+            FilterView(selectedFilter: $selectedFilter, appliedFilter: $appliedFilter, date: $selectedDate, userVM: userViewModel)
+                .onDisappear {
+                    if selectedFilter != appliedFilter {
+                        selectedFilter = appliedFilter
+                    }
+                }
         })
         .alertOverlay($userViewModel.isStreakJustAdded, content: {
             StreakGainView(isShown: $userViewModel.isStreakJustAdded, streakCount: userViewModel.streakCount)
@@ -233,13 +279,21 @@ struct JournalView: View {
                 }
             }
         })
+        .alertOverlay($isLoading, content: {
+            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
+        })
         .onChange(of: selectedDate) { newValue in
             userViewModel.getSubJournals(from: newValue)
             userViewModel.checkSubJournal(date: newValue)
         }
     }
 
-    private func sortJournal() {
+
+}
+
+private extension JournalView {
+
+    func sortJournal() {
         switch sortType {
         case .unsort:
             userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: nil)
@@ -250,7 +304,16 @@ struct JournalView: View {
         }
     }
 
-    private func userViewModelInitiation() {
+    func loadingSuccess() {
+        loadingMessage = "Signed Out"
+        loadingStatus = .success
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isLoading = false
+            appRootManager.currentRoot = .onBoardingView
+        }
+    }
+
+    func userViewModelInitiation() {
         userViewModel.generateJournalEntries()
         userViewModel.checkIsStreak()
         userViewModel.getSubJournals(from: selectedDate)

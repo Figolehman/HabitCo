@@ -32,7 +32,23 @@ struct LabelButton: View {
         )
         self.color = color
     }
-    
+
+    init(tag: Color.FilterColors, selection: Binding<[Color.FilterColors]>, color: Color){
+        self._isSelected = Binding(
+            get: { selection.wrappedValue.contains(tag)},
+            set: { tes in
+                if !tes {
+                    if let index = selection.wrappedValue.firstIndex(of: tag) {
+                        selection.wrappedValue.remove(at: index)
+                    }
+                } else{
+                    selection.wrappedValue.append(tag)
+                }
+            }
+        )
+        self.color = color
+    }
+
     var body: some View {
         Button(action: {
             isSelected.toggle()

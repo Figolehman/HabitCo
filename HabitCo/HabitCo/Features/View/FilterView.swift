@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct FilterView: View {
-    @State var selectedFilter: Set<Color.FilterColors> = []
-    
+    @Binding var selectedFilter: [Color.FilterColors]
+    @Binding var appliedFilter: [Color.FilterColors]
+
     @Binding var date: Date
     
     @ObservedObject var userVM: UserViewModel
-    
+
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -28,6 +29,7 @@ struct FilterView: View {
             
             let selectedLabel = selectedFilter.map { $0.rawValue }
             AppButton(label: "Save", sizeType: .submit, action: {
+                appliedFilter = selectedFilter
                 userVM.filterSubJournalsByLabels(date: date, labels: selectedLabel)
                 self.presentationMode.wrappedValue.dismiss()
             })
@@ -36,5 +38,5 @@ struct FilterView: View {
 }
 
 #Preview {
-    FilterView(date: .constant(Date()), userVM: UserViewModel())
+    FilterView(selectedFilter: .constant([]), appliedFilter: .constant([]), date: .constant(Date()), userVM: UserViewModel())
 }

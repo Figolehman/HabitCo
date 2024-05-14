@@ -11,6 +11,7 @@ struct SettingsView: View {
     let username: String
     let userEmail: String
     let initial: String
+
     @Binding var showAlert: Bool
     @State var showSheet = false
     @Binding var showPrivacyPolicy: Bool

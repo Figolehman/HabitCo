@@ -13,6 +13,10 @@ struct CreatePomodoroView: View {
     
     let habitNotificationId: String
 
+    @State private var isLoading = false
+    @State private var loadingStatus = LoadingType.loading
+    @State private var loadingMessage = "Saving..."
+
     @State private var pomodoroName: String = ""
     @State private var description: String = ""
     @State private var selected: Color.FilterColors? = nil
@@ -165,7 +169,7 @@ struct CreatePomodoroView: View {
                                     DatePicker("", selection: $reminderTime, displayedComponents: [.hourAndMinute])
                                         .datePickerStyle(.wheel)
                                         .background(
-                                            Color.getAppColor(.primary3)
+                                            Color.getAppColor(.primary)
                                                 .cornerRadius(13)
                                         )
                                         .environment(\.colorScheme, .dark)
@@ -241,7 +245,7 @@ struct CreatePomodoroView: View {
                                 }
                                 .pickerStyle(.wheel)
                                 .background(
-                                    Color.getAppColor(.primary3)
+                                    Color.getAppColor(.primary)
                                         .cornerRadius(13)
                                 )
                                 .environment(\.colorScheme, .dark)
@@ -255,7 +259,7 @@ struct CreatePomodoroView: View {
                                 Text("Break Time")
                                 Spacer()
                                 AppButton(label: "\(breakTime == 0 ? "Not Set" : "\(breakTime)")", sizeType: .select) {
-                                    if isFocusTimeFolded {
+                                    if isBreakTimeFolded {
                                         withAnimation {
                                             isBreakTimeFolded = false
                                             if breakTime == 0 {
@@ -277,7 +281,7 @@ struct CreatePomodoroView: View {
                                 }
                                 .pickerStyle(.wheel)
                                 .background(
-                                    Color.getAppColor(.primary3)
+                                    Color.getAppColor(.primary)
                                         .cornerRadius(13)
                                 )
                                 .environment(\.colorScheme, .dark)
@@ -313,7 +317,7 @@ struct CreatePomodoroView: View {
                                 }
                                 .pickerStyle(.wheel)
                                 .background(
-                                    Color.getAppColor(.primary3)
+                                    Color.getAppColor(.primary)
                                         .cornerRadius(13)
                                 )
                                 .environment(\.colorScheme, .dark)
@@ -324,11 +328,16 @@ struct CreatePomodoroView: View {
                 let repeatPomodoro: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     if isSavable() {
+                        isLoading = true
                         if isReminderFolded {
-                            pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: nil)
+                            pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: nil) {
+                                loadingSuccess()
+                            }
                         } else {
                             notify.sendNotification(date: reminderTime, weekdays: repeatPomodoro, title: "\(pomodoroName)", body: "Go finish it", withIdentifier: "\(habitNotificationId)")
-                            pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderTime)
+                            pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderTime) {
+                                loadingSuccess()
+                            }
                         }
                         self.presentationMode.wrappedValue.dismiss()
                     }
@@ -336,15 +345,33 @@ struct CreatePomodoroView: View {
                 .padding(.top, 4)
             }
         }
+        .alertOverlay($isLoading, content: {
+            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
+        })
+        .background (
+            Color.neutral3
+                .frame(width: ScreenSize.width, height: ScreenSize.height)
+                .ignoresSafeArea()
+        )
+        .padding(.top, .getResponsiveHeight(36))
         .navigationTitle("Create Pomodoro Form")
         .navigationBarTitleDisplayMode(.large)
     }
 }
 
 // MARK: -
-extension CreatePomodoroView {
+private extension CreatePomodoroView {
     func isSavable() -> Bool {
         return isRepeatOn && focusTime != 0 && breakTime != 0 && longBreakTime != 0 && !repeatDate.isEmpty && !pomodoroName.isEmpty && selected != nil
+    }
+
+    func loadingSuccess() {
+        loadingMessage = "Saved"
+        loadingStatus = .success
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isLoading = false
+            self.presentationMode.wrappedValue.dismiss()
+        }
     }
 }
 

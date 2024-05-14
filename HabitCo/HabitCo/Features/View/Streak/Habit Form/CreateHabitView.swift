@@ -13,6 +13,10 @@ struct CreateHabitView: View {
 
     let habitNotificationId: String
 
+    @State private var isLoading = false
+    @State private var loadingStatus = LoadingType.loading
+    @State private var loadingMessage = "Saving..."
+
     @State private var habitName: String = ""
     @State private var description: String = ""
     @State private var label: Color.FilterColors? = nil
@@ -147,26 +151,49 @@ struct CreateHabitView: View {
                 let repeatDateInt: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     guard isSavable() else { return }
+                    isLoading = true
                     if isReminderFolded {
-                        habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: nil)
+                        habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: nil) {
+                            loadingSuccess()
+                        }
                     } else {
                         notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "Go finish it", withIdentifier: "\(habitNotificationId)")
-                        habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime)
+                        habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime) {
+                            loadingSuccess()
+                        }
                     }
                     self.presentationMode.wrappedValue.dismiss()
                 }
                 .padding(.top, 4)
             }
         }
-        .padding(.top, 36)
+        .alertOverlay($isLoading, content: {
+            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
+        })
+        .background (
+            Color.neutral3
+                .frame(width: ScreenSize.width, height: ScreenSize.height)
+                .ignoresSafeArea()
+        )
+        .padding(.top, .getResponsiveHeight(36))
         .navigationTitle("Create Habit Form")
         .navigationBarTitleDisplayMode(.large)
     }
 }
 
-extension CreateHabitView {
+
+private extension CreateHabitView {
     func isSavable() -> Bool {
         return isRepeatOn && !repeatDate.isEmpty && !habitName.isEmpty && label != nil
+    }
+
+    func loadingSuccess() {
+        loadingMessage = "Saved"
+        loadingStatus = .success
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isLoading = false
+            self.presentationMode.wrappedValue.dismiss()
+        }
     }
 }
 
