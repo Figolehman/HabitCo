@@ -65,8 +65,44 @@ extension HabitViewModel {
     public func editHabit(habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: Date?) {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
+            let currentDate = Date().formattedDate(to: .fullMonthName)
             let reminder = reminderHabit?.dateToString(to: .hourAndMinute)
             self.habit = try await userManager.editHabit(userId: userId, habitId: habitId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminder)
+            let editUndo = try await userManager.editSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName), habitId: habitId, pomodoroId: nil, frequency: frequency ?? 0)
+            
+            let journal = try await userManager.getJournal(userId: userId, from: currentDate)
+            let subJournal = try await userManager.getSubJournalByDate(userId: userId, date: currentDate, habitId: habitId, pomodoroId: nil)
+            if editUndo {
+                let isFirstStreak = try await userManager.checkIsFirstStreak(userId: userId)
+                let isStartFrequencyIsZero = try await userManager.checkStartFrequencyIsZero(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
+                if try await !userManager.checkCompletedSubJournal(userId: userId, from: currentDate),
+                   try await !userManager.checkHasUndoStreak(userId: userId, from: currentDate)
+                {
+                    if !isFirstStreak,
+                       !isStartFrequencyIsZero
+                    {
+                        try await userManager.updateHasUndoStreak(userId: userId, from: currentDate, isUndo: true)
+                    } else {
+                        try await userManager.deleteStreak(userId: userId)
+                    }
+                    try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
+                }
+            } else {
+                let complete = try await userManager.checkSubJournalIsCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
+                if complete,
+                   currentDate.isSameDay(UserDefaultManager.lastEntryDate.formattedDate(to: .fullMonthName))
+                {
+                    if (try await userManager.getStreak(userId: userId) != nil) {
+                        updateCountStreak(date: currentDate)
+                        try await userManager.updateHasUndoStreak(userId: userId, from: currentDate)
+                    } else {
+                        try await userManager.createStreak(userId: userId)
+                        try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: true)
+                        try await userManager.updateHasUndoStreak(userId: userId, from: currentDate)
+                    }
+                    try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
+                }
+            }
         }
     }
     
@@ -87,6 +123,22 @@ extension HabitViewModel {
                     try await userManager.updateCountStreak(userId: userId, undo: true)
                 }
                 try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
+                if try await !userManager.checkHasSubJournalToday(userId: userId) {
+                    try await userManager.updateHasSubJournal(userId: userId, from: currentDate, hasSubJournal: false)
+                }
+            }
+        }
+    }
+}
+
+private extension HabitViewModel {
+    func updateCountStreak(date: Date) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            if try await !userManager.checkTodayStreak(userId: userId, from: date)
+            {
+                try await userManager.updateCountStreak(userId: userId)
+                try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
             }
         }
     }

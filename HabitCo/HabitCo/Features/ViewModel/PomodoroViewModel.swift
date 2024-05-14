@@ -63,8 +63,50 @@ extension PomodoroViewModel {
     public func editPomodoro(pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, longBreakTime: Int?, repeatPomodoro: [Int]?, reminderHabit: Date?) {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
+            let currentDate = Date().formattedDate(to: .fullMonthName)
             let reminder = reminderHabit?.dateToString(to: .hourAndMinute)
             self.pomodoro = try await userManager.editPomodoro(userId: userId, pomodoroId: pomodoroId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, longBreakTime: longBreakTime, reminderPomodoro: reminder)
+            let editUndo = try await userManager.editSubJournal(userId: userId, from: currentDate, habitId: nil, pomodoroId: pomodoroId, frequency: session ?? 0)
+            let journal = try await userManager.getJournal(userId: userId, from: currentDate)
+            let subJournal = try await userManager.getSubJournalByDate(userId: userId, date: currentDate, habitId: nil, pomodoroId: pomodoroId)
+            if editUndo {
+                let isFirstStreak = try await userManager.checkIsFirstStreak(userId: userId)
+                let isStartFrequencyIsZero = try await userManager.checkStartFrequencyIsZero(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
+                if try await !userManager.checkCompletedSubJournal(userId: userId, from: currentDate),
+                   try await !userManager.checkHasUndoStreak(userId: userId, from: currentDate)
+                {
+                    if !isFirstStreak,
+                       !isStartFrequencyIsZero
+                    {
+                        try await userManager.updateHasUndoStreak(userId: userId, from: currentDate, isUndo: true)
+                    } else {
+                        try await userManager.deleteStreak(userId: userId)
+                    }
+                    try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
+                }
+            } else {
+                let complete = try await userManager.checkSubJournalIsCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
+                if complete,
+                   currentDate.isSameDay(UserDefaultManager.lastEntryDate.formattedDate(to: .fullMonthName))
+                {
+                    if (try await userManager.getStreak(userId: userId) != nil) {
+                        updateCountStreak(date: currentDate)
+                        try await userManager.updateHasUndoStreak(userId: userId, from: currentDate)
+                    } else {
+                        try await userManager.createStreak(userId: userId)
+                        try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: true)
+                        try await userManager.updateHasUndoStreak(userId: userId, from: currentDate)
+                    }
+                    try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
+                }
+            }
+        }
+    }
+    
+    func editPomodoroTimer(pomodoroId: String, focusTime: Int?, breakTime: Int?, longBreakTime: Int?) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            try await userManager.editPomodoroTimer(userId: userId, pomodoroId: pomodoroId, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime)
         }
     }
     
@@ -85,6 +127,22 @@ extension PomodoroViewModel {
                     try await userManager.updateCountStreak(userId: userId, undo: true)
                 }
                 try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
+            }
+            if try await !userManager.checkHasSubJournalToday(userId: userId) {
+                try await userManager.updateHasSubJournal(userId: userId, from: currentDate, hasSubJournal: false)
+            }
+        }
+    }
+}
+
+private extension PomodoroViewModel {
+    func updateCountStreak(date: Date) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            if try await !userManager.checkTodayStreak(userId: userId, from: date)
+            {
+                try await userManager.updateCountStreak(userId: userId)
+                try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
             }
         }
     }

@@ -248,13 +248,11 @@ extension UserManager: JournalUseCase {
     }
     
     func checkHasSubJournalToday(userId: String) async throws -> Bool {
-        let snapshotHasSubJournal = try await userJournalCollection(userId: userId)
-            .whereDateField(JournalDB.CodingKeys.date.rawValue, isEqualToDate: Date().formattedDate(to: .fullMonthName))
-            .whereField(JournalDB.CodingKeys.hasSubJournal.rawValue, isEqualTo: true)
-            .getDocuments()
+        let journal = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
+        let snapshotHasSubJournal = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "").getDocuments()
         return !snapshotHasSubJournal.isEmpty
     }
-    
+        
     // Check if journal has a sub journals or not for circle scrollableView
     func checkHasSubJournals(userId: String) async throws -> [Date]? {
         guard let journals = try await getAllJournal(userId: userId) else {
@@ -374,6 +372,52 @@ extension UserManager: SubJournalUseCase {
         return false
     }
     
+        func editSubJournal(userId: String, from date: Date, habitId: String?, pomodoroId: String?, frequency: Int) async throws -> Bool {
+            let journal = try await getJournal(userId: userId, from: date)
+            let subJournalDocument = try await getSubJournalByDate(userId: userId, date: date, habitId: habitId, pomodoroId: pomodoroId)
+    
+            let count = subJournalDocument?.startFrequency ?? 0
+            let frequencySubJournal = subJournalDocument?.frequencyCount ?? 0
+            let newFraction = ((Double(count)) / Double(frequency) * 100) / 100
+            var updatedData: [String: Any] = [:]
+            if frequencySubJournal < frequency {
+                updatedData[SubJournalDB.CodingKeys.frequencyCount.rawValue] = frequency
+                updatedData[SubJournalDB.CodingKeys.isCompleted.rawValue] = false
+                updatedData[SubJournalDB.CodingKeys.fraction.rawValue] = newFraction
+                try await userSubJournalDocument(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalDocument?.id ?? "").updateData(updatedData)
+                return true
+            } else {
+                updatedData[SubJournalDB.CodingKeys.frequencyCount.rawValue] = frequency
+                if count >= frequency {
+                    updatedData[SubJournalDB.CodingKeys.startFrequency.rawValue] = frequency
+                    updatedData[SubJournalDB.CodingKeys.isCompleted.rawValue] = true
+                    updatedData[SubJournalDB.CodingKeys.fraction.rawValue] = 1
+                }
+                try await userSubJournalDocument(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalDocument?.id ?? "").updateData(updatedData)
+                return false
+            }
+        }
+    
+        func getSubJournalByDate(userId: String, date: Date, habitId: String?, pomodoroId: String?) async throws -> SubJournalDB? {
+            let journal = try await getJournal(userId: userId, from: date)
+            if habitId != nil {
+                let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "")
+                    .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitId ?? "")
+                    .getDocuments()
+                if let subJournalDocument = snapshot.documents.first {
+                    return try subJournalDocument.data(as: SubJournalDB.self)
+                }
+            } else if pomodoroId != nil {
+                let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "")
+                    .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: pomodoroId ?? "")
+                    .getDocuments()
+                if let subJournalDocument = snapshot.documents.first {
+                    return try subJournalDocument.data(as: SubJournalDB.self)
+                }
+            }
+            return nil
+        }
+    
     func checkHabitSubJournalIsCompleteByDate(userId: String, habitId: String, date: Date) async throws -> Bool {
         let journal = try await getJournal(userId: userId, from: date)
         let subJournal = try await getSubJournalByHabitID(userId: userId, habitId: habitId)?.getDocument(as: SubJournalDB.self)
@@ -387,9 +431,14 @@ extension UserManager: SubJournalUseCase {
     }
     
     // Check if the spesific subJournal already complete or not based on startFrequenct / frequencyCount
-    func checkSubJournalIsComplete(userId: String, journalId: String, subJournalId: String) async throws -> Bool {
+    func checkSubJournalIsCompleteByProgress(userId: String, journalId: String, subJournalId: String) async throws -> Bool {
         let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
         return subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int == (((subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue]) as? Int ?? 0) - 1 )
+    }
+    
+    func checkSubJournalIsCompleted(userId: String, journalId: String, subJournalId: String) async throws -> Bool {
+        let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
+        return subJournalDocument.data()?[SubJournalDB.CodingKeys.isCompleted.rawValue] as? Bool == true
     }
     
     // Check if the startFrequency is already zero
@@ -522,6 +571,7 @@ extension UserManager: HabitUseCase {
         return try await getHabitDetail(userId: userId, habitId: habitId)
     }
     
+    
     // Delete Habit
     func deleteHabit(userId: String, habitId: String) async throws {
         let habit = try await getHabitDetail(userId: userId, habitId: habitId)
@@ -618,6 +668,21 @@ extension UserManager: PomodoroUseCase {
         return try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
     }
     
+    func editPomodoroTimer(userId: String, pomodoroId: String, focusTime: Int?, breakTime: Int?,  longBreakTime: Int?) async throws {
+        let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
+        var updatedData: [String: Any] = [:]
+        if let focusTime {
+            updatedData[PomodoroDB.CodingKeys.focusTime.rawValue] = focusTime
+        }
+        if let longBreakTime {
+            updatedData[PomodoroDB.CodingKeys.longBreakTime.rawValue] = longBreakTime
+        }
+        if let breakTime {
+            updatedData[PomodoroDB.CodingKeys.breakTime.rawValue] = breakTime
+        }
+        try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).updateData(updatedData)
+    }
+    
     // Delete pomodoro
     func deletePomodoro(userId: String, pomodoroId: String) async throws {
         let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
@@ -630,7 +695,7 @@ extension UserManager: PomodoroUseCase {
 // MARK: - CRUD for Streak
 extension UserManager: StreakUseCase {
     // Create habit
-    func createStreak(userId: String, description: String) async throws {
+    func createStreak(userId: String) async throws {
         let streak = StreakDB(streaksCount: 1, dateCreated: Date())
         guard let data = try? encoder.encode(streak) else { return }
         let dict: [String: Any] = [

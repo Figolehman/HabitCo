@@ -210,7 +210,7 @@ extension UserViewModel{
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             let journal = try await userManager.getJournal(userId: userId, from: date)
-            let complete = try await userManager.checkSubJournalIsComplete(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
+            let complete = try await userManager.checkSubJournalIsCompleteByProgress(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
             try await userManager.updateCountSubJournal(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
             if complete,
                date.isSameDay(UserDefaultManager.lastEntryDate.formattedDate(to: .fullMonthName))
@@ -219,7 +219,7 @@ extension UserViewModel{
                     updateCountStreak(date: date)
                     try await userManager.updateHasUndoStreak(userId: userId, from: date)
                 } else {
-                    try await userManager.createStreak(userId: userId, description: "")
+                    try await userManager.createStreak(userId: userId)
                     try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
                     try await userManager.updateHasUndoStreak(userId: userId, from: date)
                     isStreakJustAdded = true
@@ -237,7 +237,6 @@ extension UserViewModel{
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             self.hasHabit = try await userManager.checkHasSubJournals(userId: userId)
-            print(self.hasHabit)
             if self.hasHabit == nil {
                 try await userManager.updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName), hasSubJournal: false)
             }

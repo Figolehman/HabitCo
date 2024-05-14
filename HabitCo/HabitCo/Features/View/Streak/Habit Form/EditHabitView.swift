@@ -208,4 +208,3 @@ struct EditHabitView: View {
         .navigationBarTitleDisplayMode(.large)
     }
 }
-

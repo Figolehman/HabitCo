@@ -33,7 +33,7 @@ protocol SubFutureJournalUseCase {
 }
 
 protocol StreakUseCase {
-    func createStreak(userId: String, description: String) async throws
+    func createStreak(userId: String) async throws
     func deleteStreak(userId: String) async throws
     func updateCountStreak(userId: String, undo: Bool) async throws
 }
