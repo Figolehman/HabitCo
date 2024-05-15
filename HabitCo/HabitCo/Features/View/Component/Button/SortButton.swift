@@ -28,7 +28,7 @@ struct SortButton: View {
     var label: String
     @Binding var isDisabled: Bool
     @Binding var imageType: SortImage
-    var action: () -> ()
+    var action: () -> () = {}
     
     var imageName: String {
         get {

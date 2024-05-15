@@ -130,7 +130,7 @@ struct JournalView: View {
                                 VStack (spacing: .getResponsiveHeight(24)) {
                                     ForEach(userViewModel.subJournals ?? [], id: \.subJournal.id) { item in
                                         if item.subJournal.subJournalType == .habit {
-                                            HabitItem(habitType: .pomodoro, habitName: item.habit?.habitName ?? "NO NAME", label: item.habit?.label ?? "", fraction: item.subJournal.fraction ?? 0.0, progress: item.subJournal.startFrequency ?? 0) {
+                                            HabitItem(habitType: .regular, habitName: item.habit?.habitName ?? "NO NAME", label: item.habit?.label ?? "", fraction: item.subJournal.fraction ?? 0.0, progress: item.subJournal.startFrequency ?? 0) {
                                                 habitViewModel.setHabit(habit: item.habit!)
                                                 navigateTo = .habitDetail
                                             } action: {
@@ -140,7 +140,7 @@ struct JournalView: View {
                                                 undoArg = (item.subJournal.id ?? "", selectedDate)
                                             }
                                         } else {
-                                            HabitItem(habitType: .regular, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", label: item.pomodoro?.label ?? "", progress: item.subJournal.startFrequency ?? 0) {
+                                            HabitItem(habitType: .pomodoro, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", label: item.pomodoro?.label ?? "", progress: item.subJournal.startFrequency ?? 0) {
                                                 pomodoroViewModel.setPomodoro(pomodoro: item.pomodoro!)
                                                 navigateTo = .pomodoroDetail
                                             } action: {
