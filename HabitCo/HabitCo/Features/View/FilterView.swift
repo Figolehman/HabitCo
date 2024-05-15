@@ -15,8 +15,8 @@ struct FilterView: View {
     
     @ObservedObject var userVM: UserViewModel
 
-    @Environment(\.presentationMode) var presentationMode
-    
+    let closeSheet: () -> Void
+
     var body: some View {
         let columns = Array(repeating: GridItem(.flexible()), count: 6)
         
@@ -31,12 +31,16 @@ struct FilterView: View {
             AppButton(label: "Save", sizeType: .submit, action: {
                 appliedFilter = selectedFilter
                 userVM.filterSubJournalsByLabels(date: date, labels: selectedLabel)
-                self.presentationMode.wrappedValue.dismiss()
+                appliedFilter = selectedFilter
+                closeSheet()
             })
+        }
+        .onDisappear {
+            selectedFilter = appliedFilter
         }
     }
 }
 
 #Preview {
-    FilterView(selectedFilter: .constant([]), appliedFilter: .constant([]), date: .constant(Date()), userVM: UserViewModel())
+    FilterView(selectedFilter: .constant([]), appliedFilter: .constant([]), date: .constant(Date()), userVM: UserViewModel()) { }
 }

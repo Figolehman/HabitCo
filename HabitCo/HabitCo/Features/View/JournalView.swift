@@ -255,13 +255,10 @@ struct JournalView: View {
                 }
             })
         })
-        .customSheet($showFilter, sheetType: .filters, content: {
-            FilterView(selectedFilter: $selectedFilter, appliedFilter: $appliedFilter, date: $selectedDate, userVM: userViewModel)
-                .onDisappear {
-                    if selectedFilter != appliedFilter {
-                        selectedFilter = appliedFilter
-                    }
-                }
+        .customSheet($showFilter, sheetType: .filters, onLeftButtonTapped: { selectedFilter = appliedFilter }, onRightButtonTapped: { selectedFilter = [] }, content: {
+            FilterView(selectedFilter: $selectedFilter, appliedFilter: $appliedFilter, date: $selectedDate, userVM: userViewModel) {
+                showFilter = false
+            }
         })
         .alertOverlay($userViewModel.isStreakJustAdded, content: {
             StreakGainView(isShown: $userViewModel.isStreakJustAdded, streakCount: userViewModel.streakCount)

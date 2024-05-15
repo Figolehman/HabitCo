@@ -80,7 +80,7 @@ extension View {
 
 // MARK: - Half Sheet
 extension View {
-    func customSheet(_ condition: Binding<Bool>, sheetType: SheetType, content: @escaping () -> (some View)) -> some View {
+    func customSheet(_ condition: Binding<Bool>, sheetType: SheetType, onLeftButtonTapped: @escaping () -> Void = {}, onRightButtonTapped: @escaping () -> Void = {}, content: @escaping () -> (some View)) -> some View {
         ZStack {
             
             self // = journal view
@@ -91,7 +91,7 @@ extension View {
                     .ignoresSafeArea()
             }
             
-            CustomSheetView(condition: condition, sheetType: sheetType) {
+            CustomSheetView(condition: condition, sheetType: sheetType, onLeftButtonTapped: onLeftButtonTapped, onRightButtonTapped: onRightButtonTapped) {
                 content()
             }
             
