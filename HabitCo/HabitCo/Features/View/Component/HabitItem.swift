@@ -22,21 +22,19 @@ struct HabitItem: View {
     let fraction: Double
     let progress: Int
     let label: String
+    let isComplete: Bool
     
     let navigate: () -> Void
     let action: () -> Void
     let undoAction: () -> Void
 
-    var isDone: Bool {
-        fraction == 1
-    }
-
-    init(habitType: HabitType, habitName: String, label: String, fraction: Double = 0.0, progress: Int = 2, navigate: @escaping () -> Void = {}, action: @escaping () -> Void = {}, undoAction: @escaping () -> Void = {}) {
+    init(habitType: HabitType, habitName: String, isComplete: Bool = true, label: String, fraction: Double = 0.0, progress: Int = 2, navigate: @escaping () -> Void = {}, action: @escaping () -> Void = {}, undoAction: @escaping () -> Void = {}) {
         self.habitType = habitType
         self.habitName = habitName
         self.label = label
         self.fraction = fraction
         self.progress = progress
+        self.isComplete = isComplete
         self.navigate = navigate
         self.action = action
         self.undoAction = undoAction
@@ -55,7 +53,7 @@ struct HabitItem: View {
                             .cornerRadius(4)
                         
                         Text("\(habitName)")
-                            .foregroundColor(isDone ? .getAppColor(.primary2) : .getAppColor(.neutral3))
+                            .foregroundColor(isComplete ? .getAppColor(.primary2) : .getAppColor(.neutral3))
                             .multilineTextAlignment(.leading)
 
                         Spacer()
@@ -102,7 +100,7 @@ struct HabitItem: View {
                                         .rotationEffect(.degrees(-90))
                                     
                                     Text("\(progress)")
-                                        .foregroundColor(isDone ? .getAppColor(.primary2) : .getAppColor(.neutral3))
+                                        .foregroundColor(isComplete ? .getAppColor(.primary2) : .getAppColor(.neutral3))
                                 }
                                 .padding(.horizontal, 12)
                             }

@@ -59,6 +59,6 @@ struct StreakGainView: View {
 #Preview {
     EmptyView()
         .alertOverlay(.constant(true)) {
-            StreakGainView(streakCount: 0, isShown: .constant(true))
+            StreakGainView(isShown: .constant(true), streakCount: 0)
         }
 }
