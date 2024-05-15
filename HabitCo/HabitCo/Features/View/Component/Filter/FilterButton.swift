@@ -10,7 +10,7 @@ import SwiftUI
 
 struct FilterButton: View {
     @Binding var isDisabled: Bool
-    var action: () -> ()
+    var action: () -> () = {}
     
     var body: some View {
         Button("Filter", systemImage: "slider.horizontal.3") {

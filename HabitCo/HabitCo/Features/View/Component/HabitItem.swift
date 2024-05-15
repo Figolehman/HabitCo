@@ -27,8 +27,11 @@ struct HabitItem: View {
     let navigate: () -> Void
     let action: () -> Void
     let undoAction: () -> Void
+    
+    @Binding var isShownSlided: Bool
 
-    init(habitType: HabitType, habitName: String, isComplete: Bool = true, label: String, fraction: Double = 0.0, progress: Int = 2, navigate: @escaping () -> Void = {}, action: @escaping () -> Void = {}, undoAction: @escaping () -> Void = {}) {
+    init(isShownSlided: Binding<Bool> = .constant(false), habitType: HabitType, habitName: String, isComplete: Bool = true, label: String, fraction: Double = 0.0, progress: Int = 2, navigate: @escaping () -> Void = {}, action: @escaping () -> Void = {}, undoAction: @escaping () -> Void = {}) {
+        self._isShownSlided = isShownSlided
         self.habitType = habitType
         self.habitName = habitName
         self.label = label
@@ -70,7 +73,7 @@ struct HabitItem: View {
                     } label: {
                         Group {
                             switch habitType {
-                            case .regular:
+                            case .pomodoro:
                                 VStack {
                                     Image(systemName: "timer")
                                         .font(.title3)
@@ -79,9 +82,8 @@ struct HabitItem: View {
                                     Text("\(progress) Session")
                                         .font(.caption2)
                                 }
-                                .foregroundColor(.getAppColor(.primary2))
                                 .padding(.horizontal, 12)
-                            case .pomodoro:
+                            case .regular:
                                 ZStack {
                                     
                                     Circle()
@@ -105,7 +107,7 @@ struct HabitItem: View {
                                 .padding(.horizontal, 12)
                             }
                         }
-                        .foregroundColor(.getAppColor(.neutral3))
+                        .foregroundColor(isDone ? .getAppColor(.primary2) : .getAppColor(.neutral3))
                         .frame(width: .getResponsiveWidth(76), height: .getResponsiveHeight(80))
                         .background(
                             Color.getAppColor(.primary)
@@ -132,7 +134,7 @@ struct HabitItem: View {
                     .cornerRadius(12)
             }
         }
-        .offset(x: offset + .getResponsiveWidth(66))
+        .offset(x: isShownSlided ? -133 + .getResponsiveWidth(66) : offset + .getResponsiveWidth(66))
         .mask(
             Rectangle()
                 .frame(width: .getResponsiveWidth(345), height: .getResponsiveHeight(80))
@@ -160,7 +162,7 @@ struct HabitItem: View {
     NavigationView {
         VStack {
             HabitItem(habitType: .regular, habitName: "test", label: "blossom", fraction: 1)
-            HabitItem(habitType: .pomodoro, habitName: "test", label: "blossom", fraction: 3/4)
+            HabitItem(habitType: .pomodoro, habitName: "test", label: "blossom", fraction: 1)
         }
     }
 }

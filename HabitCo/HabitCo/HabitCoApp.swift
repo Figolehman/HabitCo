@@ -13,6 +13,7 @@ import FirebaseAuth
 struct HabitCoApp: App {
     
     @StateObject private var appRootManager = AppRootManager()
+    @AppStorage("hasOpened") var hasOpened = false
     @Environment(\.auth) var authUser
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -45,7 +46,6 @@ struct HabitCoApp: App {
             
             notify.sendNotification(date: date, weekdays: [1,3,5,7], title: Prompt.appName, body: "What you do today can improve all your tomorrows. Start your day with HabitCo!", withIdentifier: "Default1")
             notify.sendNotification(date: date, weekdays: [2,4,6], title: Prompt.appName, body: "The secret of getting ahead is getting started. Kickstart your day by making strides in your habit!", withIdentifier: "Default2")
-            UserDefaults.standard.set(true, forKey: "hasOpened")
         }
     }
         
@@ -59,8 +59,14 @@ struct HabitCoApp: App {
                 OnboardingView()
                     .environmentObject(appRootManager)
             case .journalView:
-                JournalView()
-                    .environmentObject(appRootManager)
+                if hasOpened {
+                    JournalView()
+                        .environmentObject(appRootManager)
+                } else {
+                    TutorialView() {
+                        hasOpened = true
+                    }
+                }
             }
         }
     }
