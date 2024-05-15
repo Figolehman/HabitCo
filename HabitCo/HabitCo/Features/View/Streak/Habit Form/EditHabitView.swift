@@ -33,12 +33,15 @@ struct EditHabitView: View {
 
     @State var habitName: String
     @State var description: String
-    
+
+    let onDelete: () -> Void
+
     @ObservedObject private var habitVM: HabitViewModel
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(habitVM: HabitViewModel) {
+    init(habitVM: HabitViewModel, onDelete: @escaping () -> Void = {}) {
+        self.onDelete = onDelete
         self.habit = habitVM.habit!
         self.habitVM = habitVM
         _habitName = State(initialValue: habit.habitName!)
@@ -242,6 +245,9 @@ private extension EditHabitView {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             isLoading = false
             self.presentationMode.wrappedValue.dismiss()
+            if type == .delete {
+                onDelete()
+            }
         }
     }
 }

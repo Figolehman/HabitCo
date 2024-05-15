@@ -11,6 +11,8 @@ struct PomodoroDetailView: View {
 
     @ObservedObject private var pomodoroVM: PomodoroViewModel
 
+    @Environment(\.presentationMode) var presentationMode
+
     init(pomodoroVM: PomodoroViewModel) {
         self.pomodoroVM = pomodoroVM
     }
@@ -98,7 +100,7 @@ struct PomodoroDetailView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    NavigationLink(destination: EditPomodoroView(pomodoroVM: pomodoroVM)) {
+                    NavigationLink(destination: EditPomodoroView(pomodoroVM: pomodoroVM) { presentationMode.wrappedValue.dismiss() }) {
                         Image(systemName: "square.and.pencil")
                     }
                 }

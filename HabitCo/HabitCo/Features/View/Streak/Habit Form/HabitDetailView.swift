@@ -11,6 +11,8 @@ struct HabitDetailView: View {
     
     @ObservedObject private var habitVM: HabitViewModel
 
+    @Environment(\.presentationMode) var presentationMode
+
     init(habitVM: HabitViewModel) {
         self.habitVM = habitVM
     }
@@ -73,7 +75,7 @@ struct HabitDetailView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    NavigationLink(destination: EditHabitView(habitVM: habitVM)) {
+                    NavigationLink(destination: EditHabitView(habitVM: habitVM) { presentationMode.wrappedValue.dismiss() }) {
                         Image(systemName: "square.and.pencil")
                     }
                 }

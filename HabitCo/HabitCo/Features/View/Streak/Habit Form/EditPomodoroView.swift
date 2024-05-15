@@ -44,9 +44,12 @@ struct EditPomodoroView: View {
     
     @ObservedObject var pomodoroVM: PomodoroViewModel
 
+    let onDelete: () -> Void
+
     @Environment(\.presentationMode) var presentationMode
     
-    init(pomodoroVM: PomodoroViewModel) {
+    init(pomodoroVM: PomodoroViewModel, onDelete: @escaping () -> Void = {}) {
+        self.onDelete = onDelete
         self.pomodoro = pomodoroVM.pomodoro!
         self.pomodoroVM = pomodoroVM
         _repeatDate = State(initialValue: [])
@@ -421,6 +424,9 @@ private extension EditPomodoroView {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             isLoading = false
             self.presentationMode.wrappedValue.dismiss()
+            if type == .delete {
+                onDelete()
+            }
         }
     }
 }
