@@ -8,23 +8,25 @@
 import SwiftUI
 
 struct StreakGainView: View {
-    
-    let streakCount: Int
-    
+    var shareImage: UIImage {
+        StreakShareView(streak: streakCount).snapshot()
+    }
     @State private var showShareSheet: Bool = false
     @Binding var isShown: Bool
-    
-    
+
+    let streakCount: Int
+    let index = Date().get(.day) % 2
+
     var body: some View {
         VStack (alignment: .center, spacing: .getResponsiveHeight(72)){
-            Image("gainTree-\(Int.random(in: 1...2))")
-            
+            Image("gainTree-\(index + 1)")
+
             VStack (spacing: .getResponsiveHeight(24)) {
                 Text("Congratulations on your \(streakCount) days streak!")
                     .multilineTextAlignment(.center)
                     .font(.body.weight(.semibold))
                 
-                Text("\(Prompt.gainStreakPrompt[Int.random(in: 0...1)])")
+                Text("\(Prompt.gainStreakPrompt[index])")
                     .multilineTextAlignment(.center)
                     
                 VStack (spacing: .getResponsiveHeight(16)) {
