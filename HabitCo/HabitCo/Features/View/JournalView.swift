@@ -62,8 +62,10 @@ struct JournalView: View {
                     NavigationLink(destination: PomodoroDetailView(pomodoro: pomodoroNavigationArg), tag: .pomodoroDetail, selection: $navigateTo) {
                         EmptyView()
                     }
-                    NavigationLink(destination: FocusView(pomodoro: focusNavigationArg!.0, subJournal: focusNavigationArg!.1, date: focusNavigationArg!.2), tag: .focus, selection: $navigateTo) {
-                        EmptyView()
+                    if focusNavigationArg != nil {
+                        NavigationLink(destination: FocusView(pomodoro: focusNavigationArg!.0, subJournal: focusNavigationArg!.1, date: focusNavigationArg!.2), tag: .focus, selection: $navigateTo) {
+                            EmptyView()
+                        }
                     }
                 }
                 .padding(.horizontal, 16)
