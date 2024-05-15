@@ -23,10 +23,7 @@ struct FocusView: View {
     @State var isDone = false
     @State var currentTime: Int
     @State var totalTime: Int
-    
-    let pomodoroTime: (Int, Int, Int) = (1, 1, 1)
-    let maxSession = 5
-    
+        
     @State var currentPomodoroTime: PomodoroTime = .focusTime
     @State var currentSession: Int = 1
     
@@ -35,14 +32,15 @@ struct FocusView: View {
     let pomodoro: PomodoroDB?
     let subJournal: SubJournalDB?
     let date: Date
+    let minute = 60
     
     init(pomodoro: PomodoroDB?, subJournal: SubJournalDB?, date: Date) {
         self.pomodoro = pomodoro
         self.subJournal = subJournal
         self.date = date
 
-        _currentTime = State(initialValue: pomodoro!.focusTime!)
-        _totalTime = State(initialValue: pomodoro!.focusTime!)
+        _currentTime = State(initialValue: pomodoro!.focusTime! * minute)
+        _totalTime = State(initialValue: pomodoro!.focusTime! * minute)
     }
     
     var body: some View {
@@ -50,9 +48,9 @@ struct FocusView: View {
             VStack (spacing: 40) {
                 VStack (spacing: 24) {
                     PomodoroTimer(timer: $timer, totalTime: $totalTime, isRunning: $isRunning, duration: $currentTime, isDone: $isDone) {
-                        if currentSession < maxSession {
+                        if currentSession < pomodoro?.session ?? 0 {
                             if currentPomodoroTime != .focusTime {
-                                currentPomodoroTime = getNextPomodoroTime(time: currentPomodoroTime, currentSession: pomodoro?.session ?? 0)
+                                currentPomodoroTime = getNextPomodoroTime(time: currentPomodoroTime, currentSession: currentSession)
                                 currentSession = currentSession + 1
                                 currentTime = getCurrentPomodoroDuration(currentPomodoroTime)
                                 totalTime = currentTime
@@ -75,7 +73,6 @@ struct FocusView: View {
                     HStack(alignment: .bottom, spacing: 24) {
                         ControlButton(color: .getAppColor(.primary), buttonSize: .secondaryControl, buttonImage: .backward) {
                             currentTime = totalTime
-                            userViewModel.undoCountSubJournal(subJournalId: subJournal?.id ?? "", from: date)
                         }
                         ControlButton(color: .getAppColor(.primary), buttonSize: .mainControl, buttonImage: isRunning ? .pause : .play) {
                             if isRunning {
@@ -110,7 +107,7 @@ struct FocusView: View {
                         HStack {
                             Text("Session")
                             Spacer()
-                            Text("\(pomodoro?.session ?? 0)")
+                            Text("\(currentSession)")
                         }
                     }
                     
@@ -150,11 +147,11 @@ extension FocusView {
     func getCurrentPomodoroDuration(_ time: PomodoroTime) -> Int {
         switch time {
         case .focusTime:
-            pomodoroTime.0 * pomodoro!.focusTime!
+            minute * pomodoro!.focusTime!
         case .breakTime:
-            pomodoroTime.1 * pomodoro!.breakTime!
+            minute * pomodoro!.breakTime!
         case .longBreakTime:
-            pomodoroTime.2 * pomodoro!.longBreakTime!
+            minute * pomodoro!.longBreakTime!
         }
     }
     
