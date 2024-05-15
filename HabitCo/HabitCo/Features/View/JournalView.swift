@@ -103,7 +103,7 @@ struct JournalView: View {
                                     .foregroundColor(.getAppColor(.primary))
                             }
                         }
-//
+
                         if !appliedFilter.isEmpty {
                             ScrollView(.horizontal) {
                                 HStack(spacing: .getResponsiveWidth(8)) {
@@ -259,7 +259,7 @@ struct JournalView: View {
             StreakGainView(isShown: $userViewModel.isStreakJustAdded, streakCount: userViewModel.streakCount)
         })
         .alertOverlay($userViewModel.isStreakJustDeleted, content: {
-            StreakLossView(streakCount: userViewModel.streakCount, isShown: $userViewModel.isStreakJustDeleted)
+            StreakLossView(isShown: $userViewModel.isStreakJustDeleted, streakCount: userViewModel.streakCount)
         })
         .alertOverlay($showCreateHabit, closeOnTap: true, content: {
             VStack (spacing: 24) {

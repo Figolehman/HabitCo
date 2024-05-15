@@ -9,9 +9,9 @@ import SwiftUI
 
 struct StreakLossView: View {
     
-    let streakCount: Int
-    
     @Binding var isShown: Bool
+    
+    let streakCount: Int
     
     var body: some View {
         VStack (alignment: .center, spacing: .getResponsiveHeight(72)){
@@ -44,6 +44,6 @@ struct StreakLossView: View {
 #Preview {
     EmptyView()
         .alertOverlay(.constant(true)) {
-            StreakLossView(streakCount: 3, isShown: .constant(true))
+            StreakLossView(isShown: .constant(true), streakCount: 3)
         }
 }

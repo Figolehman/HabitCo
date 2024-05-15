@@ -107,7 +107,7 @@ struct HabitItem: View {
                                 .padding(.horizontal, 12)
                             }
                         }
-                        .foregroundColor(isDone ? .getAppColor(.primary2) : .getAppColor(.neutral3))
+                        .foregroundColor(isComplete ? .getAppColor(.primary2) : .getAppColor(.neutral3))
                         .frame(width: .getResponsiveWidth(76), height: .getResponsiveHeight(80))
                         .background(
                             Color.getAppColor(.primary)

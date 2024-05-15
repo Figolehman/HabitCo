@@ -159,6 +159,7 @@ extension UserViewModel{
             self.subJournals = try await fetchSubJournal(userId: userId, subJournals: subJournals)
             checkHasHabit()
             getStreak()
+            print(isStreakJustAdded)
         }
     }
     

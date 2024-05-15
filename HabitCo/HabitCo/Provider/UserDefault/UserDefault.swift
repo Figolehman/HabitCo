@@ -12,6 +12,7 @@ final class UserDefaultManager {
     private enum Keys: String {
         case isLogin
         case lastEntryDate
+        case isStreakJustAdded
         case userID
     }
 
@@ -25,6 +26,10 @@ final class UserDefaultManager {
         set (newValue) { UserDefaults.standard.setValue(newValue, forKey: Keys.lastEntryDate.rawValue) }
     }
     
+    static var isStreakJustAdded: Bool {
+        get { UserDefaults.standard.bool(forKey: Keys.isStreakJustAdded.rawValue) }
+        set (newValue) { UserDefaults.standard.setValue(newValue, forKey: Keys.isStreakJustAdded.rawValue) }
+    }
     static var userID: String? {
         get { UserDefaults.standard.string(forKey: Keys.userID.rawValue) }
         set (newValue) { UserDefaults.standard.setValue(newValue, forKey: Keys.userID.rawValue) }
