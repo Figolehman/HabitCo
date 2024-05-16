@@ -9,12 +9,15 @@ import SwiftUI
 
 struct PomodoroDetailView: View {
 
+    @Binding var loading: (Bool, LoadingType, String)
+
     @ObservedObject private var pomodoroVM: PomodoroViewModel
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(pomodoroVM: PomodoroViewModel) {
+    init(loading: Binding<(Bool, LoadingType, String)>, pomodoroVM: PomodoroViewModel) {
         self.pomodoroVM = pomodoroVM
+        self._loading = loading
     }
 
     var body: some View {
@@ -100,7 +103,7 @@ struct PomodoroDetailView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    NavigationLink(destination: EditPomodoroView(pomodoroVM: pomodoroVM) { presentationMode.wrappedValue.dismiss() }) {
+                    NavigationLink(destination: EditPomodoroView(pomodoroVM: pomodoroVM, loading: $loading) { presentationMode.wrappedValue.dismiss() }) {
                         Image(systemName: "square.and.pencil")
                     }
                 }

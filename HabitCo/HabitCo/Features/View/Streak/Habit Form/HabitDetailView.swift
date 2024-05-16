@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct HabitDetailView: View {
-    
+
+    @Binding var loading: (Bool, LoadingType, String)
+
     @ObservedObject private var habitVM: HabitViewModel
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(habitVM: HabitViewModel) {
+    init(loading: Binding<(Bool, LoadingType, String)>, habitVM: HabitViewModel) {
         self.habitVM = habitVM
+        self._loading = loading
     }
     
     var body: some View {
@@ -75,7 +78,7 @@ struct HabitDetailView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    NavigationLink(destination: EditHabitView(habitVM: habitVM) { presentationMode.wrappedValue.dismiss() }) {
+                    NavigationLink(destination: EditHabitView(habitVM: habitVM, loading: $loading) { presentationMode.wrappedValue.dismiss() }) {
                         Image(systemName: "square.and.pencil")
                     }
                 }

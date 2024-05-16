@@ -11,9 +11,7 @@ struct CreatePomodoroView: View {
 
     let habitNotificationId: String
 
-    @State private var isLoading = false
-    @State private var loadingStatus = LoadingType.loading
-    @State private var loadingMessage = "Saving..."
+    @Binding var loading: (Bool, LoadingType, String)
 
     @State private var pomodoroName: String = ""
     @State private var description: String = ""
@@ -327,7 +325,9 @@ struct CreatePomodoroView: View {
                 let repeatPomodoro: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     if isSavable() {
-                        isLoading = true
+                        loading.2 = "Saving..."
+                        loading.1 = .loading
+                        loading.0 = true
                         pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderTime) {
                             loadingSuccess()
                         }
@@ -336,8 +336,8 @@ struct CreatePomodoroView: View {
                 .padding(.top, 4)
             }
         }
-        .alertOverlay($isLoading, content: {
-            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
+        .alertOverlay($loading.0, content: {
+            LoadingView(loadingType: $loading.1, message: $loading.2)
         })
         .background (
             Color.neutral3
@@ -356,10 +356,11 @@ private extension CreatePomodoroView {
     }
 
     func loadingSuccess() {
-        loadingMessage = "Saved"
-        loadingStatus = .success
+        loading.2 = "Saved"
+        loading.1 = .success
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isLoading = false
+            loading.0 = false
+            loading.1 = .loading
             self.presentationMode.wrappedValue.dismiss()
         }
     }
@@ -367,6 +368,6 @@ private extension CreatePomodoroView {
 
 #Preview {
     NavigationView {
-        CreatePomodoroView(habitNotificationId: "0", pomodoroVM: PomodoroViewModel())
+        CreatePomodoroView(habitNotificationId: "0", loading: .constant((false, LoadingType.loading, "")),pomodoroVM: PomodoroViewModel())
     }
 }

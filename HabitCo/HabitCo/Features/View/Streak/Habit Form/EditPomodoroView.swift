@@ -11,9 +11,7 @@ struct EditPomodoroView: View {
     
     let pomodoro: PomodoroDB
 
-    @State private var isLoading = false
-    @State private var loadingStatus = LoadingType.loading
-    @State private var loadingMessage = "Loading..."
+    @Binding var loading: (Bool, LoadingType, String)
 
     @State private var pomodoroName: String = ""
     @State private var description: String = ""
@@ -48,10 +46,12 @@ struct EditPomodoroView: View {
 
     @Environment(\.presentationMode) var presentationMode
     
-    init(pomodoroVM: PomodoroViewModel, onDelete: @escaping () -> Void = {}) {
+    init(pomodoroVM: PomodoroViewModel, loading: Binding<(Bool, LoadingType, String)>, onDelete: @escaping () -> Void = {}) {
+        self._loading = loading
         self.onDelete = onDelete
-        self.pomodoro = pomodoroVM.pomodoro!
         self.pomodoroVM = pomodoroVM
+
+        self.pomodoro = pomodoroVM.pomodoro!
         _repeatDate = State(initialValue: [])
         _pomodoroName = State(initialValue: pomodoro.pomodoroName!)
         _description = State(initialValue: pomodoro.description!)
@@ -355,8 +355,8 @@ struct EditPomodoroView: View {
                 }
                 let repeatPomodoro: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit) {
-                    isLoading = true
-                    loadingMessage = "Saving..."
+                    loading.2 = "Saving..."
+                    loading.0 = true
                     pomodoroVM.editPomodoro(pomodoroId: pomodoro.id, pomodoroName: pomodoroName, description: description, label: selected?.rawValue, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderHabit: reminderTime) {
                         loadingSuccess(type: .save)
                     }
@@ -373,8 +373,8 @@ struct EditPomodoroView: View {
             CustomAlertView(title: "Are you sure you want to Delete this pomodoro?", message: "Any progress and data linked to this will be lost permanently, and you wont be able to recover it", dismiss: "Cancel", destruct: "Delete", dismissAction: {
                 showAlert = false
             }, destructAction: {
-                isLoading = true
-                loadingMessage = "Deleting..."
+                loading.2 = "Deleting..."
+                loading.0 = true
                 pomodoroVM.deletePomodoro(pomodoroId: pomodoro.id) {
                     loadingSuccess(type: .delete)
                 }
@@ -399,9 +399,6 @@ struct EditPomodoroView: View {
                }
             }
         }
-        .alertOverlay($isLoading, content: {
-            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
-        })
         .navigationTitle("Edit Pomodoro Form")
         .navigationBarTitleDisplayMode(.large)
     }
@@ -417,13 +414,14 @@ private extension EditPomodoroView {
     func loadingSuccess(type: QueryType) {
         switch type {
         case .delete:
-            loadingMessage = "Deleted"
+            loading.2 = "Deleted"
         case .save:
-            loadingMessage = "Saved"
+            loading.2 = "Saved"
         }
-        loadingStatus = .success
+        loading.1 = .success
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isLoading = false
+            loading.0 = false
+            loading.1 = .loading
             self.presentationMode.wrappedValue.dismiss()
             if type == .delete {
                 onDelete()

@@ -11,9 +11,7 @@ struct EditHabitView: View {
     
     let habit: HabitDB
 
-    @State private var isLoading = false
-    @State private var loadingMessage = "Saving..."
-    @State private var loadingStatus = LoadingType.loading
+    @Binding var loading: (Bool, LoadingType, String)
 
     @State private var selected: Color.FilterColors?
     @State private var frequency: Int
@@ -40,8 +38,9 @@ struct EditHabitView: View {
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(habitVM: HabitViewModel, onDelete: @escaping () -> Void = {}) {
+    init(habitVM: HabitViewModel, loading: Binding<(Bool, LoadingType, String)>, onDelete: @escaping () -> Void = {}) {
         self.onDelete = onDelete
+        self._loading = loading
         self.habit = habitVM.habit!
         self.habitVM = habitVM
         _habitName = State(initialValue: habit.habitName!)
@@ -135,9 +134,7 @@ struct EditHabitView: View {
                                     }
                                 }
                             }
-                            
                         }
-                        
                     }
                     
                     CardView {
@@ -179,8 +176,8 @@ struct EditHabitView: View {
                 }
                 let repeatHabit = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit) {
-                    isLoading = true
-                    loadingMessage = "Saving..."
+                    loading.2 = "Saving..."
+                    loading.0 = true
                     habitVM.editHabit(habitId: habit.id ?? "", habitName: habitName, description: description, label: selected?.rawValue, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminderTime) {
                         loadingSuccess(type: .save)
                     }
@@ -197,15 +194,12 @@ struct EditHabitView: View {
             CustomAlertView(title: "Are you sure you want to Delete this habit?", message: "Any progress and data linked to this will be lost permanently, and you wont be able to recover it", dismiss: "Cancel", destruct: "Delete", dismissAction: {
                 showAlert = false
             }, destructAction: {
-                isLoading = true
-                loadingMessage = "Deleting..."
+                loading.2 = "Deleting..."
+                loading.0 = true
                 habitVM.deleteHabit(habitId: habit.id ?? "") {
                     loadingSuccess(type: .delete)
                 }
             })
-        })
-        .alertOverlay($isLoading, content: {
-            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
         })
         .navigationTitle("Edit Habit Form")
         .toolbar {
@@ -238,13 +232,14 @@ private extension EditHabitView {
     func loadingSuccess(type: QueryType) {
         switch type {
         case .delete:
-            loadingMessage = "Deleted"
+            loading.2 = "Deleted"
         case .save:
-            loadingMessage = "Saved"
+            loading.2 = "Saved"
         }
-        loadingStatus = .success
+        loading.1 = .success
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isLoading = false
+            loading.0 = false
+            loading.1 = .loading
             self.presentationMode.wrappedValue.dismiss()
             if type == .delete {
                 onDelete()

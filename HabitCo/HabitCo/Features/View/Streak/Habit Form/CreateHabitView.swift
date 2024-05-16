@@ -13,9 +13,7 @@ struct CreateHabitView: View {
 
     let habitNotificationId: String
 
-    @State private var isLoading = false
-    @State private var loadingStatus = LoadingType.loading
-    @State private var loadingMessage = "Saving..."
+    @Binding var loading: (Bool, LoadingType, String)
 
     @State private var habitName: String = ""
     @State private var description: String = ""
@@ -153,7 +151,9 @@ struct CreateHabitView: View {
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     guard isSavable() else { return }
                     notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "\(description)", withIdentifier: "\(habitNotificationId)")
-                    isLoading = true
+                    loading.2 = "Saving..."
+                    loading.0 = true
+                    loading.1 = .loading
                     habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime) {
                         loadingSuccess()
                         self.presentationMode.wrappedValue.dismiss()
@@ -162,9 +162,6 @@ struct CreateHabitView: View {
                 .padding(.top, 4)
             }
         }
-        .alertOverlay($isLoading, content: {
-            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
-        })
         .background (
             Color.neutral3
                 .frame(width: ScreenSize.width, height: ScreenSize.height)
@@ -182,10 +179,11 @@ private extension CreateHabitView {
     }
 
     func loadingSuccess() {
-        loadingMessage = "Saved"
-        loadingStatus = .success
+        loading.1 = .success
+        loading.2 = "Saved"
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isLoading = false
+            loading.0 = false
+            loading.1 = .loading
             self.presentationMode.wrappedValue.dismiss()
         }
     }
@@ -193,6 +191,6 @@ private extension CreateHabitView {
 
 #Preview {
     NavigationView {
-        CreateHabitView(habitNotificationId: "0", habitVM: HabitViewModel())
+        CreateHabitView(habitNotificationId: "0", loading: .constant((false, .success, "")), habitVM: HabitViewModel())
     }
 }
