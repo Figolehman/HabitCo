@@ -373,6 +373,7 @@ struct EditPomodoroView: View {
             CustomAlertView(title: "Are you sure you want to Delete this pomodoro?", message: "Any progress and data linked to this will be lost permanently, and you wont be able to recover it", dismiss: "Cancel", destruct: "Delete", dismissAction: {
                 showAlert = false
             }, destructAction: {
+                showAlert = false
                 loading.2 = "Deleting..."
                 loading.0 = true
                 pomodoroVM.deletePomodoro(pomodoroId: pomodoro.id) {

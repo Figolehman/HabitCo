@@ -243,11 +243,11 @@ struct JournalView: View {
             CustomAlertView(title: "Are you sure you want to Sign Out?", message: "Signing out means that you will need to sign in again when you open the apps.", dismiss: "Cancel", destruct: "Sign Out", dismissAction: {
                 showSignOutAlert = false
             }, destructAction: {
+                showSignOutAlert = false
+                loading.2 = "Logging out..."
+                loading.0 = true
+                loading.1 = .loading
                 do {
-                    showSignOutAlert = false
-                    loading.2 = "Logging out..."
-                    loading.0 = true
-                    loading.1 = .loading
                     try auth.signOut()
                     loadingSuccess()
                 } catch {
