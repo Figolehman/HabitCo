@@ -399,6 +399,12 @@ struct EditPomodoroView: View {
                }
             }
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action : {
+            presentationMode.wrappedValue.dismiss()
+        }){
+            Text("\(Image(systemName: "chevron.left"))Back")
+        })
         .navigationTitle("Edit Pomodoro Form")
         .navigationBarTitleDisplayMode(.large)
     }

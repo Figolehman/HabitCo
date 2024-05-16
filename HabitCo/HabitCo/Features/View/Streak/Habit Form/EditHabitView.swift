@@ -8,26 +8,26 @@
 import SwiftUI
 
 struct EditHabitView: View {
-    
+
     let habit: HabitDB
 
     @Binding var loading: (Bool, LoadingType, String)
 
     @State private var selected: Color.FilterColors?
     @State private var frequency: Int
-    
+
     @State private var isRepeatOn = true
     @State private var isReminderOn = false
-    
+
     @State private var isRepeatFolded = false
     @State private var isReminderFolded = true
     @State private var isLabelFolded = false
 
     @State var showAlert = false
-    
+
     @State private var repeatDate: Set<RepeatDay> = []
     @State private var reminderTime: Date = Date()
-    
+
 
     @State var habitName: String
     @State var description: String
@@ -95,7 +95,7 @@ struct EditHabitView: View {
                             }
                         }
                     }
-                    
+
                     CardView {
                         HStack {
                             Text("Frequency")
@@ -103,7 +103,7 @@ struct EditHabitView: View {
                             LabeledStepper(frequency: $frequency )
                         }
                     }
-//
+                    //
                     CardView {
                         VStack (spacing: 12) {
                             HStack {
@@ -120,7 +120,7 @@ struct EditHabitView: View {
                                             isRepeatFolded = true
                                         }
                                     }
-                                    
+
                                 }
                             }
                             if !isRepeatFolded {
@@ -136,7 +136,7 @@ struct EditHabitView: View {
                             }
                         }
                     }
-                    
+
                     CardView {
                         VStack (spacing: 12) {
                             HStack {
@@ -158,7 +158,7 @@ struct EditHabitView: View {
                             if !isReminderFolded {
                                 Toggle("Set reminder", isOn: $isReminderOn.animation())
                                     .toggleStyle(SwitchToggleStyle(tint: .getAppColor(.primary)))
-                                
+
                                 if isReminderOn {
                                     DatePicker("", selection: $reminderTime, displayedComponents: [.hourAndMinute])
                                         .datePickerStyle(.wheel)
@@ -171,7 +171,7 @@ struct EditHabitView: View {
                                 }
                             }
                         }
-                        
+
                     }
                 }
                 let repeatHabit = repeatDate.map { $0.weekday }
@@ -201,6 +201,12 @@ struct EditHabitView: View {
                 }
             })
         })
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action : {
+            presentationMode.wrappedValue.dismiss()
+        }){
+            Text("\(Image(systemName: "chevron.left"))Back")
+        })
         .navigationTitle("Edit Habit Form")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -214,11 +220,11 @@ struct EditHabitView: View {
         }
         .onAppear {
             for habitDay in habit.repeatHabit! {
-               for day in RepeatDay.allCases {
-                   if day.weekday == habitDay {
-                       repeatDate.insert(day)
-                   }
-               }
+                for day in RepeatDay.allCases {
+                    if day.weekday == habitDay {
+                        repeatDate.insert(day)
+                    }
+                }
             }
         }
     }

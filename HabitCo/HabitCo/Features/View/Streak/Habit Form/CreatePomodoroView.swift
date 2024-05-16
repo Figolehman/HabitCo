@@ -336,9 +336,6 @@ struct CreatePomodoroView: View {
                 .padding(.top, 4)
             }
         }
-        .alertOverlay($loading.0, content: {
-            LoadingView(loadingType: $loading.1, message: $loading.2)
-        })
         .background (
             Color.neutral3
                 .frame(width: ScreenSize.width, height: ScreenSize.height)
