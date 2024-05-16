@@ -43,7 +43,8 @@ struct CreateHabitView: View {
                     EditableCardView(cardType: .name, text: $habitName)
                     EditableCardView(cardType: .description, text: $description)
                 }
-                
+                .padding(.top, .getResponsiveHeight(36))
+
                 VStack (spacing: 24) {
                     CardView {
                         VStack (spacing: 12) {
@@ -151,7 +152,7 @@ struct CreateHabitView: View {
                 let repeatDateInt: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     guard isSavable() else { return }
-                    notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "Go finish it", withIdentifier: "\(habitNotificationId)")
+                    notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "\(description)", withIdentifier: "\(habitNotificationId)")
                     isLoading = true
                     habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime) {
                         loadingSuccess()
@@ -169,7 +170,6 @@ struct CreateHabitView: View {
                 .frame(width: ScreenSize.width, height: ScreenSize.height)
                 .ignoresSafeArea()
         )
-        .padding(.top, .getResponsiveHeight(36))
         .navigationTitle("Create Habit Form")
         .navigationBarTitleDisplayMode(.large)
     }

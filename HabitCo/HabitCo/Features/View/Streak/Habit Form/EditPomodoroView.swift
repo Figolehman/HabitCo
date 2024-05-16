@@ -111,7 +111,8 @@ struct EditPomodoroView: View {
                     EditableCardView(cardType: .name, text: $pomodoroName)
                     EditableCardView(cardType: .description, text: $description)
                 }
-                
+                .padding(.top, .getResponsiveHeight(36))
+
                 VStack (spacing: 24) {
                     CardView {
                         VStack (spacing: 12) {

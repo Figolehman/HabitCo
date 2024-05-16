@@ -82,7 +82,8 @@ struct CreatePomodoroView: View {
                     EditableCardView(cardType: .name, text: $pomodoroName)
                     EditableCardView(cardType: .description, text: $description)
                 }
-                
+                .padding(.top, .getResponsiveHeight(36))
+
                 VStack (spacing: 24) {
                     CardView {
                         VStack (spacing: 12) {
@@ -343,7 +344,6 @@ struct CreatePomodoroView: View {
                 .frame(width: ScreenSize.width, height: ScreenSize.height)
                 .ignoresSafeArea()
         )
-        .padding(.top, .getResponsiveHeight(36))
         .navigationTitle("Create Pomodoro Form")
         .navigationBarTitleDisplayMode(.large)
     }

@@ -69,7 +69,8 @@ struct EditHabitView: View {
                     EditableCardView(cardType: .name, text: $habitName)
                     EditableCardView(cardType: .description, text: $description)
                 }
-                
+                .padding(.top, .getResponsiveHeight(36))
+
                 VStack (spacing: 24) {
                     CardView {
                         VStack (spacing: 12) {
