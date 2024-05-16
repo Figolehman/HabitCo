@@ -81,8 +81,10 @@ extension PomodoroViewModel {
                        !isStartFrequencyIsZero
                     {
                         try await userManager.updateHasUndoStreak(userId: userId, from: currentDate, isUndo: true)
+                        try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
                     } else {
                         try await userManager.deleteStreak(userId: userId)
+                        try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
                     }
                     try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
                 }
@@ -94,10 +96,12 @@ extension PomodoroViewModel {
                     if (try await userManager.getStreak(userId: userId) != nil) {
                         updateCountStreak(date: currentDate)
                         try await userManager.updateHasUndoStreak(userId: userId, from: currentDate)
+                        try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: true)
                     } else {
                         try await userManager.createStreak(userId: userId)
                         try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: true)
                         try await userManager.updateHasUndoStreak(userId: userId, from: currentDate)
+                        try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: true)
                     }
                     try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
                 }
@@ -123,9 +127,10 @@ extension PomodoroViewModel {
             let isFirstStreak = try await userManager.checkIsFirstStreak(userId: userId)
             if try await !userManager.checkCompletedSubJournal(userId: userId, from: currentDate),
                try await !userManager.checkHasUndoStreak(userId: userId, from: currentDate) {
-                if hasSubJournalCompleteToday,
+                if !hasSubJournalCompleteToday,
                    isFirstStreak {
                     try await userManager.deleteStreak(userId: userId)
+                    try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
                 } else {
                     try await userManager.updateCountStreak(userId: userId, undo: true)
                 }
@@ -152,7 +157,7 @@ private extension PomodoroViewModel {
                 try await userManager.updateCountStreak(userId: userId)
                 try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
             }
-            try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
+//            try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
         }
     }
 }

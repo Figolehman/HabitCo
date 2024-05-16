@@ -39,7 +39,9 @@ public extension WidgetViewModel {
 private extension WidgetViewModel {
     func fetchSubJournal(userId: String, subJournals: [SubJournalDB]) async throws -> [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)] {
         var localArray: [(subJournal: SubJournalDB, habit: HabitDB?, pomodoro: PomodoroDB?)] = []
-        for subJournal in subJournals {
+        let range = 0..<4
+        let limitSubJournals = Array(subJournals[range])
+        for subJournal in limitSubJournals {
             if subJournal.subJournalType == .habit {
                 if let habitPomodoroId = try await userManager.getHabitDetail(userId: userId, habitId: subJournal.habitPomodoroId ?? "") {
                     localArray.append((subJournal, habitPomodoroId, nil))

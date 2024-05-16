@@ -55,7 +55,7 @@ struct FocusView: View {
                                 currentSession = currentSession + 1
                                 currentTime = getCurrentPomodoroDuration(currentPomodoroTime)
                                 totalTime = currentTime
-                                userViewModel.updateCountSubJournal(subJournalId: subJournal?.id ?? "", from: Date().formattedDate(to: .fullMonthName))
+                                userViewModel.updateCountSubJournal(subJournalId: subJournal?.id ?? "", from: date.formattedDate(to: .fullMonthName))
                             } else {
                                 currentPomodoroTime = getNextPomodoroTime(time: currentPomodoroTime, currentSession: currentSession)
                                 currentTime = getCurrentPomodoroDuration(currentPomodoroTime)

@@ -361,7 +361,7 @@ private extension UserViewModel {
                 try await userManager.updateCountStreak(userId: userId)
                 try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
                 try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: true)
-
+                isAlreadyPopUpGainStreak()
             }
         }
     }
