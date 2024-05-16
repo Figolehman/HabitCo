@@ -156,7 +156,6 @@ struct CreateHabitView: View {
                     loading.1 = .loading
                     habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime) {
                         loadingSuccess()
-                        self.presentationMode.wrappedValue.dismiss()
                     }
                 }
                 .padding(.top, 4)

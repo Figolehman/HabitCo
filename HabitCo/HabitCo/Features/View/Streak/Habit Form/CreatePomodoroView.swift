@@ -353,8 +353,8 @@ private extension CreatePomodoroView {
     }
 
     func loadingSuccess() {
-        loading.2 = "Saved"
         loading.1 = .success
+        loading.2 = "Saved"
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             loading.0 = false
             loading.1 = .loading
