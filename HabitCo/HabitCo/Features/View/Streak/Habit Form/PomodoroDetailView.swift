@@ -20,7 +20,7 @@ struct PomodoroDetailView: View {
             ScrollView {
                 VStack (spacing: 40) {
                     VStack (spacing: 24) {
-                        CalendarView(habitId: pomodoro.id, label: pomodoro.label ?? "", pomodoroVM: pomodoroVM)
+                        CalendarView(habitId: pomodoro.id ?? "", label: pomodoro.label ?? "", pomodoroVM: pomodoroVM)
 
                         CardView {
                             Text("\(pomodoro.description ?? "")")
@@ -94,7 +94,7 @@ struct PomodoroDetailView: View {
             .navigationTitle("\(pomodoro.pomodoroName ?? "")")
             .navigationBarTitleDisplayMode(.large)
             .onAppear {
-                pomodoroVM.getPomodoroDetail(pomodoroId: pomodoro.id)
+                pomodoroVM.getPomodoroDetail(pomodoroId: pomodoro.id ?? "")
             }
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {

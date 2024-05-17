@@ -21,7 +21,6 @@ class NotificationHandler {
     func sendNotification(date: Date, weekdays: [Int], title: String, body: String, withIdentifier id: String) {
 //        removeAllNotification()
         removeNotification(withIdentifier: id)
-        print("ID: \(id)")
         for day in weekdays {
             var dateComponents = date.get(.hour, .minute)
             dateComponents.weekday = day

@@ -60,14 +60,6 @@ extension UserManager: UserUseCase{
         try await userDocument(userId: userId).getDocument(as: UserDB.self)
     }
     
-    // Get Total Count for notification Habit
-    func getHabitNotificationId(userId: String) async throws -> String {
-        let habitDocument = try await userHabitCollection(userId: userId).getAllDocuments(as: HabitDB.self)
-        let pomodoroDocument = try await userPomodoroCollection(userId: userId).getAllDocuments(as: PomodoroDB.self)
-        print("From Get Habit Notif: \((habitDocument?.count ?? 0) + (pomodoroDocument?.count ?? 0))")
-        return "\((habitDocument?.count ?? 0) + (pomodoroDocument?.count ?? 0))"
-    }
-    
     // * Not Used will be delete in the future *
     // Check if User have a streak or not from Firestore
     func isUserHaveStreak(userId: String) async throws -> Bool {
@@ -565,6 +557,13 @@ extension UserManager: HabitUseCase {
         let habit = HabitDB(id: id, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminderHabit, dateCreated: Date())
         try document.setData(from: habit, merge: false)
         
+        //Create Notification Handler
+        if reminderHabit != "No Reminder" {
+            let notif = NotificationHandler()
+            let reminderHabitDate = reminderHabit.stringToDate(to: .hourAndMinute)
+            notif.sendNotification(date: reminderHabitDate, weekdays: repeatHabit, title: habitName, body: description, withIdentifier: id)
+        }
+        
         // Create habit in Sub Future Journal
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: id, type: .habit, method: .generate, repeatHabit: repeatHabit, frequencyCount: frequency)
         
@@ -573,6 +572,11 @@ extension UserManager: HabitUseCase {
             try await createSubJournal(userId: userId, journalId: journalDocument?.id ?? "No ID", type: .habit, habitPomodoroId: id, label: label, frequencyCount: frequency)
             try await updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
         }
+    }
+    
+    func getHabitId(userId: String, habitId: String) async throws -> String {
+        let snapshot = try await userHabitCollection(userId: userId).whereField(HabitDB.CodingKeys.id.rawValue, isEqualTo: habitId).getDocuments()
+        return snapshot.documents.first?.documentID ?? ""
     }
     
     // Get habit detail from habit ID
@@ -654,6 +658,12 @@ extension UserManager: PomodoroUseCase {
         let pomodoro = PomodoroDB(id: id, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderPomodoro, dateCreated: Date())
         try document.setData(from: pomodoro, merge: false)
         
+        if reminderPomodoro != "No Reminder" {
+            let notif = NotificationHandler()
+            let reminderHabitDate = reminderPomodoro.stringToDate(to: .hourAndMinute)
+            notif.sendNotification(date: reminderHabitDate, weekdays: repeatPomodoro, title: pomodoroName, body: description, withIdentifier: id)
+        }
+        
         // Create Pomodoro in SubFutureJournal
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: id, type: .pomodoro, method: .generate, repeatHabit: repeatPomodoro, frequencyCount: session)
         
@@ -662,6 +672,11 @@ extension UserManager: PomodoroUseCase {
             try await createSubJournal(userId: userId, journalId: journalDocument?.id ?? "No ID", type: .pomodoro, habitPomodoroId: id, label: label, frequencyCount: session)
             try await updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
         }
+    }
+    
+    func getPomodoroId(userId: String, pomodoroId: String) async throws -> String {
+        let snapshot = try await userHabitCollection(userId: userId).whereField(PomodoroDB.CodingKeys.id.rawValue, isEqualTo: pomodoroId).getDocuments()
+        return snapshot.documents.first?.documentID ?? ""
     }
     
     // Get pomodoro detail

@@ -317,7 +317,6 @@ private extension JournalView {
         userViewModel.checkIsStreak()
         userViewModel.getSubJournals(from: selectedDate)
         userViewModel.getSubFutureJournals()
-        userViewModel.getHabitNotificationId()
         userViewModel.checkFutureJournalThatHasSubJournal()
         userViewModel.checkSubJournal(date: selectedDate.formattedDate(to: .fullMonthName))
     }

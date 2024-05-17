@@ -39,14 +39,6 @@ final class UserViewModel: ObservableObject {
 
 extension UserViewModel{
 
-    func getHabitNotificationId() {
-        Task {
-            guard let userId = UserDefaultManager.userID else { return }
-            print("From VM: \(try await userManager.getHabitNotificationId(userId: userId))")
-            self.habitNotificationId = try await userManager.getHabitNotificationId(userId: userId)
-        }
-    }
-
     // DONE -> Buat dapetin data user
     func getCurrentUserData(completion: @escaping () -> ()) throws {
         Task {

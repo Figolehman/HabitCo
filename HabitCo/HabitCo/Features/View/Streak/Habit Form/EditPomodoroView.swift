@@ -353,7 +353,7 @@ struct EditPomodoroView: View {
                 AppButton(label: "Save", sizeType: .submit) {
                     isLoading = true
                     loadingMessage = "Saving..."
-                    pomodoroVM.editPomodoro(pomodoroId: pomodoro.id, pomodoroName: pomodoroName, description: description, label: selected?.rawValue, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro != [] ? repeatPomodoro : pomodoro.repeatPomodoro, reminderHabit: isReminderOn ? reminderTime : nil) {
+                    pomodoroVM.editPomodoro(pomodoroId: pomodoro.id ?? "", pomodoroName: pomodoroName, description: description, label: selected?.rawValue, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro != [] ? repeatPomodoro : pomodoro.repeatPomodoro, reminderHabit: isReminderOn ? reminderTime : nil) {
                             loadingSuccess(type: .save)
                     }
                     if isReminderOn {
@@ -374,7 +374,7 @@ struct EditPomodoroView: View {
             }, destructAction: {
                 isLoading = true
                 loadingMessage = "Deleting..."
-                pomodoroVM.deletePomodoro(pomodoroId: pomodoro.id ) {
+                pomodoroVM.deletePomodoro(pomodoroId: pomodoro.id ?? "" ) {
                     loadingSuccess(type: .delete)
                 }
             })

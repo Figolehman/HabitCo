@@ -61,17 +61,17 @@ struct RootView: View {
 //                            Text("Get Detail Journal By Date")
 //                        }
 //                        
-                        Button {
-                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 0, repeatHabit: [], reminderHabit: Date())
-                        } label: {
-                            Text("Create Habit")
-                        }
-                        
-                        Button {
-                            habitViewModel.deleteHabit(habitId: habitViewModel.habit?.id ?? "")
-                        } label: {
-                            Text("Delete Habit")
-                        }
+//                        Button {
+//                            habitViewModel.createUserHabit(habitName: "", description: "", label: "", frequency: 0, repeatHabit: [], reminderHabit: Date())
+//                        } label: {
+//                            Text("Create Habit")
+//                        }
+//                        
+//                        Button {
+//                            habitViewModel.deleteHabit(habitId: habitViewModel.habit?.id ?? "")
+//                        } label: {
+//                            Text("Delete Habit")
+//                        }
 //                        
 //                        Button {
 //                            if viewModel.user?.streak == nil {

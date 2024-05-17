@@ -12,6 +12,7 @@ final class HabitViewModel: ObservableObject {
     
     @Published private(set) var habits: [HabitDB]? = []
     @Published private(set) var habit: HabitDB? = nil
+    @Published private(set) var habitNotificationId: String? = nil
     @Published private(set) var progress: [Date: CGFloat]? = nil
     @Published private(set) var errorMessage: String? = nil
     
@@ -38,6 +39,14 @@ extension HabitViewModel {
             let timeString = reminderHabit?.dateToString(to: .hourAndMinute) ?? "No Reminder"
             try await userManager.createNewHabit(userId: userId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString)
             completion()
+        }
+    }
+    
+    // For notification habit
+    func getNotificationHabitId(habitId: String) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            self.habitNotificationId = try await userManager.getHabitId(userId: userId, habitId: habitId)
         }
     }
     

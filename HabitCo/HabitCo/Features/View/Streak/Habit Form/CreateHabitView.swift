@@ -155,10 +155,7 @@ struct CreateHabitView: View {
                     habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: isReminderOn ? reminderTime : nil) {
                         loadingSuccess()
                     }
-                    if isReminderOn {
-                        notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "\(description)", withIdentifier: "\(habitNotificationId)")
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
+                    self.presentationMode.wrappedValue.dismiss()
                 }
                 .padding(.top, 4)
             }

@@ -12,6 +12,7 @@ final class PomodoroViewModel: ObservableObject {
     
     @Published private(set) var pomodoros: [PomodoroDB]? = []
     @Published private(set) var pomodoro: PomodoroDB? = nil
+    @Published private(set) var pomodoroNotificationId: String? = nil
     @Published private(set) var progress: [CGFloat]? = nil
     @Published private(set) var errorMessage: String? = nil
     
@@ -35,6 +36,14 @@ extension PomodoroViewModel {
             let timeString = reminderPomodoro?.dateToString(to: .hourAndMinute) ?? "No Reminder"
             try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString)
             completion()
+        }
+    }
+    
+    // For notification pomodoro
+    func getNotificationPomodoroId(pomodoroId: String) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            self.pomodoroNotificationId = try await userManager.getPomodoroId(userId: userId, pomodoroId: pomodoroId)
         }
     }
     

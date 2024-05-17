@@ -332,9 +332,6 @@ struct CreatePomodoroView: View {
                         pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: isReminderOn ? reminderTime : nil) {
                             loadingSuccess()
                         }
-                        if isReminderOn {
-                            notify.sendNotification(date: reminderTime, weekdays: repeatPomodoro, title: "\(pomodoroName)", body: "\(description)", withIdentifier: "\(habitNotificationId)")
-                        }
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
