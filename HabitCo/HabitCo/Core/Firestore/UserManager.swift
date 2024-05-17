@@ -428,23 +428,24 @@ extension UserManager: SubJournalUseCase {
         return false
     }
     
-    func editSubJournal(userId: String, from date: Date, habitId: String?, pomodoroId: String?, frequency: Int, label: String) async throws -> Bool {
+    func editSubJournal(userId: String, from date: Date, habitId: String?, pomodoroId: String?, frequency: Int, label: String?) async throws -> Bool {
             let journal = try await getJournal(userId: userId, from: date)
             let subJournalDocument = try await getSubJournalByDate(userId: userId, date: date, habitId: habitId, pomodoroId: pomodoroId)
+            let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId ?? "")
     
             let count = subJournalDocument?.startFrequency ?? 0
             let frequencySubJournal = subJournalDocument?.frequencyCount ?? 0
             let newFraction = ((Double(count)) / Double(frequency) * 100) / 100
             var updatedData: [String: Any] = [:]
             if frequencySubJournal < frequency {
-                updatedData[SubJournalDB.CodingKeys.label.rawValue] = label
+                updatedData[SubJournalDB.CodingKeys.label.rawValue] = label ?? pomodoro?.label ?? ""
                 updatedData[SubJournalDB.CodingKeys.frequencyCount.rawValue] = frequency
                 updatedData[SubJournalDB.CodingKeys.isCompleted.rawValue] = false
                 updatedData[SubJournalDB.CodingKeys.fraction.rawValue] = newFraction
                 try await userSubJournalDocument(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalDocument?.id ?? "").updateData(updatedData)
                 return true
             } else {
-                updatedData[SubJournalDB.CodingKeys.label.rawValue] = label
+                updatedData[SubJournalDB.CodingKeys.label.rawValue] = label ?? pomodoro?.label ?? ""
                 updatedData[SubJournalDB.CodingKeys.frequencyCount.rawValue] = frequency
                 if count >= frequency {
                     updatedData[SubJournalDB.CodingKeys.startFrequency.rawValue] = frequency
@@ -753,9 +754,12 @@ extension UserManager: PomodoroUseCase {
         return try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
     }
     
-    func editPomodoroTimer(userId: String, pomodoroId: String, focusTime: Int?, breakTime: Int?,  longBreakTime: Int?) async throws -> PomodoroDB? {
+    func editPomodoroTimer(userId: String, session: Int?, pomodoroId: String, focusTime: Int?, breakTime: Int?,  longBreakTime: Int?) async throws -> PomodoroDB? {
         let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
         var updatedData: [String: Any] = [:]
+        if let session {
+            updatedData[PomodoroDB.CodingKeys.session.rawValue] = session
+        }
         if let focusTime {
             updatedData[PomodoroDB.CodingKeys.focusTime.rawValue] = focusTime
         }
