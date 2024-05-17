@@ -20,9 +20,12 @@ final class PomodoroViewModel: ObservableObject {
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
     
-    init() {
+    init(pomodoro: PomodoroDB? = nil) {
         firebaseProvider = FirebaseAuthProvider()
         userManager = UserManager.shared
+        if let pomodoro {
+            self.pomodoro = pomodoro
+        }
     }
     
 }
@@ -121,10 +124,11 @@ extension PomodoroViewModel {
         }
     }
     
-    func editPomodoroTimer(pomodoroId: String, focusTime: Int?, breakTime: Int?, longBreakTime: Int?) {
+    func editPomodoroTimer(pomodoroId: String, focusTime: Int?, breakTime: Int?, longBreakTime: Int?, completion: @escaping () -> Void) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            try await userManager.editPomodoroTimer(userId: userId, pomodoroId: pomodoroId, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime)
+            self.pomodoro = try await userManager.editPomodoroTimer(userId: userId, pomodoroId: pomodoroId, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime)
+            completion()
         }
     }
     

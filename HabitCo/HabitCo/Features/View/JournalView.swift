@@ -70,7 +70,7 @@ struct JournalView: View {
                         EmptyView()
                     }
                     if focusNavigationArg != nil {
-                        NavigationLink(destination: FocusView(pomodoro: focusNavigationArg!.0, subJournal: focusNavigationArg!.1, date: focusNavigationArg!.2), tag: .focus, selection: $navigateTo) {
+                        NavigationLink(destination: FocusView(pomodoro: focusNavigationArg!.0, subJournal: focusNavigationArg!.1, date: focusNavigationArg!.2, loading: $loading, userViewModel: userViewModel), tag: .focus, selection: $navigateTo) {
                             EmptyView()
                         }
                     }

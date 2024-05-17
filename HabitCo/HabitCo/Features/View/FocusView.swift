@@ -16,8 +16,9 @@ enum PomodoroTime {
 struct FocusView: View {
     
     @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    @State var isRunning = true
-    
+    @State var isRunning = false
+    @State var firstTime = true
+
     @State var promptIndex: Int = Int.random(in: 0...3)
     
     @State var isDone = false
@@ -26,18 +27,26 @@ struct FocusView: View {
         
     @State var currentPomodoroTime: PomodoroTime = .focusTime
     @State var currentSession: Int
-    
-    @StateObject private var userViewModel = UserViewModel()
-    
-    let pomodoro: PomodoroDB?
+
+    @Binding var loading: (Bool, LoadingType, String)
+
+    @StateObject private var pomodoroViewModel: PomodoroViewModel
+    @ObservedObject private var userViewModel: UserViewModel
+
     let subJournal: SubJournalDB?
     let date: Date
     let minute = 60
-    
-    init(pomodoro: PomodoroDB?, subJournal: SubJournalDB?, date: Date) {
-        self.pomodoro = pomodoro
+
+    var pomodoro: PomodoroDB? {
+        return pomodoroViewModel.pomodoro
+    }
+
+    init(pomodoro: PomodoroDB?, subJournal: SubJournalDB?, date: Date, loading: Binding<(Bool, LoadingType, String)>, userViewModel: UserViewModel) {
         self.subJournal = subJournal
         self.date = date
+        self._loading = loading
+        self._userViewModel = ObservedObject(initialValue: userViewModel)
+        self._pomodoroViewModel = StateObject(wrappedValue: PomodoroViewModel(pomodoro: pomodoro!))
 
         _currentSession = State(initialValue: subJournal?.startFrequency ?? 0)
         _currentTime = State(initialValue: pomodoro!.focusTime! * minute)
@@ -53,20 +62,24 @@ struct FocusView: View {
                             if currentPomodoroTime != .focusTime {
                                 currentPomodoroTime = getNextPomodoroTime(time: currentPomodoroTime, currentSession: currentSession)
                                 currentSession = currentSession + 1
-                                currentTime = getCurrentPomodoroDuration(currentPomodoroTime)
-                                totalTime = currentTime
                                 userViewModel.updateCountSubJournal(subJournalId: subJournal?.id ?? "", from: date.formattedDate(to: .fullMonthName))
+                                if currentSession < (pomodoro?.session)! {
+                                    currentTime = getCurrentPomodoroDuration(currentPomodoroTime)
+                                    totalTime = currentTime
+                                }
                             } else {
                                 currentPomodoroTime = getNextPomodoroTime(time: currentPomodoroTime, currentSession: currentSession)
                                 currentTime = getCurrentPomodoroDuration(currentPomodoroTime)
                                 totalTime = currentTime
                             }
                             
-                            promptIndex = Int.random(in: 0...3)
-                            isDone = false
+                            if currentSession <= (pomodoro?.session)! {
+                                promptIndex = Int.random(in: 0...3)
+                                isDone = false
+                            }
                         }
                     }
-                        .padding(.top, .getResponsiveHeight(36))
+                    .padding(.top, .getResponsiveHeight(36))
                     
                     Text("\(currentPomodoroTime == .focusTime ? Prompt.focusPrompt[promptIndex] : Prompt.breakPrompt[promptIndex])")
                         .padding(.horizontal, 24)
@@ -83,6 +96,7 @@ struct FocusView: View {
                             } else {
                                 timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
                                 isRunning = true
+                                firstTime = false
                             }
                         }
                         ControlButton(color: .getAppColor(.primary), buttonSize: .secondaryControl, buttonImage: .forward) {
@@ -139,6 +153,22 @@ struct FocusView: View {
                 }
             }
         }
+        .if(firstTime) { view in
+            view
+                .toolbar(content: {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationLink(destination: EditPomodoroView(fromFocusView: true, pomodoroVM: pomodoroViewModel, loading: $loading)) {
+                            Image(systemName: "square.and.pencil")
+                        }
+                    }
+                })
+        }
+        .onAppear {
+            timer.upstream.connect().cancel()
+
+            currentTime = pomodoro!.focusTime! * minute
+            totalTime = pomodoro!.focusTime! * minute
+        }
         .background (
             Color.neutral3
                 .frame(width: ScreenSize.width, height: ScreenSize.height)
@@ -162,7 +192,7 @@ extension FocusView {
     }
     
     func getNextPomodoroTime(time: PomodoroTime, currentSession: Int) -> PomodoroTime {
-        if currentSession % 4 == 0 {
+        if currentSession + 1 % 4 == 0 {
             switch time {
             case .focusTime:
                 return .longBreakTime
@@ -191,8 +221,8 @@ extension FocusView {
     }
 }
 
-#Preview {
-    NavigationView {
-        FocusView(pomodoro: PomodoroDB(pomodoroName: "", description: "", label: "", session: 0, focusTime: 0, breakTime: 0, longBreakTime: 0, repeatPomodoro: [], reminderPomodoro: "", dateCreated: Date()), subJournal: SubJournalDB(id: "", habitPomodoroId: "", subJournalType: .pomodoro, label: "", frequencyCount: 0, startFrequency: 0, fraction: 0.0, isCompleted: false), date: Date())
-    }
-}
+//#Preview {
+//    NavigationView {
+//        FocusView(pomo/*doro: PomodoroDB(pomodoroName: "", description: "", label: "", session: 0, focusTime: 0, breakTime: 0, longBreakTime: 0, repeatPomodoro: [], reminderPomodoro: "", dateCreated: Date()), subJournal: SubJournalDB(id: "", habitPomodoroId: "", subJournalType: .pomodoro, label: "", frequencyCount: 0, startFrequency: 0, fraction: 0.0, isCompleted: false), date: Date())*/
+//    }
+//}

@@ -614,6 +614,8 @@ extension UserManager: HabitUseCase {
     // Edit Habit from the given parameter
     func editHabit(userId: String, habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: String?) async throws  -> HabitDB? {
         let habit = try await getHabitDetail(userId: userId, habitId: habitId)
+        let notif = NotificationHandler()
+        notif.removeNotification(withIdentifier: habitId)
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: habitId, method: .delete, repeatHabit: habit?.repeatHabit ?? [])
         var updatedData: [String: Any] = [:]
         if let habitName {
@@ -633,6 +635,7 @@ extension UserManager: HabitUseCase {
         }
         if let reminderHabit {
             updatedData[HabitDB.CodingKeys.reminderHabit.rawValue] = reminderHabit
+            notif.sendNotification(date: reminderHabit.stringToDate(to: .hourAndMinute), weekdays: repeatHabit ?? [], title: habitName ?? "", body: description ?? "", withIdentifier: habitId)
         }
         try await userHabitDocument(userId: userId, habitId: habitId).updateData(updatedData)
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: habitId, method: .generate, repeatHabit: repeatHabit ?? [])
@@ -713,6 +716,8 @@ extension UserManager: PomodoroUseCase {
     // Edit Pomodoro
     func editPomodoro(userId: String, pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, repeatPomodoro: [Int]?, longBreakTime: Int?, reminderPomodoro: String?) async throws -> PomodoroDB? {
         let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
+        let notif = NotificationHandler()
+        notif.removeNotification(withIdentifier: pomodoroId)
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: pomodoroId, type: .pomodoro, method: .delete, repeatHabit: pomodoro?.repeatPomodoro ?? [])
         var updatedData: [String: Any] = [:]
         if let pomodoroName {
@@ -741,13 +746,14 @@ extension UserManager: PomodoroUseCase {
         }
         if let reminderPomodoro {
             updatedData[PomodoroDB.CodingKeys.reminderPomodoro.rawValue] = reminderPomodoro
+            notif.sendNotification(date: reminderPomodoro.stringToDate(to: .hourAndMinute), weekdays: repeatPomodoro ?? [], title: pomodoroName ?? "", body: description ?? "", withIdentifier: pomodoroId)
         }
         try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).updateData(updatedData)
         try await manageSubFutureJournal(userId: userId, habitPomodoroId: pomodoroId, type: .pomodoro, method: .generate, repeatHabit: repeatPomodoro ?? [])
         return try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
     }
     
-    func editPomodoroTimer(userId: String, pomodoroId: String, focusTime: Int?, breakTime: Int?,  longBreakTime: Int?) async throws {
+    func editPomodoroTimer(userId: String, pomodoroId: String, focusTime: Int?, breakTime: Int?,  longBreakTime: Int?) async throws -> PomodoroDB? {
         let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
         var updatedData: [String: Any] = [:]
         if let focusTime {
@@ -760,6 +766,7 @@ extension UserManager: PomodoroUseCase {
             updatedData[PomodoroDB.CodingKeys.breakTime.rawValue] = breakTime
         }
         try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).updateData(updatedData)
+        return try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
     }
     
     // Delete pomodoro
