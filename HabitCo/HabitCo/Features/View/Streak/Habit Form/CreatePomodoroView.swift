@@ -329,7 +329,8 @@ struct CreatePomodoroView: View {
                     if isSavable() {
                         loading.2 = "Saving..."
                         loading.1 = .loading
-                        loading.0 = true                     pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: isReminderOn ? reminderTime : nil) {
+                        loading.0 = true   
+                        pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: isReminderOn ? reminderTime : nil) {
                             loadingSuccess()
                         }
                         self.presentationMode.wrappedValue.dismiss()

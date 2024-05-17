@@ -43,5 +43,5 @@ struct FilterView: View {
 }
 
 #Preview {
-    FilterView(selectedFilter: .constant([]), appliedFilter: .constant([]), date: .constant(Date()), userVM: UserViewModel()) { }
+    FilterView(selectedFilter: .constant([]), appliedFilter: .constant([]), showFilter: .constant(true), date: .constant(Date()), userVM: UserViewModel()) { }
 }

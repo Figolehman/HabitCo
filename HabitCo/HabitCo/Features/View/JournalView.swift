@@ -248,7 +248,7 @@ struct JournalView: View {
             })
         })
         .customSheet($showFilter, sheetType: .filters, onLeftButtonTapped: { selectedFilter = appliedFilter }, onRightButtonTapped: { selectedFilter = [] }, content: {
-            FilterView(selectedFilter: $selectedFilter, appliedFilter: $appliedFilter, date: $selectedDate, userVM: userViewModel) {
+            FilterView(selectedFilter: $selectedFilter, appliedFilter: $appliedFilter, showFilter: $showFilter, date: $selectedDate, userVM: userViewModel) {
                 showFilter = false
             }
         })
