@@ -73,9 +73,11 @@ struct FocusView: View {
                                 totalTime = currentTime
                             }
                             
-                            if currentSession <= (pomodoro?.session)! {
+                            if currentSession < (pomodoro?.session)! {
                                 promptIndex = Int.random(in: 0...3)
                                 isDone = false
+                            } else {
+                                timer.upstream.connect().cancel()
                             }
                         }
                     }

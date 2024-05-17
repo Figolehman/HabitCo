@@ -363,7 +363,7 @@ struct EditPomodoroView: View {
                     loading.2 = "Saving..."
                     loading.0 = true
                     if fromFocusView {
-                        pomodoroVM.editPomodoroTimer(pomodoroId: pomodoro.id!, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime) {
+                        pomodoroVM.editPomodoroTimer(pomodoroId: pomodoro.id!, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime) {
                             loadingSuccess(type: .save)
                         }
                     } else {

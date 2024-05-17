@@ -40,9 +40,19 @@ struct JournalView: View {
     @State private var showFilter = false
     @State private var showSignOutAlert = false
     @State private var showUndoAlert = false
+    @State private var showJournalView = true
 
     @Environment(\.auth) var auth
     @EnvironmentObject var appRootManager: AppRootManager
+    
+    var showPopUpGainStreak: Binding<Bool> {
+        Binding {
+            userViewModel.popUpGainStreak && showJournalView
+        } set: { value in
+            userViewModel.popUpGainStreak = value
+        }
+    }
+
     
     var body: some View {
         NavigationView {
@@ -208,6 +218,12 @@ struct JournalView: View {
                 .padding(.horizontal, 16)
                 .frame(width: ScreenSize.width)
             }
+            .onAppear {
+                showJournalView = true
+            }
+            .onDisappear {
+                showJournalView = false
+            }
         }
         .accentColor(.getAppColor(.primary))
         .navigationViewStyle(.stack)
@@ -252,8 +268,8 @@ struct JournalView: View {
                 showFilter = false
             }
         })
-        .alertOverlay($userViewModel.popUpGainStreak, content: {
-            StreakGainView(isShown: $userViewModel.popUpGainStreak, userVM: userViewModel, streakCount: userViewModel.streakCount)
+        .alertOverlay(showPopUpGainStreak, content: {
+            StreakGainView(isShown: showPopUpGainStreak, userVM: userViewModel, streakCount: userViewModel.streakCount)
         })
         .alertOverlay($userViewModel.popUpLossStreak, content: {
             StreakLossView(isShown: $userViewModel.popUpLossStreak, userVM: userViewModel, streakCount: userViewModel.streakCount)
