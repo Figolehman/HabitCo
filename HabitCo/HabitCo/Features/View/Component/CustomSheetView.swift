@@ -62,7 +62,10 @@ struct CustomSheetView<Content: View>: View {
     @Binding var condition: Bool
     
     var sheetType: SheetType
-    
+
+    var onLeftButtonTapped: () -> Void = {}
+    var onRightButtonTapped: () -> Void = {}
+
     var content: () -> Content
     
     var body: some View {
@@ -80,6 +83,7 @@ struct CustomSheetView<Content: View>: View {
                                 withAnimation {
                                     condition = false
                                 }
+                                onLeftButtonTapped()
                             } label: {
                                 Text("\(sheetType.closeLabel)")
                                     .font(.body)
@@ -91,7 +95,7 @@ struct CustomSheetView<Content: View>: View {
                             
                             if sheetType == .filters {
                                 Button{
-                                    
+                                    onRightButtonTapped()
                                 } label: {
                                     Text("Reset")
                                         .font(.body)

@@ -13,9 +13,7 @@ struct CreateHabitView: View {
 
     let habitNotificationId: String
 
-    @State private var isLoading = false
-    @State private var loadingStatus = LoadingType.loading
-    @State private var loadingMessage = "Saving..."
+    @Binding var loading: (Bool, LoadingType, String)
 
     @State private var habitName: String = ""
     @State private var description: String = ""
@@ -43,7 +41,8 @@ struct CreateHabitView: View {
                     EditableCardView(cardType: .name, text: $habitName)
                     EditableCardView(cardType: .description, text: $description)
                 }
-                
+                .padding(.top, .getResponsiveHeight(36))
+
                 VStack (spacing: 24) {
                     CardView {
                         VStack (spacing: 12) {
@@ -151,7 +150,9 @@ struct CreateHabitView: View {
                 let repeatDateInt: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     guard isSavable() else { return }
-                    isLoading = true
+                    loading.2 = "Saving..."
+                    loading.0 = true
+                    loading.1 = .loading
                     habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: isReminderOn ? reminderTime : nil) {
                         loadingSuccess()
                     }
@@ -160,15 +161,11 @@ struct CreateHabitView: View {
                 .padding(.top, 4)
             }
         }
-        .alertOverlay($isLoading, content: {
-            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
-        })
         .background (
             Color.neutral3
                 .frame(width: ScreenSize.width, height: ScreenSize.height)
                 .ignoresSafeArea()
         )
-        .padding(.top, .getResponsiveHeight(36))
         .navigationTitle("Create Habit Form")
         .navigationBarTitleDisplayMode(.large)
     }
@@ -181,10 +178,11 @@ private extension CreateHabitView {
     }
 
     func loadingSuccess() {
-        loadingMessage = "Saved"
-        loadingStatus = .success
+        loading.1 = .success
+        loading.2 = "Saved"
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isLoading = false
+            loading.0 = false
+            loading.1 = .loading
             self.presentationMode.wrappedValue.dismiss()
         }
     }
@@ -192,6 +190,6 @@ private extension CreateHabitView {
 
 #Preview {
     NavigationView {
-        CreateHabitView(habitNotificationId: "0", habitVM: HabitViewModel())
+        CreateHabitView(habitNotificationId: "0", loading: .constant((false, .success, "")), habitVM: HabitViewModel())
     }
 }

@@ -8,37 +8,39 @@
 import SwiftUI
 
 struct EditHabitView: View {
-    
+
     let habit: HabitDB
 
-    @State private var isLoading = false
-    @State private var loadingMessage = "Saving..."
-    @State private var loadingStatus = LoadingType.loading
+    @Binding var loading: (Bool, LoadingType, String)
 
     @State private var selected: Color.FilterColors?
     @State private var frequency: Int
-    
+
     @State private var isRepeatOn = true
     @State private var isReminderOn = false
-    
+
     @State private var isRepeatFolded = false
     @State private var isReminderFolded = false
     @State private var isLabelFolded = false
 
     @State var showAlert = false
-    
+
     @State private var repeatDate: Set<RepeatDay> = []
     @State private var reminderTime: Date = Date()
-    
+
 
     @State var habitName: String
     @State var description: String
-    
+
+    let onDelete: () -> Void
+
     @ObservedObject private var habitVM: HabitViewModel
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(habitVM: HabitViewModel) {
+    init(habitVM: HabitViewModel, loading: Binding<(Bool, LoadingType, String)>, onDelete: @escaping () -> Void = {}) {
+        self.onDelete = onDelete
+        self._loading = loading
         self.habit = habitVM.habit!
         self.habitVM = habitVM
         _habitName = State(initialValue: habit.habitName!)
@@ -66,7 +68,8 @@ struct EditHabitView: View {
                     EditableCardView(cardType: .name, text: $habitName)
                     EditableCardView(cardType: .description, text: $description)
                 }
-                
+                .padding(.top, .getResponsiveHeight(36))
+
                 VStack (spacing: 24) {
                     CardView {
                         VStack (spacing: 12) {
@@ -92,7 +95,7 @@ struct EditHabitView: View {
                             }
                         }
                     }
-                    
+
                     CardView {
                         HStack {
                             Text("Frequency")
@@ -100,7 +103,7 @@ struct EditHabitView: View {
                             LabeledStepper(frequency: $frequency )
                         }
                     }
-//
+                    //
                     CardView {
                         VStack (spacing: 12) {
                             HStack {
@@ -117,7 +120,7 @@ struct EditHabitView: View {
                                             isRepeatFolded = true
                                         }
                                     }
-                                    
+
                                 }
                             }
                             if !isRepeatFolded {
@@ -131,11 +134,9 @@ struct EditHabitView: View {
                                     }
                                 }
                             }
-                            
                         }
-                        
                     }
-                    
+
                     CardView {
                         VStack (spacing: 12) {
                             HStack {
@@ -157,7 +158,7 @@ struct EditHabitView: View {
                             if !isReminderFolded {
                                 Toggle("Set reminder", isOn: $isReminderOn.animation())
                                     .toggleStyle(SwitchToggleStyle(tint: .getAppColor(.primary)))
-                                
+
                                 if isReminderOn {
                                     DatePicker("", selection: $reminderTime, displayedComponents: [.hourAndMinute])
                                         .datePickerStyle(.wheel)
@@ -170,13 +171,13 @@ struct EditHabitView: View {
                                 }
                             }
                         }
-                        
+
                     }
                 }
                 let repeatHabit = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit) {
-                    isLoading = true
-                    loadingMessage = "Saving..."
+                    loading.2 = "Saving..."
+                    loading.0 = true
                     habitVM.editHabit(habitId: habit.id ?? "", habitName: habitName, description: description, label: selected?.rawValue ?? "", frequency: frequency, repeatHabit: repeatHabit != [] ? repeatHabit : habit.repeatHabit, reminderHabit: isReminderOn ? reminderTime : nil) {
                         loadingSuccess(type: .save)
                     }
@@ -196,15 +197,19 @@ struct EditHabitView: View {
             CustomAlertView(title: "Are you sure you want to Delete this habit?", message: "Any progress and data linked to this will be lost permanently, and you wont be able to recover it", dismiss: "Cancel", destruct: "Delete", dismissAction: {
                 showAlert = false
             }, destructAction: {
-                isLoading = true
-                loadingMessage = "Deleting..."
+                showAlert = false
+                loading.2 = "Deleting..."
+                loading.0 = true
                 habitVM.deleteHabit(habitId: habit.id ?? "") {
                     loadingSuccess(type: .delete)
                 }
             })
         })
-        .alertOverlay($isLoading, content: {
-            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action : {
+            presentationMode.wrappedValue.dismiss()
+        }){
+            Text("\(Image(systemName: "chevron.left"))Back")
         })
         .navigationTitle("Edit Habit Form")
         .toolbar {
@@ -219,11 +224,11 @@ struct EditHabitView: View {
         }
         .onAppear {
             for habitDay in habit.repeatHabit! {
-               for day in RepeatDay.allCases {
-                   if day.weekday == habitDay {
-                       repeatDate.insert(day)
-                   }
-               }
+                for day in RepeatDay.allCases {
+                    if day.weekday == habitDay {
+                        repeatDate.insert(day)
+                    }
+                }
             }
         }
         .navigationTitle("Edit Habit Form")
@@ -239,14 +244,18 @@ private extension EditHabitView {
     func loadingSuccess(type: QueryType) {
         switch type {
         case .delete:
-            loadingMessage = "Deleted"
+            loading.2 = "Deleted"
         case .save:
-            loadingMessage = "Saved"
+            loading.2 = "Saved"
         }
-        loadingStatus = .success
+        loading.1 = .success
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isLoading = false
+            loading.0 = false
+            loading.1 = .loading
             self.presentationMode.wrappedValue.dismiss()
+            if type == .delete {
+                onDelete()
+            }
         }
     }
 }

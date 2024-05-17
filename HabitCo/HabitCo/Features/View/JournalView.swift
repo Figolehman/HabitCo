@@ -17,9 +17,7 @@ struct JournalView: View {
 
     @State private var undoArg: (String, Date)?
 
-    @State private var isLoading = false
-    @State private var loadingStatus = LoadingType.loading
-    @State private var loadingMessage = "Signing Out..."
+    @State private var loading = (false, LoadingType.loading, "")
 
     @State private var navigateTo: Navigator? = Navigator.none
     @State private var focusNavigationArg: (PomodoroDB?, SubJournalDB?, Date)?
@@ -59,16 +57,16 @@ struct JournalView: View {
 
                     Spacer()
                     // MARK: - navigation links
-                    NavigationLink(destination: CreateHabitView(habitNotificationId: userViewModel.habitNotificationId ?? "", habitVM: habitViewModel), tag: .createHabit, selection: $navigateTo) {
+                    NavigationLink(destination: CreateHabitView(habitNotificationId: userViewModel.habitNotificationId ?? "", loading: $loading, habitVM: habitViewModel), tag: .createHabit, selection: $navigateTo) {
                         EmptyView()
                     }
-                    NavigationLink(destination: CreatePomodoroView(habitNotificationId: userViewModel.habitNotificationId ?? "", pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
+                    NavigationLink(destination: CreatePomodoroView(habitNotificationId: userViewModel.habitNotificationId ?? "", loading: $loading, pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
                         EmptyView()
                     }
-                    NavigationLink(destination: HabitDetailView(habitVM: habitViewModel), tag: .habitDetail, selection: $navigateTo) {
+                    NavigationLink(destination: HabitDetailView(loading: $loading, habitVM: habitViewModel), tag: .habitDetail, selection: $navigateTo) {
                         EmptyView()
                     }
-                  NavigationLink(destination: PomodoroDetailView(pomodoroVM: pomodoroViewModel), tag: .pomodoroDetail, selection: $navigateTo) {
+                    NavigationLink(destination: PomodoroDetailView(loading: $loading, pomodoroVM: pomodoroViewModel), tag: .pomodoroDetail, selection: $navigateTo) {
                         EmptyView()
                     }
                     if focusNavigationArg != nil {
@@ -237,9 +235,11 @@ struct JournalView: View {
             CustomAlertView(title: "Are you sure you want to Sign Out?", message: "Signing out means that you will need to sign in again when you open the apps.", dismiss: "Cancel", destruct: "Sign Out", dismissAction: {
                 showSignOutAlert = false
             }, destructAction: {
+                showSignOutAlert = false
+                loading.2 = "Logging out..."
+                loading.0 = true
+                loading.1 = .loading
                 do {
-                    showSignOutAlert = false
-                    isLoading = true
                     try auth.signOut()
                     loadingSuccess()
                 } catch {
@@ -247,13 +247,10 @@ struct JournalView: View {
                 }
             })
         })
-        .customSheet($showFilter, sheetType: .filters, content: {
-            FilterView(selectedFilter: $selectedFilter, appliedFilter: $appliedFilter, showFilter: $showFilter, date: $selectedDate, userVM: userViewModel)
-                .onDisappear {
-                    if selectedFilter != appliedFilter {
-                        selectedFilter = appliedFilter
-                    }
-                }
+        .customSheet($showFilter, sheetType: .filters, onLeftButtonTapped: { selectedFilter = appliedFilter }, onRightButtonTapped: { selectedFilter = [] }, content: {
+            FilterView(selectedFilter: $selectedFilter, appliedFilter: $appliedFilter, date: $selectedDate, userVM: userViewModel) {
+                showFilter = false
+            }
         })
         .alertOverlay($userViewModel.popUpGainStreak, content: {
             StreakGainView(isShown: $userViewModel.popUpGainStreak, userVM: userViewModel, streakCount: userViewModel.streakCount)
@@ -278,8 +275,8 @@ struct JournalView: View {
                 }
             }
         })
-        .alertOverlay($isLoading, content: {
-            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
+        .alertOverlay($loading.0, content: {
+            LoadingView(loadingType: $loading.1, message: $loading.2)
         })
         .onChange(of: selectedDate) { newValue in
             userViewModel.getSubJournals(from: newValue)
@@ -304,10 +301,11 @@ private extension JournalView {
     }
 
     func loadingSuccess() {
-        loadingMessage = "Signed Out"
-        loadingStatus = .success
+        loading.2 = "Signed Out"
+        loading.1 = .success
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isLoading = false
+            loading.0 = false
+            loading.1 = .loading
             appRootManager.currentRoot = .onBoardingView
         }
     }

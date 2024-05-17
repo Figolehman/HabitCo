@@ -13,9 +13,7 @@ struct CreatePomodoroView: View {
     
     let habitNotificationId: String
 
-    @State private var isLoading = false
-    @State private var loadingStatus = LoadingType.loading
-    @State private var loadingMessage = "Saving..."
+    @Binding var loading: (Bool, LoadingType, String)
 
     @State private var pomodoroName: String = ""
     @State private var description: String = ""
@@ -84,7 +82,8 @@ struct CreatePomodoroView: View {
                     EditableCardView(cardType: .name, text: $pomodoroName)
                     EditableCardView(cardType: .description, text: $description)
                 }
-                
+                .padding(.top, .getResponsiveHeight(36))
+
                 VStack (spacing: 24) {
                     CardView {
                         VStack (spacing: 12) {
@@ -328,8 +327,9 @@ struct CreatePomodoroView: View {
                 let repeatPomodoro: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     if isSavable() {
-                        isLoading = true
-                        pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: isReminderOn ? reminderTime : nil) {
+                        loading.2 = "Saving..."
+                        loading.1 = .loading
+                        loading.0 = true                     pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: isReminderOn ? reminderTime : nil) {
                             loadingSuccess()
                         }
                         self.presentationMode.wrappedValue.dismiss()
@@ -338,15 +338,11 @@ struct CreatePomodoroView: View {
                 .padding(.top, 4)
             }
         }
-        .alertOverlay($isLoading, content: {
-            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
-        })
         .background (
             Color.neutral3
                 .frame(width: ScreenSize.width, height: ScreenSize.height)
                 .ignoresSafeArea()
         )
-        .padding(.top, .getResponsiveHeight(36))
         .navigationTitle("Create Pomodoro Form")
         .navigationBarTitleDisplayMode(.large)
     }
@@ -359,10 +355,11 @@ private extension CreatePomodoroView {
     }
 
     func loadingSuccess() {
-        loadingMessage = "Saved"
-        loadingStatus = .success
+        loading.1 = .success
+        loading.2 = "Saved"
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isLoading = false
+            loading.0 = false
+            loading.1 = .loading
             self.presentationMode.wrappedValue.dismiss()
         }
     }
@@ -370,6 +367,6 @@ private extension CreatePomodoroView {
 
 #Preview {
     NavigationView {
-        CreatePomodoroView(habitNotificationId: "0", pomodoroVM: PomodoroViewModel())
+        CreatePomodoroView(habitNotificationId: "0", loading: .constant((false, LoadingType.loading, "")),pomodoroVM: PomodoroViewModel())
     }
 }
