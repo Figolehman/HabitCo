@@ -319,6 +319,6 @@ private extension JournalView {
         userViewModel.getSubFutureJournals()
         userViewModel.getHabitNotificationId()
         userViewModel.checkFutureJournalThatHasSubJournal()
-        userViewModel.checkSubJournal(date: Date().formattedDate(to: .fullMonthName))
+        userViewModel.checkSubJournal(date: selectedDate.formattedDate(to: .fullMonthName))
     }
 }

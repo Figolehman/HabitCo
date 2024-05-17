@@ -42,6 +42,7 @@ extension UserViewModel{
     func getHabitNotificationId() {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
+            print("From VM: \(try await userManager.getHabitNotificationId(userId: userId))")
             self.habitNotificationId = try await userManager.getHabitNotificationId(userId: userId)
         }
     }
@@ -198,13 +199,6 @@ extension UserViewModel{
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             self.isUserStreak = try await userManager.isUserHaveStreak(userId: userId)
-        }
-    }
-    
-    func getCountHabit() {
-        Task {
-            guard let userId = UserDefaultManager.userID else { return }
-            self.habitCount = try await userManager.getHabitNotificationId(userId: userId)
         }
     }
     

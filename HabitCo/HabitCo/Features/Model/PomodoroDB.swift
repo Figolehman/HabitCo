@@ -8,7 +8,7 @@
 import Foundation
 
 struct PomodoroDB: Codable {
-    var id: String = UUID().uuidString
+    var id: String?
     let pomodoroName: String?
     let description: String?
     let label: String?

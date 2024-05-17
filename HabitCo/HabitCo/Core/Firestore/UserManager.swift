@@ -63,7 +63,8 @@ extension UserManager: UserUseCase{
     // Get Total Count for notification Habit
     func getHabitNotificationId(userId: String) async throws -> String {
         let habitDocument = try await userHabitCollection(userId: userId).getAllDocuments(as: HabitDB.self)
-        let pomodoroDocument = try await userHabitCollection(userId: userId).getAllDocuments(as: PomodoroDB.self)
+        let pomodoroDocument = try await userPomodoroCollection(userId: userId).getAllDocuments(as: PomodoroDB.self)
+        print("From Get Habit Notif: \((habitDocument?.count ?? 0) + (pomodoroDocument?.count ?? 0))")
         return "\((habitDocument?.count ?? 0) + (pomodoroDocument?.count ?? 0))"
     }
     
