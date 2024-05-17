@@ -64,7 +64,7 @@ struct PomodoroTimer: View {
                     .onReceive(timer) { _ in
                         if duration > 0 {
                             duration = duration - 1
-                        } else if duration == 0 && !isDone{
+                        } else if duration == 0 && !isDone {
                             soundPlayer.playSound(.endPomodoro)
                             isDone = true
                             action()

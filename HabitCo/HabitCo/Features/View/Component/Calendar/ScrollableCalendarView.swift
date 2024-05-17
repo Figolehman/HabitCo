@@ -84,8 +84,8 @@ extension ScrollableCalendarView {
             Text(day.getDayName)
                 .frame(maxWidth: .infinity)
                 .font(day.isSameDay(currentDate) ? .footnote.weight(.heavy) : .footnote.weight(.semibold))
-                .foregroundColor(Color(.tertiaryLabel))
-            
+                .foregroundColor(.getAppColor(.neutral2))
+
             Spacer()
                 .frame(height: spacing)
             

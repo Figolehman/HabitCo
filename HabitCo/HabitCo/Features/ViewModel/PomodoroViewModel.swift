@@ -85,6 +85,7 @@ extension PomodoroViewModel {
             let editUndo = try await userManager.editSubJournal(userId: userId, from: currentDate, habitId: nil, pomodoroId: pomodoroId, frequency: session ?? 0, label: label ?? "")
             let journal = try await userManager.getJournal(userId: userId, from: currentDate)
             let subJournal = try await userManager.getSubJournalByDate(userId: userId, date: currentDate, habitId: nil, pomodoroId: pomodoroId)
+            let alreadyStreak = try await userManager.checkTodayStreak(userId: userId, from: Date().formattedDate(to: .fullMonthName))
             if editUndo {
                 let isFirstStreak = try await userManager.checkIsFirstStreak(userId: userId)
                 let isStartFrequencyIsZero = try await userManager.checkStartFrequencyIsZero(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
@@ -110,12 +111,16 @@ extension PomodoroViewModel {
                     if (try await userManager.getStreak(userId: userId) != nil) {
                         updateCountStreak(date: currentDate)
                         try await userManager.updateHasUndoStreak(userId: userId, from: currentDate)
-                        try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: true)
+                        if !alreadyStreak {
+                            try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: true)
+                        }
                     } else {
                         try await userManager.createStreak(userId: userId)
                         try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: true)
                         try await userManager.updateHasUndoStreak(userId: userId, from: currentDate)
-                        try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: true)
+                        if !alreadyStreak {
+                            try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: true)
+                        }
                     }
                     try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
                 }
@@ -124,10 +129,57 @@ extension PomodoroViewModel {
         }
     }
     
-    func editPomodoroTimer(pomodoroId: String, focusTime: Int?, breakTime: Int?, longBreakTime: Int?, completion: @escaping () -> Void) {
+    func editPomodoroTimer(pomodoroId: String, session: Int?, focusTime: Int?, breakTime: Int?, longBreakTime: Int?, completion: @escaping () -> Void = {}) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            self.pomodoro = try await userManager.editPomodoroTimer(userId: userId, pomodoroId: pomodoroId, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime)
+            let currentDate = Date().formattedDate(to: .fullMonthName)
+            self.pomodoro = try await userManager.editPomodoroTimer(userId: userId, session: session, pomodoroId: pomodoroId, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime)
+            guard try await userManager.checkHasSubJournalTodayWithHabitPomodoroId(userId: userId, habitPomodoroId: pomodoroId) else {
+                return completion()
+            }
+            let editUndo = try await userManager.editSubJournal(userId: userId, from: currentDate, habitId: nil, pomodoroId: pomodoroId, frequency: session ?? 0, label: nil)
+            let journal = try await userManager.getJournal(userId: userId, from: currentDate)
+            let subJournal = try await userManager.getSubJournalByDate(userId: userId, date: currentDate, habitId: nil, pomodoroId: pomodoroId)
+            let alreadyStreak = try await userManager.checkTodayStreak(userId: userId, from: Date().formattedDate(to: .fullMonthName))
+            if editUndo {
+                let isFirstStreak = try await userManager.checkIsFirstStreak(userId: userId)
+                let isStartFrequencyIsZero = try await userManager.checkStartFrequencyIsZero(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
+                if try await !userManager.checkCompletedSubJournal(userId: userId, from: currentDate),
+                   try await !userManager.checkHasUndoStreak(userId: userId, from: currentDate)
+                {
+                    if !isFirstStreak,
+                       !isStartFrequencyIsZero
+                    {
+                        try await userManager.updateHasUndoStreak(userId: userId, from: currentDate, isUndo: true)
+                        try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                    } else {
+                        try await userManager.deleteStreak(userId: userId)
+                        try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                    }
+                    try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
+                }
+            } else {
+                let complete = try await userManager.checkSubJournalIsCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
+                if complete,
+                   currentDate.isSameDay(UserDefaultManager.lastEntryDate.formattedDate(to: .fullMonthName))
+                {
+                    if (try await userManager.getStreak(userId: userId) != nil) {
+                        updateCountStreak(date: currentDate)
+                        try await userManager.updateHasUndoStreak(userId: userId, from: currentDate)
+                        if !alreadyStreak {
+                            try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: true)
+                        }
+                    } else {
+                        try await userManager.createStreak(userId: userId)
+                        try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: true)
+                        try await userManager.updateHasUndoStreak(userId: userId, from: currentDate)
+                        if !alreadyStreak {
+                            try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: true)
+                        }
+                    }
+                    try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournal?.id ?? "")
+                }
+            }
             completion()
         }
     }

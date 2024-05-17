@@ -12,6 +12,7 @@ import WidgetKit
 
 @main
 struct HabitCoApp: App {
+    let notify = NotificationHandler()
 
     var widgetManager: WidgetManager {
         WidgetManager()
@@ -40,17 +41,7 @@ struct HabitCoApp: App {
             } catch {
                 debugPrint(error.localizedDescription)
             }
-            let notify = NotificationHandler()
-            notify.removeAllNotification()
             notify.askPermission()
-            var dateComponent = Date().get(.hour, .minute)
-            dateComponent.hour = 7
-            dateComponent.minute = 0
-            
-            let date = Calendar.current.date(from: dateComponent)!
-            
-            notify.sendNotification(date: date, weekdays: [1,3,5,7], title: Prompt.appName, body: "What you do today can improve all your tomorrows. Start your day with HabitCo!", withIdentifier: "Default1")
-            notify.sendNotification(date: date, weekdays: [2,4,6], title: Prompt.appName, body: "The secret of getting ahead is getting started. Kickstart your day by making strides in your habit!", withIdentifier: "Default2")
         }
     }
         
@@ -79,6 +70,15 @@ struct HabitCoApp: App {
                         }
                 } else {
                     TutorialView() {
+                        notify.removeAllNotification()
+                        notify.askPermission()
+                        let currentDate = Date()
+                        let date = Calendar.current.date(bySettingHour: 7, minute: 0, second: 0, of: currentDate)!
+                        let date2 = Calendar.current.date(bySettingHour: 18, minute: 0, second: 0, of: currentDate)!
+                        notify.sendNotification(timeInterval: 10, title: "ASdAS", body: "dsdsd")
+                        notify.sendNotification(date: date, weekdays: [1,3,5,7], title: Prompt.appName, body: "What you do today can improve all your tomorrows. Start your day with HabitCo!", withIdentifier: "Default1")
+                        notify.sendNotification(date: date, weekdays: [2,4,6], title: Prompt.appName, body: "The secret of getting ahead is getting started. Kickstart your day by making strides in your habit!", withIdentifier: "Default2")
+                        notify.sendNotification(date: date2, weekdays: [1,2,3,4,5,6,7], title: Prompt.appName, body: "The day is almost over, let’s complete your habit to keep your habit streaks!", withIdentifier: "Default3")
                         hasOpened = true
                     }
                 }

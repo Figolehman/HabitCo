@@ -78,6 +78,9 @@ struct HabitCo_WidgetEntryView : View {
                     .cornerRadius(12)
                 }
             }
+            if (family == .systemLarge && viewEntry.count < 4) || (family == .systemMedium && viewEntry.count < 2) {
+                Spacer()
+            }
         }
         .ignoresSafeArea()
     }

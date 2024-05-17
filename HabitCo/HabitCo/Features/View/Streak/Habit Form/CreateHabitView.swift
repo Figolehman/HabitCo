@@ -9,8 +9,6 @@ import SwiftUI
 
 struct CreateHabitView: View {
 
-    let notify = NotificationHandler()
-
     let habitNotificationId: String
 
     @Binding var loading: (Bool, LoadingType, String)

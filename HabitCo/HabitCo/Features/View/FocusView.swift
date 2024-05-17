@@ -73,9 +73,11 @@ struct FocusView: View {
                                 totalTime = currentTime
                             }
                             
-                            if currentSession <= (pomodoro?.session)! {
+                            if currentSession < (pomodoro?.session)! {
                                 promptIndex = Int.random(in: 0...3)
                                 isDone = false
+                            } else {
+                                timer.upstream.connect().cancel()
                             }
                         }
                     }
@@ -192,7 +194,7 @@ extension FocusView {
     }
     
     func getNextPomodoroTime(time: PomodoroTime, currentSession: Int) -> PomodoroTime {
-        if currentSession + 1 % 4 == 0 {
+        if (currentSession + 1) % 4 == 0 {
             switch time {
             case .focusTime:
                 return .longBreakTime

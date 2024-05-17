@@ -292,7 +292,7 @@ struct EditPomodoroView: View {
                             Text("Break Time")
                             Spacer()
                             AppButton(label: "\(breakTime == 0 ? "Not Set" : "\(breakTime)")", sizeType: .select) {
-                                if isFocusTimeFolded {
+                                if isBreakTimeFolded {
                                     withAnimation {
                                         isBreakTimeFolded = false
                                         if breakTime == 0 {
@@ -363,7 +363,7 @@ struct EditPomodoroView: View {
                     loading.2 = "Saving..."
                     loading.0 = true
                     if fromFocusView {
-                        pomodoroVM.editPomodoroTimer(pomodoroId: pomodoro.id!, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime) {
+                        pomodoroVM.editPomodoroTimer(pomodoroId: pomodoro.id!, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime) {
                             loadingSuccess(type: .save)
                         }
                     } else {
