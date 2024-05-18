@@ -32,7 +32,7 @@ extension PomodoroViewModel {
     public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date?, completion: @escaping () -> Void = {}){
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            let timeString = reminderPomodoro?.dateToString(to: .hourAndMinute) ?? ""
+            let timeString = reminderPomodoro?.dateToString(to: .hourAndMinute) ?? "-"
             try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString)
             completion()
         }
@@ -65,8 +65,10 @@ extension PomodoroViewModel {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             let currentDate = Date().formattedDate(to: .fullMonthName)
-            let reminder = reminderHabit?.dateToString(to: .hourAndMinute)
-            let editUndo = try await userManager.editSubJournal(userId: userId, from: currentDate, habitId: nil, pomodoroId: pomodoroId, frequency: session ?? 0)
+            let reminder = reminderHabit?.dateToString(to: .hourAndMinute) ?? "-"
+            self.pomodoro = try await userManager.editPomodoro(userId: userId, pomodoroId: pomodoroId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, longBreakTime: longBreakTime, reminderPomodoro: reminder)
+            
+            let editUndo = try await userManager.editSubJournal(userId: userId, from: currentDate, habitId: nil, pomodoroId: pomodoroId, frequency: session ?? 0, label: label ?? "")
             let journal = try await userManager.getJournal(userId: userId, from: currentDate)
             let subJournal = try await userManager.getSubJournalByDate(userId: userId, date: currentDate, habitId: nil, pomodoroId: pomodoroId)
             if editUndo {
@@ -108,7 +110,6 @@ extension PomodoroViewModel {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             try await userManager.editPomodoroTimer(userId: userId, pomodoroId: pomodoroId, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime)
-            try await userManager.editPomodoroTimer(userId: userId, pomodoroId: pomodoroId, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime)
         }
     }
     
@@ -128,11 +129,12 @@ extension PomodoroViewModel {
                 } else {
                     try await userManager.updateCountStreak(userId: userId, undo: true)
                 }
+                try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
                 if try await !userManager.checkHasSubJournalToday(userId: userId) {
                     try await userManager.updateHasSubJournal(userId: userId, from: currentDate, hasSubJournal: false)
                 }
-                completion()
             }
+            completion()
         }
     }
     

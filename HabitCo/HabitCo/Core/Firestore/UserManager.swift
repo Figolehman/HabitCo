@@ -179,7 +179,7 @@ extension UserManager: JournalUseCase {
               try await (getJournal(userId: userId, from: date) == nil)
         else { return }
         let (document, id) = generateDocumentID(userId: userId, type: nil)
-        let journal = JournalDB(id: id, date: date, dateName: date.getDayName, undoStreak: false, todayStreak: false, hasSubJournal: false)
+        let journal = JournalDB(id: id, date: date, dateName: date.getDayName, undoStreak: false, todayStreak: false, popUpGainStreak: false, popUpLossStreak: false, hasSubJournal: false)
         try document.setData(from: journal, merge: false)
         
         // When journal is created, Sub Journal also created in the same day
@@ -294,6 +294,33 @@ extension UserManager: JournalUseCase {
         return journal?.todayStreak ?? false
     }
     
+    // Check if app is already trigger the pop up streak or not
+    func checkPopUpGainStreak(userId: String) async throws -> Bool {
+        let journal = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
+        return journal?.popUpGainStreak ?? false
+    }
+    
+    func updatePopUpGainStreak(userId: String, popUpStreak: Bool) async throws {
+        let journal = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
+        let updatedData: [String: Any] = [
+            JournalDB.CodingKeys.popUpGainStreak.rawValue: popUpStreak
+        ]
+        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
+    }
+    
+    func checkPopUpLossStreak(userId: String) async throws -> Bool {
+        let journal = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
+        return journal?.popUpLossStreak ?? false
+    }
+    
+    func updatePopUpLossStreak(userId: String, popUpStreak: Bool) async throws {
+        let journal = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
+        let updatedData: [String: Any] = [
+            JournalDB.CodingKeys.popUpLossStreak.rawValue: popUpStreak
+        ]
+        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
+    }
+    
     // Update field hasSubJournal in firestore
     func updateHasSubJournal(userId: String, from date: Date, hasSubJournal: Bool = true) async throws {
         let journal = try await getJournal(userId: userId, from: date)
@@ -363,7 +390,6 @@ extension UserManager: SubJournalUseCase {
                 .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitId)
                 .getDocuments()
             if let document = snapshot.documents.first {
-                print(document.documentID)
                 try await document.reference.delete()
             }
         }
@@ -376,7 +402,6 @@ extension UserManager: SubJournalUseCase {
                 .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: pomodoroId)
                 .getDocuments()
             if let document = snapshot.documents.first {
-                print(document.documentID)
                 try await document.reference.delete()
             }
         }
@@ -404,7 +429,7 @@ extension UserManager: SubJournalUseCase {
         return false
     }
     
-        func editSubJournal(userId: String, from date: Date, habitId: String?, pomodoroId: String?, frequency: Int) async throws -> Bool {
+    func editSubJournal(userId: String, from date: Date, habitId: String?, pomodoroId: String?, frequency: Int, label: String) async throws -> Bool {
             let journal = try await getJournal(userId: userId, from: date)
             let subJournalDocument = try await getSubJournalByDate(userId: userId, date: date, habitId: habitId, pomodoroId: pomodoroId)
     
@@ -413,12 +438,14 @@ extension UserManager: SubJournalUseCase {
             let newFraction = ((Double(count)) / Double(frequency) * 100) / 100
             var updatedData: [String: Any] = [:]
             if frequencySubJournal < frequency {
+                updatedData[SubJournalDB.CodingKeys.label.rawValue] = label
                 updatedData[SubJournalDB.CodingKeys.frequencyCount.rawValue] = frequency
                 updatedData[SubJournalDB.CodingKeys.isCompleted.rawValue] = false
                 updatedData[SubJournalDB.CodingKeys.fraction.rawValue] = newFraction
                 try await userSubJournalDocument(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalDocument?.id ?? "").updateData(updatedData)
                 return true
             } else {
+                updatedData[SubJournalDB.CodingKeys.label.rawValue] = label
                 updatedData[SubJournalDB.CodingKeys.frequencyCount.rawValue] = frequency
                 if count >= frequency {
                     updatedData[SubJournalDB.CodingKeys.startFrequency.rawValue] = frequency

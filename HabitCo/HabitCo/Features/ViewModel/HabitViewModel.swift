@@ -35,7 +35,7 @@ extension HabitViewModel {
     public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date?, completion: @escaping () -> Void = {}) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            let timeString = reminderHabit?.dateToString(to: .hourAndMinute) ?? ""
+            let timeString = reminderHabit?.dateToString(to: .hourAndMinute) ?? "-"
             try await userManager.createNewHabit(userId: userId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString)
             completion()
         }
@@ -44,7 +44,6 @@ extension HabitViewModel {
     // Get Progress Habit
     func getProgressHabit(habitId: String, date: Date) {
         Task {
-            print("Date: \(date)")
             guard let userId = UserDefaultManager.userID else { return }
             self.progress = try await userManager.getProgressHabit(userId: userId, habitId: habitId, month: date.formattedDate(to: .fullMonthName))
         }
@@ -71,9 +70,10 @@ extension HabitViewModel {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
             let currentDate = Date().formattedDate(to: .fullMonthName)
-            let reminder = reminderHabit?.dateToString(to: .hourAndMinute)
-            let editUndo = try await userManager.editSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName), habitId: habitId, pomodoroId: nil, frequency: frequency ?? 0)
+            let timeString = reminderHabit?.dateToString(to: .hourAndMinute) ?? "-"
+            self.habit = try await userManager.editHabit(userId: userId, habitId: habitId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString)
             
+            let editUndo = try await userManager.editSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName), habitId: habitId, pomodoroId: nil, frequency: frequency ?? 0, label: label ?? "")
             let journal = try await userManager.getJournal(userId: userId, from: currentDate)
             let subJournal = try await userManager.getSubJournalByDate(userId: userId, date: currentDate, habitId: habitId, pomodoroId: nil)
             if editUndo {

@@ -11,6 +11,8 @@ struct StreakLossView: View {
     
     @Binding var isShown: Bool
     
+    @ObservedObject var userVM: UserViewModel
+    
     let streakCount: Int
     
     var body: some View {
@@ -23,6 +25,7 @@ struct StreakLossView: View {
                     .multilineTextAlignment(.center)
                     
                 AppButton(label: "Close", sizeType: .share) {
+                    userVM.updatePopUpLossStreak(isPopUp: false)
                     withAnimation {
                         isShown = false
                     }
@@ -44,6 +47,6 @@ struct StreakLossView: View {
 #Preview {
     EmptyView()
         .alertOverlay(.constant(true)) {
-            StreakLossView(isShown: .constant(true), streakCount: 3)
+            StreakLossView(isShown: .constant(true), userVM: UserViewModel(), streakCount: 3)
         }
 }

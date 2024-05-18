@@ -12,9 +12,7 @@ class NotificationHandler {
     
     func askPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { isSuccess, error in
-            if isSuccess {
-                print("Access Granted")
-            } else if let error = error {
+            if let error {
                 print(error.localizedDescription)
             }
         }

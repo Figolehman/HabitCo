@@ -28,8 +28,8 @@ struct EditPomodoroView: View {
     @State private var longBreakTime: Int
     
     @State private var isRepeatFolded = false
-    @State private var isReminderFolded = true
-    @State private var isLabelFolded = true
+    @State private var isReminderFolded = false
+    @State private var isLabelFolded = false
     
     @State private var isFocusTimeFolded = true
     @State private var isBreakTimeFolded = true
@@ -63,7 +63,7 @@ struct EditPomodoroView: View {
         }
 
         _session = State(initialValue: pomodoro.session!)
-        _isReminderOn = State(initialValue: pomodoro.reminderPomodoro != nil)
+        _isReminderOn = State(initialValue: pomodoro.reminderPomodoro != "-")
         _isReminderFolded = State(initialValue: isReminderOn)
 
         if let reminderHabit = pomodoro.reminderPomodoro {
@@ -353,8 +353,11 @@ struct EditPomodoroView: View {
                 AppButton(label: "Save", sizeType: .submit) {
                     isLoading = true
                     loadingMessage = "Saving..."
-                    pomodoroVM.editPomodoro(pomodoroId: pomodoro.id, pomodoroName: pomodoroName, description: description, label: selected?.rawValue, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderHabit: reminderTime) {
-                        loadingSuccess(type: .save)
+                    pomodoroVM.editPomodoro(pomodoroId: pomodoro.id, pomodoroName: pomodoroName, description: description, label: selected?.rawValue, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro != [] ? repeatPomodoro : pomodoro.repeatPomodoro, reminderHabit: isReminderOn ? reminderTime : nil) {
+                            loadingSuccess(type: .save)
+                    }
+                    if isReminderOn {
+                        // update notif
                     }
                 }
                 .padding(.top, 4)
@@ -371,7 +374,7 @@ struct EditPomodoroView: View {
             }, destructAction: {
                 isLoading = true
                 loadingMessage = "Deleting..."
-                pomodoroVM.deletePomodoro(pomodoroId: pomodoro.id) {
+                pomodoroVM.deletePomodoro(pomodoroId: pomodoro.id ) {
                     loadingSuccess(type: .delete)
                 }
             })

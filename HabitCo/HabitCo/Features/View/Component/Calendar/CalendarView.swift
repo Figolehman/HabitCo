@@ -15,12 +15,12 @@ struct CalendarView: View {
     @State var currentDate = Date()
     @State var days = [Date]()
     @State var selectedDate: Int?
-    @State var label = ""
 
     @ObservedObject private var habitVM: HabitViewModel
     @ObservedObject private var pomodoroVM: PomodoroViewModel
 
     let habitId: String
+    let label: String
 
     var currentMonth: Int {
         get {
@@ -37,18 +37,18 @@ struct CalendarView: View {
         self.habitId = habitId
         self.pomodoroVM = pomodoroVM
         self.habitVM = HabitViewModel()
+        self.label = label
 
         self._days = State(initialValue: currentDate.calendarDisplayDate)
-        self._label = State(initialValue: label)
     }
 
     init(habitId: String, label: String, habitVM: HabitViewModel) {
         self.habitId = habitId
         self.pomodoroVM = PomodoroViewModel()
         self.habitVM = habitVM
+        self.label = label
 
         self._days = State(initialValue: currentDate.calendarDisplayDate)
-        self._label = State(initialValue: label)
     }
 
 

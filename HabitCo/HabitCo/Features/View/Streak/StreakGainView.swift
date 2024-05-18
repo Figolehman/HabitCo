@@ -13,6 +13,8 @@ struct StreakGainView: View {
     }
     @State private var showShareSheet: Bool = false
     @Binding var isShown: Bool
+    
+    @ObservedObject var userVM: UserViewModel
 
     let streakCount: Int
     let index = Date().get(.day) % 2
@@ -31,9 +33,11 @@ struct StreakGainView: View {
                     
                 VStack (spacing: .getResponsiveHeight(16)) {
                     AppButton(label: "Share", sizeType: .share) {
+                        userVM.updatePopUpGainStreak(isPopUp: false)
                         showShareSheet = true
                     }
                     AppButton(label: "Close", sizeType: .share) {
+                        userVM.updatePopUpGainStreak(isPopUp: false)
                         withAnimation {
                             isShown = false
                         }
@@ -59,6 +63,6 @@ struct StreakGainView: View {
 #Preview {
     EmptyView()
         .alertOverlay(.constant(true)) {
-            StreakGainView(isShown: .constant(true), streakCount: 0)
+            StreakGainView(isShown: .constant(true), userVM: UserViewModel(), streakCount: 0)
         }
 }

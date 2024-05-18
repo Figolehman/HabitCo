@@ -10,12 +10,11 @@ import SwiftUI
 struct FilterView: View {
     @Binding var selectedFilter: [Color.FilterColors]
     @Binding var appliedFilter: [Color.FilterColors]
+    @Binding var showFilter: Bool
 
     @Binding var date: Date
     
     @ObservedObject var userVM: UserViewModel
-
-    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         let columns = Array(repeating: GridItem(.flexible()), count: 6)
@@ -31,12 +30,12 @@ struct FilterView: View {
             AppButton(label: "Save", sizeType: .submit, action: {
                 appliedFilter = selectedFilter
                 userVM.filterSubJournalsByLabels(date: date, labels: selectedLabel)
-                self.presentationMode.wrappedValue.dismiss()
+                showFilter = false
             })
         }
     }
 }
 
 #Preview {
-    FilterView(selectedFilter: .constant([]), appliedFilter: .constant([]), date: .constant(Date()), userVM: UserViewModel())
+    FilterView(selectedFilter: .constant([]), appliedFilter: .constant([]), showFilter: .constant(true), date: .constant(Date()), userVM: UserViewModel())
 }

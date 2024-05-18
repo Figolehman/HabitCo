@@ -14,6 +14,8 @@ struct JournalDB: Codable{
     let dateName: String?
     let undoStreak: Bool?
     let todayStreak: Bool?
+    let popUpGainStreak: Bool?
+    let popUpLossStreak: Bool?
     let hasSubJournal: Bool?
     
     enum CodingKeys: String, CodingKey{
@@ -21,6 +23,8 @@ struct JournalDB: Codable{
         case dateName = "date_name"
         case undoStreak = "undo_streak"
         case hasSubJournal = "has_sub_journal"
+        case popUpGainStreak = "pop_up_gain_streak"
+        case popUpLossStreak = "pop_up_loss_streak"
         case todayStreak = "today_streak"
     }
 }
@@ -35,6 +39,8 @@ extension JournalDB {
         self.undoStreak = try container.decode(Bool.self, forKey: .undoStreak)
         self.todayStreak = try container.decode(Bool.self, forKey: .todayStreak)
         self.hasSubJournal = try container.decode(Bool.self, forKey: .hasSubJournal)
+        self.popUpGainStreak = try container.decode(Bool.self, forKey: .popUpGainStreak)
+        self.popUpLossStreak = try container.decode(Bool.self, forKey: .popUpLossStreak)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -45,5 +51,7 @@ extension JournalDB {
         try container.encodeIfPresent(self.undoStreak, forKey: .undoStreak)
         try container.encodeIfPresent(self.todayStreak, forKey: .todayStreak)
         try container.encodeIfPresent(self.hasSubJournal, forKey: .hasSubJournal)
+        try container.encodeIfPresent(self.popUpGainStreak, forKey: .popUpGainStreak)
+        try container.encodeIfPresent(self.popUpLossStreak, forKey: .popUpLossStreak)
     }
 }

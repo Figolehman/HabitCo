@@ -329,15 +329,11 @@ struct CreatePomodoroView: View {
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     if isSavable() {
                         isLoading = true
-                        if isReminderFolded {
-                            pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: nil) {
-                                loadingSuccess()
-                            }
-                        } else {
+                        pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: isReminderOn ? reminderTime : nil) {
+                            loadingSuccess()
+                        }
+                        if isReminderOn {
                             notify.sendNotification(date: reminderTime, weekdays: repeatPomodoro, title: "\(pomodoroName)", body: "Go finish it", withIdentifier: "\(habitNotificationId)")
-                            pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderTime) {
-                                loadingSuccess()
-                            }
                         }
                         self.presentationMode.wrappedValue.dismiss()
                     }

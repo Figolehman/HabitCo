@@ -152,16 +152,10 @@ struct CreateHabitView: View {
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     guard isSavable() else { return }
                     isLoading = true
-                    if isReminderFolded {
-                        habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: nil) {
-                            loadingSuccess()
-                        }
-                    } else {
-                        notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "Go finish it", withIdentifier: "\(habitNotificationId)")
-                        habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime) {
-                            loadingSuccess()
-                        }
+                    habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: isReminderOn ? reminderTime : nil) {
+                        loadingSuccess()
                     }
+                    notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "Go finish it", withIdentifier: "\(habitNotificationId)")
                     self.presentationMode.wrappedValue.dismiss()
                 }
                 .padding(.top, 4)

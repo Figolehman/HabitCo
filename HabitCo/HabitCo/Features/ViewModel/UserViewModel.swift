@@ -23,8 +23,9 @@ final class UserViewModel: ObservableObject {
     @Published var isUserStreak: Bool?
     @Published var habitNotificationId: String?
 
-    @Published var isStreakJustDeleted = false
-    @Published var isStreakJustAdded = false
+    @Published var popUpGainStreak: Bool = false
+    @Published var popUpLossStreak: Bool = false
+    //@Published var isStreakJustAdded = false
 
     private let firebaseProvider: FirebaseAuthProvider
     private let userManager: UserManager
@@ -97,6 +98,8 @@ extension UserViewModel{
                 checkIsStreak()
                 UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
             }
+            isAlreadyPopLossStreak()
+            isAlreadyPopUpGainStreak()
         }
     }
     
@@ -144,6 +147,34 @@ extension UserViewModel{
         }
     }
     
+    func isAlreadyPopUpGainStreak() {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            self.popUpGainStreak = try await userManager.checkPopUpGainStreak(userId: userId)
+        }
+    }
+    
+    func isAlreadyPopLossStreak() {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            self.popUpLossStreak = try await userManager.checkPopUpLossStreak(userId: userId)
+        }
+    }
+    
+    func updatePopUpGainStreak(isPopUp: Bool) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: isPopUp)
+        }
+    }
+    
+    func updatePopUpLossStreak(isPopUp: Bool) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: isPopUp)
+        }
+    }
+    
     // DONE -> Get sub journal data
     func getSubJournals(from date: Date) {
         Task {
@@ -159,7 +190,6 @@ extension UserViewModel{
             self.subJournals = try await fetchSubJournal(userId: userId, subJournals: subJournals)
             checkHasHabit()
             getStreak()
-            print(isStreakJustAdded)
         }
     }
     
@@ -197,7 +227,10 @@ extension UserViewModel{
                     try await userManager.updateHasUndoStreak(userId: userId, from: date, isUndo: true)
                 } else {
                     try await userManager.deleteStreak(userId: userId)
-                    isStreakJustDeleted = true
+                    /**/
+                    try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                    isAlreadyPopLossStreak()
+                   // isStreakJustDeleted = true
                 }
                 try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: false)
             }
@@ -223,13 +256,12 @@ extension UserViewModel{
                     try await userManager.createStreak(userId: userId)
                     try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
                     try await userManager.updateHasUndoStreak(userId: userId, from: date)
-                    isStreakJustAdded = true
+                    try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: true)
+                    isAlreadyPopUpGainStreak()
                 }
                 try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
                 getStreak()
             }
-            print("isStreakJustAdded: \(isStreakJustAdded)")
-            print("isStreakJustDeleted: \(isStreakJustDeleted)")
             getSubJournals(from: date)
         }
     }
@@ -250,9 +282,7 @@ extension UserViewModel{
     func checkSubJournal(date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            let flag = try await userManager.checkHasSubJournalByDate(userId: userId, date: date.formattedDate(to: .fullMonthName))
-            print(flag, date.formattedDate(to: .fullMonthName))
-            self.hasSubJournal = !flag
+            self.hasSubJournal = try await !userManager.checkHasSubJournalByDate(userId: userId, date: date.formattedDate(to: .fullMonthName))
         }
     }
     
@@ -273,7 +303,9 @@ extension UserViewModel{
                 !formattedDate.isSameDay(startDate)
             {
                 try await userManager.deleteStreak(userId: userId)
-               isStreakJustDeleted = true
+                try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+
+               //isStreakJustDeleted = true
                 getStreak()
             }
         }
@@ -328,7 +360,8 @@ private extension UserViewModel {
             {
                 try await userManager.updateCountStreak(userId: userId)
                 try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: true)
-               isStreakJustAdded = true
+                try await userManager.updatePopUpGainStreak(userId: userId, popUpStreak: true)
+
             }
         }
     }

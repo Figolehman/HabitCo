@@ -186,7 +186,7 @@ struct JournalView: View {
                 do {
                     try userViewModel.getCurrentUserData { }
                 } catch {
-                    print("No Authenticated User")
+                    debugPrint("No Authenticated User")
                 }
                 userViewModelInitiation()
             }
@@ -243,23 +243,23 @@ struct JournalView: View {
                     try auth.signOut()
                     loadingSuccess()
                 } catch {
-                    print(error)
+                    debugPrint(error)
                 }
             })
         })
         .customSheet($showFilter, sheetType: .filters, content: {
-            FilterView(selectedFilter: $selectedFilter, appliedFilter: $appliedFilter, date: $selectedDate, userVM: userViewModel)
+            FilterView(selectedFilter: $selectedFilter, appliedFilter: $appliedFilter, showFilter: $showFilter, date: $selectedDate, userVM: userViewModel)
                 .onDisappear {
                     if selectedFilter != appliedFilter {
                         selectedFilter = appliedFilter
                     }
                 }
         })
-        .alertOverlay($userViewModel.isStreakJustAdded, content: {
-            StreakGainView(isShown: $userViewModel.isStreakJustAdded, streakCount: userViewModel.streakCount)
+        .alertOverlay($userViewModel.popUpGainStreak, content: {
+            StreakGainView(isShown: $userViewModel.popUpGainStreak, userVM: userViewModel, streakCount: userViewModel.streakCount)
         })
-        .alertOverlay($userViewModel.isStreakJustDeleted, content: {
-            StreakLossView(isShown: $userViewModel.isStreakJustDeleted, streakCount: userViewModel.streakCount)
+        .alertOverlay($userViewModel.popUpLossStreak, content: {
+            StreakLossView(isShown: $userViewModel.popUpLossStreak, userVM: userViewModel, streakCount: userViewModel.streakCount)
         })
         .alertOverlay($showCreateHabit, closeOnTap: true, content: {
             VStack (spacing: 24) {

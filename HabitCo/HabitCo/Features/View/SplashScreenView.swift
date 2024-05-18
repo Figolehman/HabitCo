@@ -40,7 +40,7 @@ struct SplashScreenView: View {
                     do {
                         try userViewModel.getCurrentUserData { }
                     } catch {
-                        print("No Authenticated User")
+                        debugPrint("No Authenticated User")
                     }
                 } else {
                     appRootManager.currentRoot = .onBoardingView

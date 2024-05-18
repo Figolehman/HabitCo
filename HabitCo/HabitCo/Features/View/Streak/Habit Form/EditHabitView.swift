@@ -22,7 +22,7 @@ struct EditHabitView: View {
     @State private var isReminderOn = false
     
     @State private var isRepeatFolded = false
-    @State private var isReminderFolded = true
+    @State private var isReminderFolded = false
     @State private var isLabelFolded = false
 
     @State var showAlert = false
@@ -51,7 +51,7 @@ struct EditHabitView: View {
         }
 
         _frequency = State(initialValue: habit.frequency!)
-        _isReminderOn = State(initialValue: habit.reminderHabit != nil)
+        _isReminderOn = State(initialValue: habit.reminderHabit != "-")
         _isReminderFolded = State(initialValue: isReminderOn)
 
         if let reminderHabit = habit.reminderHabit {
@@ -177,8 +177,11 @@ struct EditHabitView: View {
                 AppButton(label: "Save", sizeType: .submit) {
                     isLoading = true
                     loadingMessage = "Saving..."
-                    habitVM.editHabit(habitId: habit.id ?? "", habitName: habitName, description: description, label: selected?.rawValue, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminderTime) {
+                    habitVM.editHabit(habitId: habit.id ?? "", habitName: habitName, description: description, label: selected?.rawValue ?? "", frequency: frequency, repeatHabit: repeatHabit != [] ? repeatHabit : habit.repeatHabit, reminderHabit: isReminderOn ? reminderTime : nil) {
                         loadingSuccess(type: .save)
+                    }
+                    if isReminderOn {
+                        // update notif
                     }
                 }
                 .padding(.top, 4)

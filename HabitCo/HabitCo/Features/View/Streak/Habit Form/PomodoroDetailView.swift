@@ -51,7 +51,7 @@ struct PomodoroDetailView: View {
                             HStack {
                                 Text("Reminder")
                                 Spacer()
-                                Text("\(pomodoro.reminderPomodoro ?? "")")
+                                Text("\(pomodoro.reminderPomodoro ?? "-")")
                             }
                         }
                         CardView(height: .getResponsiveHeight(70)) {
