@@ -23,7 +23,6 @@ final class UserViewModel: ObservableObject {
         firebaseProvider = FirebaseAuthProvider()
         userManager = UserManager.shared
         checkIsToday()
-        checkIsStreak()
     }
     
 }
@@ -60,7 +59,7 @@ extension UserViewModel{
         return initial.uppercased()
     }
     
-    // BUG -> di Last Entry Date
+    // DONE
     func generateJournalEntries()  {
         let lastEntryDate = UserDefaultManager.lastEntryDate
         let calendar = Calendar.current
@@ -71,7 +70,7 @@ extension UserViewModel{
         print(currentDate)
         Task {
             if missedDay > 0 {
-                for i in 1...missedDay {
+                for i in 0...missedDay {
                     if let missedDate = calendar.date(byAdding: .day, value: -i, to: currentDate)
                     {
                         print("missed Date: \(missedDate)")
@@ -98,6 +97,7 @@ extension UserViewModel{
         }
     }
     
+    // WIP
     func filterByProgress(from date: Date, isAscending: Bool) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -121,6 +121,7 @@ extension UserViewModel{
         }
     }
     
+    // DONE
     func getStreak() {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -161,7 +162,6 @@ extension UserViewModel{
         }
     }
 
-    // BUG -> di hasTodayStreak, jadi setiap si UserViewModel ke init dia jadi false terus, salah penempatan
     func updateFreqeuncySubJournal(subJournalId: String, from date: Date) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
@@ -178,7 +178,6 @@ extension UserViewModel{
                     print("B\n")
                     try await userManager.createStreak(userId: userId, description: "")
                     UserDefaultManager.hasTodayStreak = true
-                    UserDefaultManager.isFirstStreak = true
                 }
                 try await userManager.updateSubJournalCompleted(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
                 getStreak()
@@ -197,25 +196,19 @@ extension UserViewModel{
             let checkYesterdayJournalCompleted = try await userManager.checkCompletedSubJournal(userId: userId, from: yesterday ?? Date())
             print("Journal Completed yesterday: \(checkYesterdayJournalCompleted)")
             print("yesterday: \(String(describing: yesterday))\n")
-            if let subJournals = try await userManager.getSubJournal(userId: userId, from: formattedDate) {
-                for _ in subJournals {
-                    if !UserDefaultManager.isFirstStreak,
-                       (try await userManager.getStreak(userId: userId) != nil),
-                       !checkYesterdayJournalCompleted
-                    {
-                        try await userManager.deleteStreak(userId: userId)
-                        print("TRigegrerere")
-                    }
-                }
+            if (try await userManager.getStreak(userId: userId) != nil),
+               !checkYesterdayJournalCompleted
+            {
+                try await userManager.deleteStreak(userId: userId)
+                getStreak()
+                print("TRigegrerere")
             }
         }
     }
     
-    // BUG -> Kalo last entry date == Date sekarang 
     func checkIsToday() {
-        if UserDefaultManager.lastEntryDate.isSameDay(Date().formattedDate(to: .fullMonthName)) {
+        if !UserDefaultManager.lastEntryDate.isSameDay(Date().formattedDate(to: .fullMonthName)) {
             UserDefaultManager.hasTodayStreak = false
-            print(UserDefaultManager.hasTodayStreak)
         }
     }
     
@@ -247,10 +240,8 @@ private extension UserViewModel {
             if !UserDefaultManager.hasTodayStreak
             {
                 try await userManager.updateCountStreak(userId: userId)
-                UserDefaultManager.isFirstStreak = false
                 UserDefaultManager.hasTodayStreak = true
             }
-            
         }
     }
 }

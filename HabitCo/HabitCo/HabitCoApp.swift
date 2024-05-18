@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Firebase
+import FirebaseAuth
 
 @main
 struct HabitCoApp: App {
@@ -20,6 +21,11 @@ struct HabitCoApp: App {
         FirebaseApp.configure()
 //        UserDefaults.standard.set(false, forKey: "hasOpened")
         if UserDefaults.standard.bool(forKey: "hasOpened") == false {
+            do {
+                try Auth.auth().signOut()
+            } catch {
+                debugPrint(error.localizedDescription)
+            }
             let notify = NotificationHandler()
             notify.removeAllNotification()
             notify.askPermission()

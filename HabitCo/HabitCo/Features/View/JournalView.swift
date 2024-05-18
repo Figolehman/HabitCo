@@ -53,9 +53,9 @@ struct JournalView: View {
                 }
                 
                 Button {
-                    userViewModel.generateJournalEntries()
+                    userViewModel.checkIsStreak()
                 } label: {
-                    Text("Generate")
+                    Text("checkIsStreak")
                 }
                 
                 
@@ -78,13 +78,13 @@ struct JournalView: View {
                                     NavigationLink {
                                         HabitDetailView(habit: item.habit)
                                     } label: {
-                                        HabitItem(habitType: .type2, habitName: item.habit?.habitName ?? "NO NAME", fraction: userViewModel.fraction, progress: item.subJournal.startFrequency ?? 0)
+                                        HabitItem(habitType: .type2, habitName: item.habit?.habitName ?? "NO NAME", fraction: userViewModel.fraction, progress: item.subJournal.startFrequency ?? 0, label: item.habit?.label ?? "blossom")
                                     }
                                 } else {
                                     Button {
                                         userViewModel.updateFreqeuncySubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                     } label: {
-                                        HabitItem(habitType: .type1, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", fraction: userViewModel.fraction, progress: item.subJournal.startFrequency ?? 0)
+                                        HabitItem(habitType: .type1, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", fraction: userViewModel.fraction, progress: item.subJournal.startFrequency ?? 0, label: item.pomodoro?.label ?? "blossom")
                                     }
                                 }
                             }
@@ -189,7 +189,6 @@ struct JournalView: View {
             customNavigation.titleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             customNavigation.largeTitleTextAttributes = [.foregroundColor: UIColor(.getAppColor(.neutral))]
             UINavigationBar.appearance().standardAppearance = customNavigation
-            UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
             userViewModel.generateJournalEntries()
             userViewModel.getSubJournals(from: selectedDate)
             userViewModel.getStreak()
@@ -204,6 +203,8 @@ struct JournalView: View {
             } catch {
                 print("No Authenticated User")
             }
+            UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
+            userViewModel.checkIsStreak()
         }
         .onChange(of: selectedDate) { newValue in
             userViewModel.getSubJournals(from: newValue)

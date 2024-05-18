@@ -16,16 +16,16 @@ struct HabitItem: View {
     let progressSize: CGFloat = 50
     let habitType: HabitType
     let habitName: String
-    let label: String
     let fraction: Double
     let progress: Int
+    let label: String
     
-    init(habitType: HabitType, habitName: String, label: String = "blossom", fraction: Double = 1, progress: Int = 2) {
+    init(habitType: HabitType, habitName: String, fraction: Double = 1, progress: Int = 2, label: String) {
         self.habitType = habitType
         self.habitName = habitName
-        self.label = label
         self.fraction = fraction
         self.progress = progress
+        self.label = label
     }
     
     var body: some View {
@@ -103,7 +103,7 @@ struct HabitItem: View {
 
 #Preview {
     VStack {
-        HabitItem(habitType: .type1, habitName: "habit 1", label: "yellow", fraction: 0.5)
-        HabitItem(habitType: .type2, habitName: "habit 2", label: "yellow", fraction: 0.8)
+        HabitItem(habitType: .type1, habitName: "habit 1", fraction: 0.5, label: "yellow")
+        HabitItem(habitType: .type2, habitName: "habit 2", fraction: 0.8, label: "yellow")
     }
 }
