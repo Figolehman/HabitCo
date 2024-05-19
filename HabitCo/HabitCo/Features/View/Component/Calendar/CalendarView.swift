@@ -99,7 +99,7 @@ struct CalendarView: View {
         .padding()
         .onChange(of: currentDate, perform: { _ in
             days = currentDate.calendarDisplayDate
-           //habitVM.getProgressHabit(habitId: habitId, date: currentDate)
+            habitVM.getProgressHabit(habitId: habitId, date: days.first?.formattedDate(to: .fullMonthName) ?? Date())
         })
         .background(Color.white)
         .cornerRadius(13)
