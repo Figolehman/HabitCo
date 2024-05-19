@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TaskModel: Identifiable, RawRepresentable, Codable {
 
-    static let defaultJSON = "{\"id\": \"1\", \"taskTitle\":\"kosong\", \"filterColor\":\"aluminium\", \"taskCount\": 0, \"totalTask\": 1}"
+    static let defaultJSON = "{\"id\": \"1\", \"taskTitle\":\"Habit Name\", \"filterColor\":\"aluminium\", \"taskCount\": 0, \"totalTask\": 1}"
 
     public var rawValue: String {
         guard let data = try? JSONEncoder().encode(self),

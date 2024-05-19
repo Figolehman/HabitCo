@@ -279,6 +279,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B18050E2BFA6D6C0021F515 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */,
+				1BE028B62BA97A9F0042CAC3 /* Info.plist */,
+			);
+			name = Files;
+			sourceTree = "<group>";
+		};
 		1B560C772BA2022600CE2DC6 /* Features */ = {
 			isa = PBXGroup;
 			children = (
@@ -393,6 +402,7 @@
 		1B98BD4B2BF9CEF00096F730 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -585,12 +595,10 @@
 		1BE028AF2BA97A9D0042CAC3 /* HabitCo Widget */ = {
 			isa = PBXGroup;
 			children = (
+				1B18050E2BFA6D6C0021F515 /* Files */,
 				1B98BD4B2BF9CEF00096F730 /* Main */,
 				1B98BD4A2BF9CEED0096F730 /* Extension */,
-				1BE028B42BA97A9F0042CAC3 /* Assets.xcassets */,
 				1B772ADA2BBD5B6000BB675E /* TaskModel.swift */,
-				1BE028B22BA97A9D0042CAC3 /* HabitCo_Widget.swift */,
-				1BE028B62BA97A9F0042CAC3 /* Info.plist */,
 			);
 			path = "HabitCo Widget";
 			sourceTree = "<group>";

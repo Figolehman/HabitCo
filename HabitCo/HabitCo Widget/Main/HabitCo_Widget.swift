@@ -6,9 +6,7 @@
 //
 
 import WidgetKit
-import FirebaseFirestoreInternal
 import SwiftUI
-import HabitCo
 
 struct Provider: TimelineProvider {
 
@@ -28,13 +26,16 @@ struct Provider: TimelineProvider {
 
         for dayOffset in 0...31 {
             let entryDate = calendar.date(byAdding: .day, value: dayOffset, to: currentDate.startOfDay())!
-            let lastFourTasks = UserDefaults(suiteName: "group.HabitCo")!.object(forKey: "WidgetData") as? [String]
-            let lastFourDecodedTasks: [TaskModel] = lastFourTasks?.compactMap {
-                TaskModel(rawValue: $0)
-            } ?? TaskDataModel.shared.tasks
-            entries.append(TaskEntry(date: entryDate, lastFourTasks: lastFourDecodedTasks))
+            if let lastFourTasks = UserDefaults(suiteName: "group.HabitCo")!.object(forKey: "WidgetData") as? [String] {
+                let lastFourDecodedTasks: [TaskModel] = lastFourTasks.compactMap {
+                    TaskModel(rawValue: $0)
+                }
+                entries.append(TaskEntry(date: entryDate, lastFourTasks: lastFourDecodedTasks))
+            } else {
+                entries.append(TaskEntry(date: entryDate, lastFourTasks: []))
+            }
         }
-        
+
         let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
     }
@@ -47,42 +48,50 @@ struct TaskEntry: TimelineEntry {
 
 struct HabitCo_WidgetEntryView : View {
     var entry: Provider.Entry
-    let userDefaults = UserDefaults(suiteName: "group.HabitCo")
 
     @Environment(\.widgetFamily) var family
 
     var body: some View {
         let viewEntry = (family == .systemLarge) ? entry.lastFourTasks : Array(entry.lastFourTasks.prefix(2))
-        VStack (spacing: (family == .systemLarge) ? 19 : 8) {
-            ForEach(viewEntry, id:\.id) { task in
-                HStack (spacing: 20) {
-                    HStack {
-                        Text("\(task.taskTitle)")
-                        Spacer()
-                        Text("\(task.taskCount)/\(task.totalTask)")
+        if viewEntry.count == 0 {
+            VStack(spacing: 20) {
+                Image(systemName: "leaf")
+                    .font(.largeTitle)
+                Text("There’s no habit recorded yet.")
+            }
+            .foregroundColor(.getAppColor(.neutral))
+        } else {
+            VStack (spacing: (family == .systemLarge) ? 19 : 8) {
+                ForEach(viewEntry, id:\.id) { task in
+                    HStack (spacing: 20) {
+                        HStack {
+                            Text("\(task.taskTitle)")
+                            Spacer()
+                            Text("\(task.taskCount)/\(task.totalTask)")
+                        }
+                        .padding(20)
+                        .foregroundColor(.getAppColor(.primary))
+                        //                    .frame(width: 210, height: 60)
+                        .background(
+                            Color.getAppColor(.primary2)
+                                .overlay(
+                                    HStack {
+                                        //                                    Text("\(task.taskCount * 220 / task.totalTask)")
+                                        Color(task.filterColor)
+                                            .frame(width: CGFloat(task.taskCount * 314 / task.totalTask))
+                                        Spacer()
+                                    }
+                                )
+                        )
+                        .cornerRadius(12)
                     }
-                    .padding(20)
-                    .foregroundColor(.getAppColor(.primary))
-//                    .frame(width: 210, height: 60)
-                    .background(
-                        Color.getAppColor(.primary2)
-                            .overlay(
-                                HStack {
-//                                    Text("\(task.taskCount * 220 / task.totalTask)")
-                                    Color(task.filterColor)
-                                        .frame(width: CGFloat(task.taskCount * 314 / task.totalTask))
-                                    Spacer()
-                                }
-                            )
-                    )
-                    .cornerRadius(12)
+                }
+                if (family == .systemLarge && viewEntry.count < 4) || (family == .systemMedium && viewEntry.count < 2) {
+                    Spacer()
                 }
             }
-            if (family == .systemLarge && viewEntry.count < 4) || (family == .systemMedium && viewEntry.count < 2) {
-                Spacer()
-            }
+            .ignoresSafeArea()
         }
-        .ignoresSafeArea()
     }
 }
 
@@ -95,8 +104,8 @@ struct HabitCo_Widget: Widget {
             HabitCo_WidgetEntryView(entry: entry)
                 .widgetBackground(.getAppColor(.neutral3))
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("HabitCo's Widget")
+        .description("A list of your today's habit")
         .supportedFamilies([.systemLarge, .systemMedium])
     }
 }
