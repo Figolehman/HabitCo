@@ -194,7 +194,7 @@ extension FocusView {
     }
     
     func getNextPomodoroTime(time: PomodoroTime, currentSession: Int) -> PomodoroTime {
-        if currentSession + 1 % 4 == 0 {
+        if (currentSession + 1) % 4 == 0 {
             switch time {
             case .focusTime:
                 return .longBreakTime

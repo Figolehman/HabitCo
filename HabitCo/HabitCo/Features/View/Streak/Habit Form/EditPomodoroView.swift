@@ -292,7 +292,7 @@ struct EditPomodoroView: View {
                             Text("Break Time")
                             Spacer()
                             AppButton(label: "\(breakTime == 0 ? "Not Set" : "\(breakTime)")", sizeType: .select) {
-                                if isFocusTimeFolded {
+                                if isBreakTimeFolded {
                                     withAnimation {
                                         isBreakTimeFolded = false
                                         if breakTime == 0 {

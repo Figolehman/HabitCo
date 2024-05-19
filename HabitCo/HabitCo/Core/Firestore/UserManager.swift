@@ -431,14 +431,22 @@ extension UserManager: SubJournalUseCase {
     func editSubJournal(userId: String, from date: Date, habitId: String?, pomodoroId: String?, frequency: Int, label: String?) async throws -> Bool {
             let journal = try await getJournal(userId: userId, from: date)
             let subJournalDocument = try await getSubJournalByDate(userId: userId, date: date, habitId: habitId, pomodoroId: pomodoroId)
-            let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId ?? "")
+            var habit: HabitDB?
+            var pomodoro: PomodoroDB?
     
             let count = subJournalDocument?.startFrequency ?? 0
             let frequencySubJournal = subJournalDocument?.frequencyCount ?? 0
             let newFraction = ((Double(count)) / Double(frequency) * 100) / 100
             var updatedData: [String: Any] = [:]
-            if frequencySubJournal < frequency {
+            if let pomodoroId {
+                pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: pomodoroId)
                 updatedData[SubJournalDB.CodingKeys.label.rawValue] = label ?? pomodoro?.label ?? ""
+            }
+            if let habitId {
+                habit = try await getHabitDetail(userId: userId, habitId: habitId)
+                updatedData[SubJournalDB.CodingKeys.label.rawValue] = label ?? habit?.label ?? ""
+            }
+            if frequencySubJournal < frequency {
                 updatedData[SubJournalDB.CodingKeys.frequencyCount.rawValue] = frequency
                 updatedData[SubJournalDB.CodingKeys.isCompleted.rawValue] = false
                 updatedData[SubJournalDB.CodingKeys.fraction.rawValue] = newFraction
@@ -639,7 +647,7 @@ extension UserManager: HabitUseCase {
             notif.sendNotification(date: reminderHabit.stringToDate(to: .hourAndMinute), weekdays: repeatHabit ?? [], title: habitName ?? "", body: description ?? "", withIdentifier: habitId)
         }
         try await userHabitDocument(userId: userId, habitId: habitId).updateData(updatedData)
-        try await manageSubFutureJournal(userId: userId, habitPomodoroId: habitId, method: .generate, repeatHabit: repeatHabit ?? [])
+        try await manageSubFutureJournal(userId: userId, habitPomodoroId: habitId, type: .habit, method: .generate, repeatHabit: repeatHabit ?? [])
         return try await getHabitDetail(userId: userId, habitId: habitId)
     }
     
