@@ -8,10 +8,15 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
+import WidgetKit
 
 @main
 struct HabitCoApp: App {
-    
+
+    var widgetManager: WidgetManager {
+        WidgetManager()
+    }
+
     @StateObject private var appRootManager = AppRootManager()
     @AppStorage("hasOpened") var hasOpened = false
     @Environment(\.auth) var authUser
@@ -55,6 +60,11 @@ struct HabitCoApp: App {
             case .splashView:
                 SplashScreenView()
                     .environmentObject(appRootManager)
+                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+                        widgetManager.getSubJournalToday(){
+                            WidgetCenter.shared.reloadAllTimelines()
+                        }
+                    }
             case .onBoardingView:
                 OnboardingView()
                     .environmentObject(appRootManager)
@@ -62,6 +72,11 @@ struct HabitCoApp: App {
                 if hasOpened {
                     JournalView()
                         .environmentObject(appRootManager)
+                        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+                            widgetManager.getSubJournalToday(){
+                                WidgetCenter.shared.reloadAllTimelines()
+                            }
+                        }
                 } else {
                     TutorialView() {
                         hasOpened = true

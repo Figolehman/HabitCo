@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import WidgetKit
 
 private enum Navigator {
     case createHabit, createPomodoro, habitDetail, pomodoroDetail, focus
