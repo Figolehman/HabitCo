@@ -12,10 +12,12 @@ struct HabitDetailView: View {
     @Binding var loading: (Bool, LoadingType, String)
 
     @ObservedObject private var habitVM: HabitViewModel
+    @ObservedObject private var userVM: UserViewModel
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(loading: Binding<(Bool, LoadingType, String)>, habitVM: HabitViewModel) {
+    init(loading: Binding<(Bool, LoadingType, String)>, habitVM: HabitViewModel, userVM: UserViewModel) {
+        self.userVM = userVM
         self.habitVM = habitVM
         self._loading = loading
     }
@@ -25,7 +27,7 @@ struct HabitDetailView: View {
             ScrollView {
                 VStack (spacing: 40) {
                     VStack (spacing: 24) {
-                        CalendarView(habitId: habit.id ?? "", label: habit.label ?? "", habitVM: habitVM)
+                        CalendarView(habitId: habit.id ?? "", label: habit.label ?? "", userVM: userVM)
 
                         CardView {
                             Text("\(habit.description ?? "")")

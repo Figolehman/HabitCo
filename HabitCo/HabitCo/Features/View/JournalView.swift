@@ -73,10 +73,10 @@ struct JournalView: View {
                     NavigationLink(destination: CreatePomodoroView(habitNotificationId: userViewModel.habitNotificationId ?? "", loading: $loading, pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
                         EmptyView()
                     }
-                    NavigationLink(destination: HabitDetailView(loading: $loading, habitVM: habitViewModel), tag: .habitDetail, selection: $navigateTo) {
+                    NavigationLink(destination: HabitDetailView(loading: $loading, habitVM: habitViewModel, userVM: userViewModel), tag: .habitDetail, selection: $navigateTo) {
                         EmptyView()
                     }
-                    NavigationLink(destination: PomodoroDetailView(loading: $loading, pomodoroVM: pomodoroViewModel), tag: .pomodoroDetail, selection: $navigateTo) {
+                    NavigationLink(destination: PomodoroDetailView(loading: $loading, pomodoroVM: pomodoroViewModel, userVM: userViewModel), tag: .pomodoroDetail, selection: $navigateTo) {
                         EmptyView()
                     }
                     if focusNavigationArg != nil {

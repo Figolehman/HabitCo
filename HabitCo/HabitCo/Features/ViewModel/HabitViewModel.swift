@@ -13,7 +13,6 @@ final class HabitViewModel: ObservableObject {
     @Published private(set) var habits: [HabitDB]? = []
     @Published private(set) var habit: HabitDB? = nil
     @Published private(set) var habitNotificationId: String? = nil
-    @Published private(set) var progress: [Date: CGFloat]? = nil
     @Published private(set) var errorMessage: String? = nil
     
     private let firebaseProvider: FirebaseAuthProvider
@@ -47,14 +46,6 @@ extension HabitViewModel {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             self.habitNotificationId = try await userManager.getHabitId(userId: userId, habitId: habitId)
-        }
-    }
-    
-    // Get Progress Habit
-    func getProgressHabit(habitId: String, date: Date) {
-        Task {
-            guard let userId = UserDefaultManager.userID else { return }
-            self.progress = try await userManager.getProgressHabit(userId: userId, habitId: habitId, month: date.formattedDate(to: .fullMonthName))
         }
     }
     
@@ -98,10 +89,14 @@ extension HabitViewModel {
                        !isStartFrequencyIsZero
                     {
                         try await userManager.updateHasUndoStreak(userId: userId, from: currentDate, isUndo: true)
-                        try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        if alreadyStreak {
+                            try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        }
                     } else {
                         try await userManager.deleteStreak(userId: userId)
-                        try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        if alreadyStreak {
+                            try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        }
                     }
                     try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
                 }

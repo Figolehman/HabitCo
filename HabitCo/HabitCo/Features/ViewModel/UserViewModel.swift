@@ -22,6 +22,7 @@ final class UserViewModel: ObservableObject {
     @Published var isAscending: Bool?
     @Published var isUserStreak: Bool?
     @Published var habitNotificationId: String?
+    @Published var progress: [Date: CGFloat]? = nil
 
     @Published var popUpGainStreak: Bool = false
     @Published var popUpLossStreak: Bool = false
@@ -161,6 +162,12 @@ extension UserViewModel{
         }
     }
     
+    func getProgressHabit(habitPomodoroId: String, date: Date) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            self.progress = try await userManager.getProgressHabitPomodoro(userId: userId, habitId: habitPomodoroId, month: date.formattedDate(to: .fullMonthName))
+        }
+    }
     func updatePopUpLossStreak(isPopUp: Bool) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }

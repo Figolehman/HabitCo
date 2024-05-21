@@ -13,7 +13,6 @@ final class PomodoroViewModel: ObservableObject {
     @Published private(set) var pomodoros: [PomodoroDB]? = []
     @Published private(set) var pomodoro: PomodoroDB? = nil
     @Published private(set) var pomodoroNotificationId: String? = nil
-    @Published private(set) var progress: [CGFloat]? = nil
     @Published private(set) var errorMessage: String? = nil
     
     private var user: UserDB? = nil
@@ -47,14 +46,6 @@ extension PomodoroViewModel {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             self.pomodoroNotificationId = try await userManager.getPomodoroId(userId: userId, pomodoroId: pomodoroId)
-        }
-    }
-    
-    // Get progress for one month
-    func getProgressPomodoro(pomodoroId: String, date: Date) {
-        Task {
-            guard let userId = UserDefaultManager.userID else { return }
-            self.progress = try await userManager.getProgressPomodoro(userId: userId, pomodoroId: pomodoroId, month: date.formattedDate(to: .fullMonthName))
         }
     }
     
@@ -96,10 +87,14 @@ extension PomodoroViewModel {
                        !isStartFrequencyIsZero
                     {
                         try await userManager.updateHasUndoStreak(userId: userId, from: currentDate, isUndo: true)
-                        try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        if alreadyStreak {
+                            try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        }
                     } else {
                         try await userManager.deleteStreak(userId: userId)
-                        try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        if alreadyStreak {
+                            try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        }
                     }
                     try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
                 }
@@ -151,10 +146,14 @@ extension PomodoroViewModel {
                        !isStartFrequencyIsZero
                     {
                         try await userManager.updateHasUndoStreak(userId: userId, from: currentDate, isUndo: true)
-                        try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        if alreadyStreak {
+                            try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        }
                     } else {
                         try await userManager.deleteStreak(userId: userId)
-                        try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        if alreadyStreak {
+                            try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
+                        }
                     }
                     try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
                 }
