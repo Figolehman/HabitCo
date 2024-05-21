@@ -35,7 +35,9 @@ class NotificationHandler {
 
             UNUserNotificationCenter.current().add(request)
         }
-        UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in }
+        UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in
+            print("\(notifications)")
+        }
     }
 //    
 //    func sendNotification(date: Date, habitWeekdays: [Int], title: String, body: String, withIdentifier id: String) {
@@ -59,7 +61,7 @@ class NotificationHandler {
         var trigger: UNNotificationTrigger?
         
         trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
-        
+
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body

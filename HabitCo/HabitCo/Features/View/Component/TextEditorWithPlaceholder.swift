@@ -18,6 +18,7 @@ struct TextEditorWithPlaceholder: View {
              VStack {
                  TextEditor(text: $text)
                      .frame(minHeight: 150, maxHeight: 300)
+                     
 //                     .opacity(text.isEmpty ? 0.85 : 1)
                  Spacer()
              }

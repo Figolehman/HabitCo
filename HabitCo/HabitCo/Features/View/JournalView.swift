@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import WidgetKit
 
 private enum Navigator {
     case createHabit, createPomodoro, habitDetail, pomodoroDetail, focus
@@ -64,6 +63,7 @@ struct JournalView: View {
                         .font(.caption)
                     Text("\(userViewModel.streakCount) Day Streak!")
                         .font(.caption)
+                        .foregroundColor(.getAppColor(.neutral))
 
                     Spacer()
                     // MARK: - navigation links
