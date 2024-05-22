@@ -120,12 +120,3 @@ extension Set<RepeatDay> {
     }
 }
 
-extension Set {
-    
-}
-
-//#Preview {
-//    RepeatButton(isSelected: false, day: .sunday) {
-//        
-//    }
-//}

@@ -109,9 +109,3 @@ struct HabitDetailView: View {
         }
     }
 }
-
-#Preview {
-    NavigationView {
-//        HabitDetailView(habit: HabitDB(habitName: "Lari Pagi", description: "Mau lari pagi", label: "mushroom", frequency: 0, repeatHabit: [1, 2], reminderHabit: "18:00", dateCreated: Date()))
-    }
-}
