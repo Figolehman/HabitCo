@@ -214,6 +214,8 @@ struct JournalView: View {
                         showNavigationLink = true
                     }
                 }
+
+                backAlert.message = "The data you fill out would not be saved."
             }
             .toolbar {
                 HStack {
@@ -312,12 +314,14 @@ struct JournalView: View {
             LoadingView(loadingType: $loading.1, message: $loading.2)
         })
         .alertOverlay($showBackAlert, content: {
-            CustomAlertView(title: "Are you sure you want to Cancel this habit?", message: "You will lose all the changes you make.", dismiss: "Cancel", destruct: "Yes") {
+            CustomAlertView(
+                title: "Are you sure you want to Cancel this habit?",
+                message: backAlert.message,
+                dismiss: "Cancel", destruct: "Yes") {
                 showBackAlert = false
             } destructAction: {
                 backAlert.backAction()
             }
-
         })
         .onChange(of: selectedDate) { newValue in
             userViewModel.getSubJournals(from: newValue)

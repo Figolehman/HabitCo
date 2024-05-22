@@ -91,6 +91,7 @@
 		1BC8682A2BB17DB200B348FE /* LabeledStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868292BB17DB200B348FE /* LabeledStepper.swift */; };
 		1BCAD4732BFD14BE004C81D4 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAD4722BFD14BE004C81D4 /* BackButton.swift */; };
 		1BCAD4792BFDAD1F004C81D4 /* BackButtonActionAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAD4782BFDAD1F004C81D4 /* BackButtonActionAlert.swift */; };
+		1BCAD47B2BFE5BAD004C81D4 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAD47A2BFE5BAD004C81D4 /* UIApplication.swift */; };
 		1BD50F0F2BA5688000FC7BCF /* ScrollableCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F0E2BA5688000FC7BCF /* ScrollableCalendarView.swift */; };
 		1BD50F162BA5BB2500FC7BCF /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F152BA5BB2500FC7BCF /* CardView.swift */; };
 		1BD50F192BA5D21500FC7BCF /* EditableCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F182BA5D21500FC7BCF /* EditableCardView.swift */; };
@@ -221,6 +222,7 @@
 		1BC868292BB17DB200B348FE /* LabeledStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledStepper.swift; sourceTree = "<group>"; };
 		1BCAD4722BFD14BE004C81D4 /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		1BCAD4782BFDAD1F004C81D4 /* BackButtonActionAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButtonActionAlert.swift; sourceTree = "<group>"; };
+		1BCAD47A2BFE5BAD004C81D4 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		1BD50F0E2BA5688000FC7BCF /* ScrollableCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableCalendarView.swift; sourceTree = "<group>"; };
 		1BD50F152BA5BB2500FC7BCF /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		1BD50F182BA5D21500FC7BCF /* EditableCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableCardView.swift; sourceTree = "<group>"; };
@@ -368,6 +370,7 @@
 				1B4B2A3C2BADEE3E0059559F /* CGFloat+Extension.swift */,
 				3F28DD082BD7AF930043CB4F /* String+Extension.swift */,
 				3F28DD2A2BD8751B0043CB4F /* Array+Extension.swift */,
+				1BCAD47A2BFE5BAD004C81D4 /* UIApplication.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -764,6 +767,7 @@
 				1BD50F1E2BA61F8D00FC7BCF /* SettingButton.swift in Sources */,
 				1B7A24AB2BB6D0480045E8D4 /* HabitDetailView.swift in Sources */,
 				1B7A24A92BB5DC280045E8D4 /* Prompt.swift in Sources */,
+				1BCAD47B2BFE5BAD004C81D4 /* UIApplication.swift in Sources */,
 				1BC23AE62BAB514C00133C27 /* AuthManagerEnvironmentKey.swift in Sources */,
 				1B897F3E2BA4279B0018BEAA /* Date+Extension.swift in Sources */,
 				1B2457C42BA6C7EF00E19459 /* View+Extension.swift in Sources */,
@@ -987,7 +991,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HabitCo/HabitCo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"HabitCo/Preview Content\"";
 				DEVELOPMENT_TEAM = JGSV4C4BP3;
 				ENABLE_PREVIEWS = YES;
@@ -1024,7 +1028,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HabitCo/HabitCo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"HabitCo/Preview Content\"";
 				DEVELOPMENT_TEAM = JGSV4C4BP3;
 				ENABLE_PREVIEWS = YES;

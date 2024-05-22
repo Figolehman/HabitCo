@@ -118,7 +118,8 @@ struct PomodoroDetailView: View {
                 }
             }
             .onAppear {
-                BackButtonActionAlert.shared.backAction = {
+                let backAlert = BackButtonActionAlert.shared
+                backAlert.backAction = {
                     withAnimation {
                         showBackAlert = false
                         showNavigationToEdit = false
@@ -127,6 +128,8 @@ struct PomodoroDetailView: View {
                         showNavigationToEdit = true
                     }
                 }
+
+                backAlert.message = "You will lose all the changes you make."
             }
         } else {
             EmptyView()

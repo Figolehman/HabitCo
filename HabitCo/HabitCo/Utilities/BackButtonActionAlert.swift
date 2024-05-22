@@ -11,6 +11,8 @@ class BackButtonActionAlert {
 
     static let shared = BackButtonActionAlert()
 
+    var message: String = ""
+
     var backAction: () -> Void = {}
 
     private init() {

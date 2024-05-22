@@ -375,13 +375,16 @@ struct EditPomodoroView: View {
                 .padding(.top, 4)
             }
         }
+        .onTapGesture {
+            UIApplication.shared.endEditing()
+        }
         .background (
             Color.neutral3
                 .frame(width: ScreenSize.width, height: ScreenSize.height)
                 .ignoresSafeArea()
         )
         .alertOverlay($showAlert, content: {
-            CustomAlertView(title: "Are you sure you want to Delete this pomodoro?", message: "Any progress and data linked to this will be lost permanently, and you wont be able to recover it", dismiss: "Cancel", destruct: "Delete", dismissAction: {
+            CustomAlertView(title: "Are you sure you want to Delete this pomodoro?", message: "Any progress and data linked to this will be lost permanently, and you wont be able to recover it.", dismiss: "Cancel", destruct: "Delete", dismissAction: {
                 showAlert = false
             }, destructAction: {
                 showAlert = false
@@ -408,7 +411,7 @@ struct EditPomodoroView: View {
                 }
             }
             ToolbarItem(placement: .primaryAction) {
-                if fromFocusView {
+                if !fromFocusView {
                     Button {
                         showAlert = true
                     } label: {

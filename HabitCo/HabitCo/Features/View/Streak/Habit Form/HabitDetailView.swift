@@ -93,7 +93,8 @@ struct HabitDetailView: View {
                 }
             }
             .onAppear {
-                BackButtonActionAlert.shared.backAction = {
+                let backAlert = BackButtonActionAlert.shared
+                backAlert.backAction = {
                     withAnimation {
                         showBackAlert = false
                         showNavigationToEdit = false
@@ -102,6 +103,8 @@ struct HabitDetailView: View {
                         showNavigationToEdit = true
                     }
                 }
+
+                backAlert.message = "You will lose all the changes you make."
             }
 
         } else {

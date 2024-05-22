@@ -176,7 +176,9 @@ struct FocusView: View {
             currentTime = pomodoro!.focusTime! * minute
             totalTime = pomodoro!.focusTime! * minute
 
-            BackButtonActionAlert.shared.backAction = {
+            let backAlert = BackButtonActionAlert.shared
+
+            backAlert.backAction = {
                 withAnimation {
                     showBackAlert = false
                     showNavigationToEdit = false
@@ -185,6 +187,8 @@ struct FocusView: View {
                     showNavigationToEdit = true
                 }
             }
+
+            backAlert.message = "You will lose all the changes you make."
         }
         .background (
             Color.neutral3

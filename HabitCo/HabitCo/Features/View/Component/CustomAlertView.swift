@@ -33,9 +33,12 @@ struct CustomAlertView: View {
                         Button (action: {
                             dismissAction()
                         }, label: {
-                            Text("\(dismiss)")
-                                .font(.body)
+                            ZStack {
+                                Color.clear
+                                Text("\(dismiss)")
+                                    .font(.body)
                                 .foregroundColor(.getAppColor(.primary))
+                            }
                         })
                     )
                 Divider()
@@ -46,9 +49,12 @@ struct CustomAlertView: View {
                         Button (action: {
                             destructAction()
                         }, label: {
-                            Text("\(destruct)")
-                                .font(.headline)
+                            ZStack {
+                                Color.clear
+                                Text("\(destruct)")
+                                    .font(.headline)
                                 .foregroundColor(.getAppColor(.danger))
+                            }
                         })
                     )
             }

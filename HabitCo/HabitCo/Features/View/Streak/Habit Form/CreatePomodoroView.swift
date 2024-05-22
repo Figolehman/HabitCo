@@ -338,6 +338,9 @@ struct CreatePomodoroView: View {
                 .padding(.top, 4)
             }
         }
+        .onTapGesture {
+            UIApplication.shared.endEditing()
+        }
         .background (
             Color.neutral3
                 .frame(width: ScreenSize.width, height: ScreenSize.height)
