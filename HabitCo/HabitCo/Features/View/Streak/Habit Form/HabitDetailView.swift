@@ -9,13 +9,17 @@ import SwiftUI
 
 struct HabitDetailView: View {
 
+    @State private var showNavigationToEdit = true
+
     @Binding var loading: (Bool, LoadingType, String)
+    @Binding var showBackAlert: Bool
 
     @ObservedObject private var habitVM: HabitViewModel
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(loading: Binding<(Bool, LoadingType, String)>, habitVM: HabitViewModel) {
+    init(loading: Binding<(Bool, LoadingType, String)>, showBackAlert: Binding<Bool>, habitVM: HabitViewModel) {
+        self._showBackAlert = showBackAlert
         self.habitVM = habitVM
         self._loading = loading
     }
@@ -78,8 +82,21 @@ struct HabitDetailView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    NavigationLink(destination: EditHabitView(habitVM: habitVM, loading: $loading) { presentationMode.wrappedValue.dismiss() }) {
-                        Image(systemName: "square.and.pencil")
+                    if showNavigationToEdit {
+                        NavigationLink(destination: EditHabitView(habitVM: habitVM, loading: $loading, showBackAlert: $showBackAlert) { presentationMode.wrappedValue.dismiss() }) {
+                            Image(systemName: "square.and.pencil")
+                        }
+                    }
+                }
+            }
+            .onAppear {
+                BackButtonActionAlert.shared.backAction = {
+                    withAnimation {
+                        showBackAlert = false
+                        showNavigationToEdit = false
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        showNavigationToEdit = true
                     }
                 }
             }

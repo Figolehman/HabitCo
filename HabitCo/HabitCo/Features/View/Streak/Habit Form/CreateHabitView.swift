@@ -12,6 +12,7 @@ struct CreateHabitView: View {
     let habitNotificationId: String
 
     @Binding var loading: (Bool, LoadingType, String)
+    @Binding var showAlertView: Bool
 
     @State private var habitName: String = ""
     @State private var description: String = ""
@@ -166,6 +167,14 @@ struct CreateHabitView: View {
         )
         .navigationTitle("Create Habit Form")
         .navigationBarTitleDisplayMode(.large)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton {
+                    showAlertView = true
+                }
+            }
+        }
     }
 }
 
@@ -188,6 +197,6 @@ private extension CreateHabitView {
 
 #Preview {
     NavigationView {
-        CreateHabitView(habitNotificationId: "0", loading: .constant((false, .success, "")), habitVM: HabitViewModel())
+        CreateHabitView(habitNotificationId: "0", loading: .constant((false, .success, "")), showAlertView: .constant(false), habitVM: HabitViewModel())
     }
 }

@@ -36,19 +36,19 @@ extension Array<Int> {
           
           switch firstInt {
           case 1:
-              return "S"
+              return "Sunday"
           case 2:
-              return "M"
+              return "Monday"
           case 3:
-              return "T"
+              return "Tuesday"
           case 4:
-              return "W"
+              return "Wednesday"
           case 5:
-              return "T"
+              return "Thursday"
           case 6:
-              return "F"
+              return "Friday"
           case 7:
-              return "S"
+              return "Saturday"
           default:
               return "Unknown"
           }

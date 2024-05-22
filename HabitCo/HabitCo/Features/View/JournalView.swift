@@ -14,6 +14,8 @@ private enum Navigator {
 
 struct JournalView: View {
 
+    let backAlert = BackButtonActionAlert.shared
+
     @State private var undoArg: (String, Date)?
 
     @State private var loading = (false, LoadingType.loading, "")
@@ -41,6 +43,9 @@ struct JournalView: View {
     @State private var showUndoAlert = false
     @State private var showJournalView = true
 
+    @State private var showBackAlert = false
+    @State private var showNavigationLink = true
+
     @Environment(\.auth) var auth
     @EnvironmentObject var appRootManager: AppRootManager
     
@@ -67,20 +72,22 @@ struct JournalView: View {
 
                     Spacer()
                     // MARK: - navigation links
-                    NavigationLink(destination: CreateHabitView(habitNotificationId: userViewModel.habitNotificationId ?? "", loading: $loading, habitVM: habitViewModel), tag: .createHabit, selection: $navigateTo) {
-                        EmptyView()
-                    }
-                    NavigationLink(destination: CreatePomodoroView(habitNotificationId: userViewModel.habitNotificationId ?? "", loading: $loading, pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
-                        EmptyView()
-                    }
-                    NavigationLink(destination: HabitDetailView(loading: $loading, habitVM: habitViewModel), tag: .habitDetail, selection: $navigateTo) {
-                        EmptyView()
-                    }
-                    NavigationLink(destination: PomodoroDetailView(loading: $loading, pomodoroVM: pomodoroViewModel), tag: .pomodoroDetail, selection: $navigateTo) {
-                        EmptyView()
+                    if showNavigationLink {
+                        NavigationLink(destination: CreateHabitView(habitNotificationId: userViewModel.habitNotificationId ?? "", loading: $loading, showAlertView: $showBackAlert, habitVM: habitViewModel), tag: .createHabit, selection: $navigateTo) {
+                            EmptyView()
+                        }
+                        NavigationLink(destination: CreatePomodoroView(habitNotificationId: userViewModel.habitNotificationId ?? "", loading: $loading,  showAlertView: $showBackAlert, pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
+                            EmptyView()
+                        }
+                        NavigationLink(destination: HabitDetailView(loading: $loading, showBackAlert: $showBackAlert, habitVM: habitViewModel), tag: .habitDetail, selection: $navigateTo) {
+                            EmptyView()
+                        }
+                        NavigationLink(destination: PomodoroDetailView(loading: $loading, showBackAlert: $showBackAlert, pomodoroVM: pomodoroViewModel), tag: .pomodoroDetail, selection: $navigateTo) {
+                            EmptyView()
+                        }
                     }
                     if focusNavigationArg != nil {
-                        NavigationLink(destination: FocusView(pomodoro: focusNavigationArg!.0, subJournal: focusNavigationArg!.1, date: focusNavigationArg!.2, loading: $loading, userViewModel: userViewModel), tag: .focus, selection: $navigateTo) {
+                        NavigationLink(destination: FocusView(pomodoro: focusNavigationArg!.0, subJournal: focusNavigationArg!.1, date: focusNavigationArg!.2, loading: $loading, showBackAlert: $showBackAlert, userViewModel: userViewModel), tag: .focus, selection: $navigateTo) {
                             EmptyView()
                         }
                     }
@@ -197,6 +204,16 @@ struct JournalView: View {
                     debugPrint("No Authenticated User")
                 }
                 userViewModelInitiation()
+
+                backAlert.backAction = {
+                    withAnimation {
+                        showBackAlert = false
+                        showNavigationLink = false
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        showNavigationLink = true
+                    }
+                }
             }
             .toolbar {
                 HStack {
@@ -293,6 +310,14 @@ struct JournalView: View {
         })
         .alertOverlay($loading.0, content: {
             LoadingView(loadingType: $loading.1, message: $loading.2)
+        })
+        .alertOverlay($showBackAlert, content: {
+            CustomAlertView(title: "Are you sure you want to Cancel this habit?", message: "You will lose all the changes you make.", dismiss: "Cancel", destruct: "Yes") {
+                showBackAlert = false
+            } destructAction: {
+                backAlert.backAction()
+            }
+
         })
         .onChange(of: selectedDate) { newValue in
             userViewModel.getSubJournals(from: newValue)

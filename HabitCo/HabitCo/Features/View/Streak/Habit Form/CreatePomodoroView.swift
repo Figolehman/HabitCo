@@ -14,6 +14,7 @@ struct CreatePomodoroView: View {
     let habitNotificationId: String
 
     @Binding var loading: (Bool, LoadingType, String)
+    @Binding var showAlertView: Bool
 
     @State private var pomodoroName: String = ""
     @State private var description: String = ""
@@ -205,9 +206,7 @@ struct CreatePomodoroView: View {
                                     .padding(12)
                                     .frame(height: 46)
                                     .background(
-                                        currentDefaultPomodoro == type ?
-                                        Color.getAppColor(.primary) :
-                                        Color.getAppColor(.primary2)
+                                        Color.getAppColor(.primary)
                                     )
                                     .cornerRadius(12)
                                     .elevate3()
@@ -346,6 +345,14 @@ struct CreatePomodoroView: View {
         )
         .navigationTitle("Create Pomodoro Form")
         .navigationBarTitleDisplayMode(.large)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton {
+                    showAlertView = true
+                }
+            }
+        }
     }
 }
 
@@ -368,6 +375,6 @@ private extension CreatePomodoroView {
 
 #Preview {
     NavigationView {
-        CreatePomodoroView(habitNotificationId: "0", loading: .constant((false, LoadingType.loading, "")),pomodoroVM: PomodoroViewModel())
+        CreatePomodoroView(habitNotificationId: "0", loading: .constant((false, LoadingType.loading, "")), showAlertView: .constant(false),pomodoroVM: PomodoroViewModel())
     }
 }

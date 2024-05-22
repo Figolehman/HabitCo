@@ -89,6 +89,8 @@
 		1BC868262BB13ABA00B348FE /* CreateLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868252BB13ABA00B348FE /* CreateLabel.swift */; };
 		1BC868282BB1424D00B348FE /* CreateHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868272BB1424D00B348FE /* CreateHabitView.swift */; };
 		1BC8682A2BB17DB200B348FE /* LabeledStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC868292BB17DB200B348FE /* LabeledStepper.swift */; };
+		1BCAD4732BFD14BE004C81D4 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAD4722BFD14BE004C81D4 /* BackButton.swift */; };
+		1BCAD4792BFDAD1F004C81D4 /* BackButtonActionAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAD4782BFDAD1F004C81D4 /* BackButtonActionAlert.swift */; };
 		1BD50F0F2BA5688000FC7BCF /* ScrollableCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F0E2BA5688000FC7BCF /* ScrollableCalendarView.swift */; };
 		1BD50F162BA5BB2500FC7BCF /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F152BA5BB2500FC7BCF /* CardView.swift */; };
 		1BD50F192BA5D21500FC7BCF /* EditableCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD50F182BA5D21500FC7BCF /* EditableCardView.swift */; };
@@ -217,6 +219,8 @@
 		1BC868252BB13ABA00B348FE /* CreateLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLabel.swift; sourceTree = "<group>"; };
 		1BC868272BB1424D00B348FE /* CreateHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitView.swift; sourceTree = "<group>"; };
 		1BC868292BB17DB200B348FE /* LabeledStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledStepper.swift; sourceTree = "<group>"; };
+		1BCAD4722BFD14BE004C81D4 /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
+		1BCAD4782BFDAD1F004C81D4 /* BackButtonActionAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButtonActionAlert.swift; sourceTree = "<group>"; };
 		1BD50F0E2BA5688000FC7BCF /* ScrollableCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableCalendarView.swift; sourceTree = "<group>"; };
 		1BD50F152BA5BB2500FC7BCF /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		1BD50F182BA5D21500FC7BCF /* EditableCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableCardView.swift; sourceTree = "<group>"; };
@@ -347,6 +351,7 @@
 				1B013A1A2BBBF7E00027FD6E /* CustomSheetView.swift */,
 				9BF3F7CC2BBD55BF00B7CE59 /* CustomAlertView.swift */,
 				1BB0C1752BDA1A880071F595 /* ActivityView.swift */,
+				1BCAD4722BFD14BE004C81D4 /* BackButton.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -511,6 +516,7 @@
 				1BC23B012BAB624600133C27 /* Utlities.swift */,
 				1B4B2A382BAD95980059559F /* ScreenSize.swift */,
 				1B7A24A82BB5DC280045E8D4 /* Prompt.swift */,
+				1BCAD4782BFDAD1F004C81D4 /* BackButtonActionAlert.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -764,6 +770,7 @@
 				1B793AA72BB48FBE00B6BFC9 /* EditHabitView.swift in Sources */,
 				1BC8681E2BAE9E6F00B348FE /* JournalView.swift in Sources */,
 				1B560C7E2BA2028C00CE2DC6 /* AppButton.swift in Sources */,
+				1BCAD4732BFD14BE004C81D4 /* BackButton.swift in Sources */,
 				3FBA06E72C01CF9C0003DF0B /* EditPomodoroView.swift in Sources */,
 				3FBCEB1B2BB552510057E204 /* SubJournalDB.swift in Sources */,
 				1B4B2A352BAD90170059559F /* SplashScreenView.swift in Sources */,
@@ -772,6 +779,7 @@
 				1BC23B112BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift in Sources */,
 				1BC23AFE2BAB5A1800133C27 /* DateFormatUtil.swift in Sources */,
 				1BC23AF82BAB54EF00133C27 /* UserViewModel.swift in Sources */,
+				1BCAD4792BFDAD1F004C81D4 /* BackButtonActionAlert.swift in Sources */,
 				1BC8682A2BB17DB200B348FE /* LabeledStepper.swift in Sources */,
 				3FBCEB452BC8DF650057E204 /* PomodoroDB.swift in Sources */,
 				1BB0C1762BDA1A880071F595 /* ActivityView.swift in Sources */,

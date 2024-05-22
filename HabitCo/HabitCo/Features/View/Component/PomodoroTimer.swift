@@ -25,6 +25,7 @@ struct PomodoroTimer: View {
     @Binding var duration: Int
     
     @Binding var isDone: Bool
+    @State private var isBackButtonTapped = false
 
     let action: () -> ()
     
@@ -85,7 +86,7 @@ struct PomodoroTimer: View {
 //            }
         }
         .alert(isPresented: $isAllDone, content: {
-            Alert(title: Text("Your pomodoro session has finished"), message: Text("Great job! Take a breather before your next task!"), dismissButton: .cancel(Text("Okay")))
+          Alert(title: Text("Your pomodoro session has finished"), message: Text("Great job! Take a breather before your next task!"), dismissButton: .cancel((Text("Okay"))))
         })
     }
 }

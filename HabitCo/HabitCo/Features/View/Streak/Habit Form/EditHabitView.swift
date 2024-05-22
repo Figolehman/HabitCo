@@ -24,6 +24,7 @@ struct EditHabitView: View {
     @State private var isLabelFolded = false
 
     @State var showAlert = false
+    @Binding var showBackAlert: Bool
 
     @State private var repeatDate: Set<RepeatDay> = []
     @State private var reminderTime: Date = Date()
@@ -38,7 +39,8 @@ struct EditHabitView: View {
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(habitVM: HabitViewModel, loading: Binding<(Bool, LoadingType, String)>, onDelete: @escaping () -> Void = {}) {
+    init(habitVM: HabitViewModel, loading: Binding<(Bool, LoadingType, String)>, showBackAlert: Binding<Bool>, onDelete: @escaping () -> Void = {}) {
+        self._showBackAlert = showBackAlert
         self.onDelete = onDelete
         self._loading = loading
         self.habit = habitVM.habit!
@@ -206,13 +208,13 @@ struct EditHabitView: View {
             })
         })
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action : {
-            presentationMode.wrappedValue.dismiss()
-        }){
-            Text("\(Image(systemName: "chevron.left"))Back")
-        })
         .navigationTitle("Edit Habit Form")
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton {
+                  showBackAlert = true
+                }
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     showAlert = true

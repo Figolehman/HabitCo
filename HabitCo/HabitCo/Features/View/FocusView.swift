@@ -28,7 +28,9 @@ struct FocusView: View {
     @State var currentPomodoroTime: PomodoroTime = .focusTime
     @State var currentSession: Int
 
+    @State var showNavigationToEdit = true
     @Binding var loading: (Bool, LoadingType, String)
+    @Binding var showBackAlert: Bool
 
     @StateObject private var pomodoroViewModel: PomodoroViewModel
     @ObservedObject private var userViewModel: UserViewModel
@@ -41,8 +43,9 @@ struct FocusView: View {
         return pomodoroViewModel.pomodoro
     }
 
-    init(pomodoro: PomodoroDB?, subJournal: SubJournalDB?, date: Date, loading: Binding<(Bool, LoadingType, String)>, userViewModel: UserViewModel) {
+    init(pomodoro: PomodoroDB?, subJournal: SubJournalDB?, date: Date, loading: Binding<(Bool, LoadingType, String)>, showBackAlert: Binding<Bool>, userViewModel: UserViewModel) {
         self.subJournal = subJournal
+        self._showBackAlert = showBackAlert
         self.date = date
         self._loading = loading
         self._userViewModel = ObservedObject(initialValue: userViewModel)
@@ -159,8 +162,10 @@ struct FocusView: View {
             view
                 .toolbar(content: {
                     ToolbarItem(placement: .topBarTrailing) {
-                        NavigationLink(destination: EditPomodoroView(fromFocusView: true, pomodoroVM: pomodoroViewModel, loading: $loading)) {
-                            Image(systemName: "square.and.pencil")
+                        if showNavigationToEdit {
+                            NavigationLink(destination: EditPomodoroView(fromFocusView: true, pomodoroVM: pomodoroViewModel, loading: $loading, showBackAlert: $showBackAlert)) {
+                                Image(systemName: "square.and.pencil")
+                            }
                         }
                     }
                 })
@@ -170,6 +175,16 @@ struct FocusView: View {
 
             currentTime = pomodoro!.focusTime! * minute
             totalTime = pomodoro!.focusTime! * minute
+
+            BackButtonActionAlert.shared.backAction = {
+                withAnimation {
+                    showBackAlert = false
+                    showNavigationToEdit = false
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    showNavigationToEdit = true
+                }
+            }
         }
         .background (
             Color.neutral3

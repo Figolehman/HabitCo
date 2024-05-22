@@ -9,13 +9,17 @@ import SwiftUI
 
 struct PomodoroDetailView: View {
 
+    @State private var showNavigationToEdit = true
+
     @Binding var loading: (Bool, LoadingType, String)
+    @Binding var showBackAlert: Bool
 
     @ObservedObject private var pomodoroVM: PomodoroViewModel
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(loading: Binding<(Bool, LoadingType, String)>, pomodoroVM: PomodoroViewModel) {
+    init(loading: Binding<(Bool, LoadingType, String)>, showBackAlert: Binding<Bool>, pomodoroVM: PomodoroViewModel) {
+        self._showBackAlert = showBackAlert
         self.pomodoroVM = pomodoroVM
         self._loading = loading
     }
@@ -103,8 +107,21 @@ struct PomodoroDetailView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    NavigationLink(destination: EditPomodoroView(pomodoroVM: pomodoroVM, loading: $loading) { presentationMode.wrappedValue.dismiss() }) {
-                        Image(systemName: "square.and.pencil")
+                    if showNavigationToEdit {
+                        NavigationLink(destination: EditPomodoroView(pomodoroVM: pomodoroVM, loading: $loading, showBackAlert: $showBackAlert) { presentationMode.wrappedValue.dismiss() }) {
+                            Image(systemName: "square.and.pencil")
+                        }
+                    }
+                }
+            }
+            .onAppear {
+                BackButtonActionAlert.shared.backAction = {
+                    withAnimation {
+                        showBackAlert = false
+                        showNavigationToEdit = false
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        showNavigationToEdit = true
                     }
                 }
             }

@@ -13,6 +13,7 @@ struct EditPomodoroView: View {
     let pomodoro: PomodoroDB
 
     @Binding var loading: (Bool, LoadingType, String)
+    @Binding var showBackAlert: Bool
 
     @State private var pomodoroName: String
     @State private var description: String
@@ -47,8 +48,9 @@ struct EditPomodoroView: View {
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(fromFocusView: Bool = false, pomodoroVM: PomodoroViewModel, loading: Binding<(Bool, LoadingType, String)>, onDelete: @escaping () -> Void = {}) {
+    init(fromFocusView: Bool = false, pomodoroVM: PomodoroViewModel, loading: Binding<(Bool, LoadingType, String)>, showBackAlert: Binding<Bool>, onDelete: @escaping () -> Void = {}) {
         self.fromFocusView = fromFocusView
+        self._showBackAlert = showBackAlert
         self._loading = loading
         self.onDelete = onDelete
         self.pomodoroVM = pomodoroVM
@@ -239,9 +241,7 @@ struct EditPomodoroView: View {
                                 .padding(12)
                                 .frame(height: 46)
                                 .background(
-                                    currentDefaultPomodoro == type ?
-                                    Color.getAppColor(.primary) :
-                                        Color.getAppColor(.primary2)
+                                    Color.getAppColor(.primary)
                                 )
                                 .cornerRadius(12)
                                 .elevate3()
@@ -392,19 +392,6 @@ struct EditPomodoroView: View {
                 }
             })
         })
-        .if(!fromFocusView, transform: { view in
-            view
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button {
-                            showAlert = true
-                        } label: {
-                            Image(systemName: "trash")
-                                .foregroundColor(.red)
-                        }
-                    }
-                }
-        })
         .onAppear {
             for pomodoroDay in pomodoro.repeatPomodoro! {
                 for day in RepeatDay.allCases {
@@ -414,12 +401,24 @@ struct EditPomodoroView: View {
                 }
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton {
+                  showBackAlert = true
+                }
+            }
+            ToolbarItem(placement: .primaryAction) {
+                if fromFocusView {
+                    Button {
+                        showAlert = true
+                    } label: {
+                        Image(systemName: "trash")
+                            .foregroundColor(.red)
+                    }
+                }
+            }
+        }
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action : {
-            presentationMode.wrappedValue.dismiss()
-        }){
-            Text("\(Image(systemName: "chevron.left"))Back")
-        })
         .navigationTitle("Edit Pomodoro Form")
         .navigationBarTitleDisplayMode(.large)
     }
