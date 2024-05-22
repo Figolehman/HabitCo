@@ -18,7 +18,7 @@ struct BackButton: View {
                     .font(.system(size: 17, weight: .semibold))
                 Text("Back")
             }
-            .padding(0)
+            .padding(.leading, -8)
             .foregroundColor(.getAppColor(.primary))
         }
     }
