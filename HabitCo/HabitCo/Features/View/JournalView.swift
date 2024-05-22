@@ -79,10 +79,10 @@ struct JournalView: View {
                         NavigationLink(destination: CreatePomodoroView(habitNotificationId: userViewModel.habitNotificationId ?? "", loading: $loading,  showAlertView: $showBackAlert, pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
                             EmptyView()
                         }
-                        NavigationLink(destination: HabitDetailView(loading: $loading, showBackAlert: $showBackAlert, habitVM: habitViewModel), tag: .habitDetail, selection: $navigateTo) {
+                        NavigationLink(destination: HabitDetailView(loading: $loading, showBackAlert: $showBackAlert, habitVM: habitViewModel, userVM: userViewModel), tag: .habitDetail, selection: $navigateTo) {
                             EmptyView()
                         }
-                        NavigationLink(destination: PomodoroDetailView(loading: $loading, showBackAlert: $showBackAlert, pomodoroVM: pomodoroViewModel), tag: .pomodoroDetail, selection: $navigateTo) {
+                        NavigationLink(destination: PomodoroDetailView(loading: $loading, showBackAlert: $showBackAlert, pomodoroVM: pomodoroViewModel, userVM: userViewModel), tag: .pomodoroDetail, selection: $navigateTo) {
                             EmptyView()
                         }
                     }

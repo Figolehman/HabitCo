@@ -15,11 +15,13 @@ struct PomodoroDetailView: View {
     @Binding var showBackAlert: Bool
 
     @ObservedObject private var pomodoroVM: PomodoroViewModel
+    @ObservedObject private var userVM: UserViewModel
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(loading: Binding<(Bool, LoadingType, String)>, showBackAlert: Binding<Bool>, pomodoroVM: PomodoroViewModel) {
+    init(loading: Binding<(Bool, LoadingType, String)>, showBackAlert: Binding<Bool>, pomodoroVM: PomodoroViewModel, userVM: UserViewModel) {
         self._showBackAlert = showBackAlert
+        self.userVM = userVM
         self.pomodoroVM = pomodoroVM
         self._loading = loading
     }
@@ -29,7 +31,7 @@ struct PomodoroDetailView: View {
             ScrollView {
                 VStack (spacing: 40) {
                     VStack (spacing: 24) {
-                        CalendarView(habitId: pomodoro.id ?? "", label: pomodoro.label ?? "", pomodoroVM: pomodoroVM)
+                        CalendarView(habitId: pomodoro.id ?? "", label: pomodoro.label ?? "", userVM: userVM)
 
                         CardView {
                             Text("\(pomodoro.description ?? "")")
@@ -67,7 +69,8 @@ struct PomodoroDetailView: View {
                             HStack {
                                 Text("Session")
                                 Spacer()
-                                Text("\(pomodoro.session ?? 0)")
+                                Text("\(pomodoro.session ?? 0) Times")
+                                    .foregroundColor(userVM.isProgressComplete ? .black : .danger)
                             }
                         }
                         CardView(height: .getResponsiveHeight(70)) {

@@ -15,11 +15,13 @@ struct HabitDetailView: View {
     @Binding var showBackAlert: Bool
 
     @ObservedObject private var habitVM: HabitViewModel
+    @ObservedObject private var userVM: UserViewModel
 
     @Environment(\.presentationMode) var presentationMode
 
-    init(loading: Binding<(Bool, LoadingType, String)>, showBackAlert: Binding<Bool>, habitVM: HabitViewModel) {
+    init(loading: Binding<(Bool, LoadingType, String)>, showBackAlert: Binding<Bool>, habitVM: HabitViewModel, userVM: UserViewModel) {
         self._showBackAlert = showBackAlert
+        self.userVM = userVM
         self.habitVM = habitVM
         self._loading = loading
     }
@@ -29,7 +31,7 @@ struct HabitDetailView: View {
             ScrollView {
                 VStack (spacing: 40) {
                     VStack (spacing: 24) {
-                        CalendarView(habitId: habit.id ?? "", label: habit.label ?? "", habitVM: habitVM)
+                        CalendarView(habitId: habit.id ?? "", label: habit.label ?? "", userVM: userVM)
 
                         CardView {
                             Text("\(habit.description ?? "")")
@@ -52,7 +54,8 @@ struct HabitDetailView: View {
                             HStack {
                                 Text("Frequency")
                                 Spacer()
-                                Text("\(habit.frequency ?? 0)")
+                                Text("\(habit.frequency ?? 0) Times")
+                                    .foregroundColor(userVM.isProgressComplete ? .black : .danger)
                             }
                         }
                         CardView(height: .getResponsiveHeight(70)) {

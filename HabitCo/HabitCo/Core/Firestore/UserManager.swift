@@ -222,6 +222,33 @@ extension UserManager: JournalUseCase {
         return journalDocuments
     }
     
+    // Get progress habit for one month
+    func getProgressHabitPomodoro(userId: String, habitId: String, month: Date) async throws -> [Date: CGFloat]? {
+        var progressValues: [Date: CGFloat] = [:]
+        guard let journalDocuments = try await getJournalForOneMonth(userId: userId, forMonth: month) else {
+            return nil
+        }
+        for journalDocument in journalDocuments {
+            // Get SubJournal if habitPomodoroId == habitId
+            guard let subJournalDocuments = try await userSubJournalCollection(userId: userId, journalId: journalDocument.id ?? "")
+                    .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitId)
+                    .getAllDocuments(as: SubJournalDB.self), subJournalDocuments.count != 0
+            else {
+                // if subJournal == nil, append progress = 0.0
+                progressValues[journalDocument.date!] = 0.0
+                continue
+            }
+            
+            for subJournalDocument in subJournalDocuments {
+                if subJournalDocument.frequencyCount != 0 {
+                    let progress = Float(subJournalDocument.startFrequency ?? 0) / Float(subJournalDocument.frequencyCount ?? 0)
+                    progressValues[journalDocument.date!] = CGFloat(progress)
+                }
+            }
+        }
+        return progressValues.isEmpty ? nil : progressValues
+    }
+    
     // Check if the journal has sub journal and the journal already has a streak in that day or not for checkIsStreak function by given date
     func checkHasSubJournalAndHasTodayStreak(userId: String, startDate: Date, endDate: Date) async throws -> Bool {
         // Check if the Journal has a sub journal or not
@@ -256,6 +283,18 @@ extension UserManager: JournalUseCase {
         guard let journal = try await getJournal(userId: userId, from: date) else { return false }
         let snapshotHasSubJournal = try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").getDocuments()
         return !snapshotHasSubJournal.isEmpty
+    }
+    
+    func checkCompletedProgressHabitPomodoroByDate(userId: String, habitPomodoroId: String, date: Date) async throws -> Bool {
+        let journal = try await getJournal(userId: userId, from: date.formattedDate(to: .fullMonthName))
+        let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "")
+            .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitPomodoroId)
+            .getDocuments()
+        if let subJournalDocument = snapshot.documents.first {
+            let subJournal = try subJournalDocument.data(as: SubJournalDB.self)
+            return subJournal.fraction == 1
+        }
+        return true
     }
         
     // Check if journal has a sub journals or not for circle scrollableView
@@ -593,33 +632,6 @@ extension UserManager: HabitUseCase {
         return try await userHabitDocument(userId: userId, habitId: habitId).getDocument(as: HabitDB.self)
     }
     
-    // Get progress habit for one month
-    func getProgressHabit(userId: String, habitId: String, month: Date) async throws -> [Date: CGFloat]? {
-        var progressValues: [Date: CGFloat] = [:]
-        guard let journalDocuments = try await getJournalForOneMonth(userId: userId, forMonth: month) else {
-            return nil
-        }
-        for journalDocument in journalDocuments {
-            // Get SubJournal if habitPomodoroId == habitId
-            guard let subJournalDocuments = try await userSubJournalCollection(userId: userId, journalId: journalDocument.id ?? "")
-                    .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitId)
-                    .getAllDocuments(as: SubJournalDB.self), subJournalDocuments.count != 0
-            else {
-                // if subJournal == nil, append progress = 0.0
-                progressValues[journalDocument.date!] = 0.0
-                continue
-            }
-            
-            for subJournalDocument in subJournalDocuments {
-                if subJournalDocument.frequencyCount != 0 {
-                    let progress = Float(subJournalDocument.startFrequency ?? 0) / Float(subJournalDocument.frequencyCount ?? 0)
-                    progressValues[journalDocument.date!] = CGFloat(progress)
-                }
-            }
-        }
-        return progressValues.isEmpty ? nil : progressValues
-    }
-    
     // Edit Habit from the given parameter
     func editHabit(userId: String, habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: String?) async throws  -> HabitDB? {
         let habit = try await getHabitDetail(userId: userId, habitId: habitId)
@@ -695,32 +707,6 @@ extension UserManager: PomodoroUseCase {
     func getPomodoroDetail(userId: String, pomodoroId: String) async throws -> PomodoroDB? {
         return try await userPomodoroDocument(userId: userId, pomodoroId: pomodoroId).getDocument(as: PomodoroDB.self)
     }
-    
-    // Get progress pomodoro for 1 month
-    func getProgressPomodoro(userId: String, pomodoroId: String, month: Date) async throws -> [CGFloat]? {
-            var progressValues: [CGFloat] = []
-            
-            guard let journalDocuments = try await getJournalForOneMonth(userId: userId, forMonth: month) else {
-                return nil
-            }
-            for journalDocument in journalDocuments {
-                guard let subJournalDocuments = try await userSubJournalCollection(userId: userId, journalId: journalDocument.id ?? "")
-                        .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: pomodoroId)
-                        .getAllDocuments(as: SubJournalDB.self), subJournalDocuments.count != 0
-                else {
-                    progressValues.append(0.0)
-                    continue
-                }
-                
-                for subJournalDocument in subJournalDocuments {
-                    if subJournalDocument.frequencyCount != 0 {
-                        let progress = Float(subJournalDocument.startFrequency ?? 0) / Float(subJournalDocument.frequencyCount ?? 0)
-                        progressValues.append(CGFloat(progress))
-                    }
-                }
-            }
-            return progressValues.isEmpty ? nil : progressValues
-        }
     
     // Edit Pomodoro
     func editPomodoro(userId: String, pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, repeatPomodoro: [Int]?, longBreakTime: Int?, reminderPomodoro: String?) async throws -> PomodoroDB? {
@@ -1042,10 +1028,9 @@ private extension UserManager {
     //  Sort Sub Journals
     func sortedSubJournals(_ subJournals: [SubJournalDB], _ isAscending: Bool) -> [SubJournalDB]? {
         let sortedSubJournals = subJournals
-            .filter { $0.frequencyCount != 0 }
             .sorted {
-                let progress1 = Float($0.startFrequency ?? 0) / Float($0.frequencyCount ?? 1)
-                let progress2 = Float($1.startFrequency ?? 0) / Float($1.frequencyCount ?? 1)
+                let progress1 = $0.startFrequency ?? 0
+                let progress2 = $1.startFrequency ?? 0
                 return !isAscending ? progress1 < progress2 : progress1 > progress2
             }
         return sortedSubJournals

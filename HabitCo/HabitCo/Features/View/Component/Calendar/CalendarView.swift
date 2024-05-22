@@ -15,9 +15,8 @@ struct CalendarView: View {
     @State var currentDate = Date()
     @State var days = [Date]()
     @State var selectedDate: Int?
-
-    @ObservedObject private var habitVM: HabitViewModel
-    @ObservedObject private var pomodoroVM: PomodoroViewModel
+    
+    @ObservedObject private var userVM: UserViewModel
 
     let habitId: String
     let label: String
@@ -33,24 +32,13 @@ struct CalendarView: View {
         }
     }
 
-    init(habitId: String, label: String, pomodoroVM: PomodoroViewModel) {
+    init(habitId: String, label: String, userVM: UserViewModel) {
         self.habitId = habitId
-        self.pomodoroVM = pomodoroVM
-        self.habitVM = HabitViewModel()
+        self.userVM = userVM
         self.label = label
-
+        
         self._days = State(initialValue: currentDate.calendarDisplayDate)
     }
-
-    init(habitId: String, label: String, habitVM: HabitViewModel) {
-        self.habitId = habitId
-        self.pomodoroVM = PomodoroViewModel()
-        self.habitVM = habitVM
-        self.label = label
-
-        self._days = State(initialValue: currentDate.calendarDisplayDate)
-    }
-
 
     var body: some View {
 
@@ -90,16 +78,16 @@ struct CalendarView: View {
                         .foregroundColor(Color(UIColor.tertiaryLabel))
                 }
             }
-
-            calendarView(fractionForDate: habitVM.progress ?? [:], label: label)
+            calendarView(fractionForDate: userVM.progress ?? [:], label: label)
         }
         .onAppear{
-            habitVM.getProgressHabit(habitId: habitId, date: currentDate)
+            userVM.getProgressHabit(habitPomodoroId: habitId, date: currentDate)
+           // userVM.checkCompletedProgressHabitPomodoroByDate(habitPomodoroId: habitId, date: currentDate)
         }
         .padding()
         .onChange(of: currentDate, perform: { _ in
             days = currentDate.calendarDisplayDate
-            habitVM.getProgressHabit(habitId: habitId, date: days.first?.formattedDate(to: .fullMonthName) ?? Date())
+            userVM.getProgressHabit(habitPomodoroId: habitId, date: days.first?.formattedDate(to: .fullMonthName) ?? Date() )
         })
         .background(Color.white)
         .cornerRadius(13)
@@ -129,6 +117,7 @@ extension CalendarView {
                     .modifier(DateMarking(fraction: fractionForDate[day] ?? 0, isSelected: selectedDate == dayDate, label: label))
                     .onTapGesture {
                         selectedDate = dayDate
+                        userVM.checkCompletedProgressHabitPomodoroByDate(habitPomodoroId: habitId, date: day)
                     }
             }
         })
