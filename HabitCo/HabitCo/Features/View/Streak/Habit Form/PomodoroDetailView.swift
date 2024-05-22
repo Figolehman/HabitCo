@@ -69,7 +69,7 @@ struct PomodoroDetailView: View {
                             HStack {
                                 Text("Session")
                                 Spacer()
-                                Text("\(pomodoro.session ?? 0) Times")
+                                Text("\(pomodoro.session ?? 0) \((pomodoro.session ?? 0) <= 1 ? "Time" : "Times")")
                                     .foregroundColor(userVM.isProgressComplete ? .black : .danger)
                             }
                         }

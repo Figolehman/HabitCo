@@ -54,7 +54,7 @@ struct HabitDetailView: View {
                             HStack {
                                 Text("Frequency")
                                 Spacer()
-                                Text("\(habit.frequency ?? 0) Times")
+                                Text("\(habit.frequency ?? 0) \((habit.frequency ?? 0) <= 1 ? "Time" : "Times")")
                                     .foregroundColor(userVM.isProgressComplete ? .black : .danger)
                             }
                         }
