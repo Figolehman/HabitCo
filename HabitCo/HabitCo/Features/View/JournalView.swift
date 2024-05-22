@@ -210,7 +210,7 @@ struct JournalView: View {
                         showBackAlert = false
                         showNavigationLink = false
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         showNavigationLink = true
                     }
                 }
