@@ -65,7 +65,8 @@ struct PomodoroDetailView: View {
                             HStack {
                                 Text("Session")
                                 Spacer()
-                                Text("\(pomodoro.session ?? 0)")
+                                Text("\(pomodoro.session ?? 0) Times")
+                                    .foregroundColor(userVM.isProgressComplete ? .black : .danger)
                             }
                         }
                         CardView(height: .getResponsiveHeight(70)) {

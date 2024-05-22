@@ -50,7 +50,8 @@ struct HabitDetailView: View {
                             HStack {
                                 Text("Frequency")
                                 Spacer()
-                                Text("\(habit.frequency ?? 0)")
+                                Text("\(habit.frequency ?? 0) Times")
+                                    .foregroundColor(userVM.isProgressComplete ? .black : .danger)
                             }
                         }
                         CardView(height: .getResponsiveHeight(70)) {

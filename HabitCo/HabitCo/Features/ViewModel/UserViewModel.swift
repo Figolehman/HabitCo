@@ -23,6 +23,7 @@ final class UserViewModel: ObservableObject {
     @Published var isUserStreak: Bool?
     @Published var habitNotificationId: String?
     @Published var progress: [Date: CGFloat]? = nil
+    @Published var isProgressComplete: Bool = true
 
     @Published var popUpGainStreak: Bool = false
     @Published var popUpLossStreak: Bool = false
@@ -133,6 +134,19 @@ extension UserViewModel{
             self.futureSubJournals = try await fetchFutureJournal(userId: userId, futureSubJournals: futureSubJournals["MON"]!)
         }
     }
+    
+    func checkCompletedProgressHabitPomodoroByDate(habitPomodoroId: String, date: Date) {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            print(habitPomodoroId, date.formattedDate(to: .fullMonthName))
+            if let journal = try await userManager.getJournal(userId: userId, from: date) {
+                self.isProgressComplete = try await userManager.checkCompletedProgressHabitPomodoroByDate(userId: userId, habitPomodoroId: habitPomodoroId, date: date)
+                return
+            }
+            self.isProgressComplete = true
+            print(self.isProgressComplete)
+        }
+    }
 
     func checkFutureJournalThatHasSubJournal() {
         Task {
@@ -168,6 +182,7 @@ extension UserViewModel{
             self.progress = try await userManager.getProgressHabitPomodoro(userId: userId, habitId: habitPomodoroId, month: date.formattedDate(to: .fullMonthName))
         }
     }
+    
     func updatePopUpLossStreak(isPopUp: Bool) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }

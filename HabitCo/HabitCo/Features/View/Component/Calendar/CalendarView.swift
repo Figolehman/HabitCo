@@ -82,6 +82,7 @@ struct CalendarView: View {
         }
         .onAppear{
             userVM.getProgressHabit(habitPomodoroId: habitId, date: currentDate)
+           // userVM.checkCompletedProgressHabitPomodoroByDate(habitPomodoroId: habitId, date: currentDate)
         }
         .padding()
         .onChange(of: currentDate, perform: { _ in
@@ -116,6 +117,7 @@ extension CalendarView {
                     .modifier(DateMarking(fraction: fractionForDate[day] ?? 0, isSelected: selectedDate == dayDate, label: label))
                     .onTapGesture {
                         selectedDate = dayDate
+                        userVM.checkCompletedProgressHabitPomodoroByDate(habitPomodoroId: habitId, date: day)
                     }
             }
         })

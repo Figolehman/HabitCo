@@ -284,6 +284,18 @@ extension UserManager: JournalUseCase {
         let snapshotHasSubJournal = try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").getDocuments()
         return !snapshotHasSubJournal.isEmpty
     }
+    
+    func checkCompletedProgressHabitPomodoroByDate(userId: String, habitPomodoroId: String, date: Date) async throws -> Bool {
+        let journal = try await getJournal(userId: userId, from: date.formattedDate(to: .fullMonthName))
+        let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "")
+            .whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitPomodoroId)
+            .getDocuments()
+        if let subJournalDocument = snapshot.documents.first {
+            let subJournal = try subJournalDocument.data(as: SubJournalDB.self)
+            return subJournal.fraction == 1
+        }
+        return true
+    }
         
     // Check if journal has a sub journals or not for circle scrollableView
     func checkHasHabit(userId: String) async throws -> [Date]? {
