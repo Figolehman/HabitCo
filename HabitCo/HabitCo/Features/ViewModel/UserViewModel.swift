@@ -230,7 +230,6 @@ extension UserViewModel{
                     /**/
                     try await userManager.updatePopUpLossStreak(userId: userId, popUpStreak: true)
                     isAlreadyPopLossStreak()
-                   // isStreakJustDeleted = true
                 }
                 try await userManager.updateTodayStreak(userId: userId, from: date, isTodayStreak: false)
             }

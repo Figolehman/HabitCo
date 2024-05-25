@@ -57,7 +57,7 @@ struct SortButton: View {
         case .ascending:
             imageType = .descending
         case .descending:
-            imageType = .ascending
+            imageType = .unsort
         }
     }
 }

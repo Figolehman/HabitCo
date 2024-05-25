@@ -333,7 +333,7 @@ struct CreatePomodoroView: View {
                             loadingSuccess()
                         }
                         if isReminderOn {
-                            notify.sendNotification(date: reminderTime, weekdays: repeatPomodoro, title: "\(pomodoroName)", body: "Go finish it", withIdentifier: "\(habitNotificationId)")
+                            notify.sendNotification(date: reminderTime, weekdays: repeatPomodoro, title: "\(pomodoroName)", body: "\(description)", withIdentifier: "\(habitNotificationId)")
                         }
                         self.presentationMode.wrappedValue.dismiss()
                     }

@@ -51,7 +51,7 @@ struct EditHabitView: View {
         }
 
         _frequency = State(initialValue: habit.frequency!)
-        _isReminderOn = State(initialValue: habit.reminderHabit != "-")
+        _isReminderOn = State(initialValue: habit.reminderHabit != "No Reminder")
         _isReminderFolded = State(initialValue: isReminderOn)
 
         if let reminderHabit = habit.reminderHabit {

@@ -63,7 +63,7 @@ struct EditPomodoroView: View {
         }
 
         _session = State(initialValue: pomodoro.session!)
-        _isReminderOn = State(initialValue: pomodoro.reminderPomodoro != "-")
+        _isReminderOn = State(initialValue: pomodoro.reminderPomodoro != "No Reminder")
         _isReminderFolded = State(initialValue: isReminderOn)
 
         if let reminderHabit = pomodoro.reminderPomodoro {

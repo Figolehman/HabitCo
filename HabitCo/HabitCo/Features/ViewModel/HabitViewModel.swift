@@ -35,7 +35,7 @@ extension HabitViewModel {
     public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date?, completion: @escaping () -> Void = {}) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            let timeString = reminderHabit?.dateToString(to: .hourAndMinute) ?? "-"
+            let timeString = reminderHabit?.dateToString(to: .hourAndMinute) ?? "No Reminder"
             try await userManager.createNewHabit(userId: userId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString)
             completion()
         }
@@ -70,9 +70,11 @@ extension HabitViewModel {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
             let currentDate = Date().formattedDate(to: .fullMonthName)
-            let timeString = reminderHabit?.dateToString(to: .hourAndMinute) ?? "-"
+            let timeString = reminderHabit?.dateToString(to: .hourAndMinute) ?? "No Reminder"
             self.habit = try await userManager.editHabit(userId: userId, habitId: habitId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString)
-            
+            guard try await userManager.checkHasSubJournalTodayWithHabitPomodoroId(userId: userId, habitPomodoroId: habitId) else {
+                return completion()
+            }
             let editUndo = try await userManager.editSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName), habitId: habitId, pomodoroId: nil, frequency: frequency ?? 0, label: label ?? "")
             let journal = try await userManager.getJournal(userId: userId, from: currentDate)
             let subJournal = try await userManager.getSubJournalByDate(userId: userId, date: currentDate, habitId: habitId, pomodoroId: nil)

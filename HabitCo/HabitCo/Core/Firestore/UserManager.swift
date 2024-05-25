@@ -253,6 +253,12 @@ extension UserManager: JournalUseCase {
         return !snapshotHasSubJournal.isEmpty
     }
     
+    func checkHasSubJournalTodayWithHabitPomodoroId(userId: String, habitPomodoroId: String) async throws -> Bool {
+        let journal = try await getJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName))
+        let snapshotHasSubJournal = try await userSubJournalCollection(userId: userId, journalId: journal?.id ?? "").whereField(SubJournalDB.CodingKeys.habitPomodoroId.rawValue, isEqualTo: habitPomodoroId).getDocuments()
+        return !snapshotHasSubJournal.isEmpty
+    }
+    
     func checkHasSubJournalByDate(userId: String, date: Date) async throws -> Bool {
         guard let journal = try await getJournal(userId: userId, from: date) else { return false }
         let snapshotHasSubJournal = try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").getDocuments()

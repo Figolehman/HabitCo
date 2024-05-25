@@ -25,7 +25,7 @@ public extension WidgetViewModel {
     func getSubJournalToday() {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            guard let subJournals = try await userManager.getSubJournals(userId: userId, from: Date().formattedDate(to: .fullMonthName), label: nil, isAscending: nil),
+            guard let subJournals = try await userManager.getSubJournals(userId: userId, from: Date().formattedDate(to: .fullMonthName), label: nil, isAscending: true),
                   !subJournals.isEmpty
             else {
                 self.subJournals = nil

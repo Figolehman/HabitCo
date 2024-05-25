@@ -32,7 +32,7 @@ extension PomodoroViewModel {
     public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date?, completion: @escaping () -> Void = {}){
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            let timeString = reminderPomodoro?.dateToString(to: .hourAndMinute) ?? "-"
+            let timeString = reminderPomodoro?.dateToString(to: .hourAndMinute) ?? "No Reminder"
             try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString)
             completion()
         }
@@ -65,9 +65,11 @@ extension PomodoroViewModel {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             let currentDate = Date().formattedDate(to: .fullMonthName)
-            let reminder = reminderHabit?.dateToString(to: .hourAndMinute) ?? "-"
+            let reminder = reminderHabit?.dateToString(to: .hourAndMinute) ?? "No Reminder"
             self.pomodoro = try await userManager.editPomodoro(userId: userId, pomodoroId: pomodoroId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, longBreakTime: longBreakTime, reminderPomodoro: reminder)
-            
+            guard try await userManager.checkHasSubJournalTodayWithHabitPomodoroId(userId: userId, habitPomodoroId: pomodoroId) else {
+                return completion()
+            }
             let editUndo = try await userManager.editSubJournal(userId: userId, from: currentDate, habitId: nil, pomodoroId: pomodoroId, frequency: session ?? 0, label: label ?? "")
             let journal = try await userManager.getJournal(userId: userId, from: currentDate)
             let subJournal = try await userManager.getSubJournalByDate(userId: userId, date: currentDate, habitId: nil, pomodoroId: pomodoroId)

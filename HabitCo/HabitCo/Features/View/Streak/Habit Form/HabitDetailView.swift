@@ -57,7 +57,7 @@ struct HabitDetailView: View {
                             HStack {
                                 Text("Reminder")
                                 Spacer()
-                                Text("\(habit.reminderHabit ?? "-")")
+                                Text("\(habit.reminderHabit ?? "No Reminder")")
                             }
                         }
                     }
