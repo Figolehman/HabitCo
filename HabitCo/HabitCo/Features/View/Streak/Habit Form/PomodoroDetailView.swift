@@ -91,6 +91,13 @@ struct PomodoroDetailView: View {
         .onAppear {
             pomodoroVM.getPomodoroDetail(pomodoroId: pomodoro?.id ?? "")
         }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                NavigationLink(destination: EditPomodoroView(pomodoro: pomodoro!)) {
+                    Image(systemName: "square.and.pencil")
+                }
+            }
+        }
     }
 }
 

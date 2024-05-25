@@ -100,7 +100,7 @@ struct CalendarView: View {
 // MARK: - View Builder
 extension CalendarView {
     @ViewBuilder
-    func calendarView(fractionForDate: [Int: CGFloat]) -> some View {
+    func calendarView(fractionForDate: [Date: CGFloat]) -> some View {
         let columns = Array(repeating: GridItem(.flexible()), count: 7)
 
         let emptyDays = currentDate.startOfMonth.get(.weekday) - 1
@@ -116,7 +116,7 @@ extension CalendarView {
                         text.font(.title3.bold())
                     })
                     .font(.title3)
-                    .modifier(DateMarking(fraction: fractionForDate[dayDate] ?? 0, isSelected: selectedDate == dayDate))
+                    .modifier(DateMarking(fraction: fractionForDate[day] ?? 0, isSelected: selectedDate == dayDate))
                     .onTapGesture {
                         selectedDate = dayDate
                     }

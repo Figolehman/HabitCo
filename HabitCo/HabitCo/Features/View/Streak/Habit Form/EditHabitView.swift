@@ -201,7 +201,6 @@ struct EditHabitView: View {
                for day in RepeatDay.allCases {
                    if day.weekday == habitDay {
                        repeatDate.insert(day)
-                       print(day)
                    }
                }
             }

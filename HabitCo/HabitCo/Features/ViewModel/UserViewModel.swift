@@ -124,7 +124,7 @@ extension UserViewModel{
         }
     }
     
-    func getSubFutureJournals() {
+    func getSubFutureJournals(dateName: String = "") {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             guard let futureSubJournals = try await userManager.getAllSubFutureJournalsByDateName(userId: userId),
@@ -137,6 +137,13 @@ extension UserViewModel{
         }
     }
 
+    func checkFutureJournalThatHasSubJournal() {
+        Task {
+            guard let userId = UserDefaultManager.userID else { return }
+            let _ = try await userManager.checkAllJournalThatHasSubJournal(userId: userId)
+        }
+    }
+    
     // DONE -> Get sub journal data
     func getSubJournals(from date: Date) {
         Task {
@@ -203,7 +210,7 @@ extension UserViewModel{
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             let journal = try await userManager.getJournal(userId: userId, from: date)
-            let complete = try await userManager.checkSubJournalisComplete(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
+            let complete = try await userManager.checkSubJournalIsComplete(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
             try await userManager.updateCountSubJournal(userId: userId, journalId: journal?.id ?? "", subJournalId: subJournalId)
             if complete,
                date.isSameDay(UserDefaultManager.lastEntryDate.formattedDate(to: .fullMonthName))
@@ -230,6 +237,10 @@ extension UserViewModel{
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             self.hasHabit = try await userManager.checkHasSubJournals(userId: userId)
+            print(self.hasHabit)
+            if self.hasHabit == nil {
+                try await userManager.updateHasSubJournal(userId: userId, from: Date().formattedDate(to: .fullMonthName), hasSubJournal: false)
+            }
         }
     }
     
@@ -296,7 +307,7 @@ private extension UserViewModel {
         getStreak()
         return localArray
     }
-
+    
     // DONE -> Cuman fungsi update count biasa kepake di UpdateCountSubJournal
     func updateCountStreak(date: Date) {
         Task {

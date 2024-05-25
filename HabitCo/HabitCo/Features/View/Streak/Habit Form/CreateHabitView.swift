@@ -147,7 +147,7 @@ struct CreateHabitView: View {
                 let repeatDateInt: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     guard isSavable() else { return }
-                    notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "Buruan kerjain anjing", withIdentifier: "\(habitNotificationId)" /*masukin jumlah habit*/)
+                    notify.sendNotification(date: reminderTime, weekdays: repeatDateInt, title: "\(habitName)", body: "Go finish it", withIdentifier: "\(habitNotificationId)")
                     habitVM.createUserHabit(habitName: habitName, description: description, label: label?.rawValue ?? "", frequency: frequency, repeatHabit: repeatDateInt, reminderHabit: reminderTime)
                     self.presentationMode.wrappedValue.dismiss()
                 }

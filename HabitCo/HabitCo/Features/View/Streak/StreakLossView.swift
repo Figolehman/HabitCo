@@ -18,9 +18,6 @@ struct StreakLossView: View {
             Image("lossTree")
             
             VStack (spacing: .getResponsiveHeight(24)) {
-                Text("Congratulations on your X days streak!")
-                    .multilineTextAlignment(.center)
-                    .font(.body.weight(.semibold))
                 
                 Text("\(Prompt.lossStreakPrompt[0])")
                     .multilineTextAlignment(.center)

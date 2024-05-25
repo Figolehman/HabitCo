@@ -262,5 +262,6 @@ struct JournalView: View {
         userViewModel.getSubJournals(from: selectedDate)
         userViewModel.getSubFutureJournals()
         userViewModel.getHabitNotificationId()
+        userViewModel.checkFutureJournalThatHasSubJournal()
     }
 }

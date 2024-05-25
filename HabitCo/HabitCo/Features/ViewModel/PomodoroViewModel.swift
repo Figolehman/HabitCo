@@ -32,18 +32,6 @@ extension PomodoroViewModel {
     public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date?){
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            guard !pomodoroName.isEmpty,
-                  !description.isEmpty,
-                  !label.isEmpty,
-                  session != 0,
-                  focusTime != 0,
-                  breakTime != 0,
-                  !repeatPomodoro.isEmpty,
-                  reminderPomodoro != nil
-            else {
-                self.errorMessage = "Please fill all fields"
-                return
-            }
             let timeString = reminderPomodoro?.dateToString(to: .hourAndMinute)
             try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString ?? "")
         }
@@ -72,11 +60,32 @@ extension PomodoroViewModel {
         }
     }
     
+    public func editPomodoro(pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, repeatPomodoro: [Int]?, reminderHabit: Date?) {
+        Task{
+            guard let userId = UserDefaultManager.userID else { return }
+            let reminder = reminderHabit?.dateToString(to: .hourAndMinute)
+            self.pomodoro = try await userManager.editPomodoro(userId: userId, pomodoroId: pomodoroId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminder)
+        }
+    }
+    
     // Delete pomodoro
     public func deletePomodoro(pomodoroId: String) {
         Task {
-            guard let user = self.user else { return }
-            try await userManager.deletePomodoro(userId: user.id, pomodoroId: pomodoroId)
+            guard let userId = UserDefaultManager.userID else { return }
+            try await userManager.deletePomodoro(userId: userId, pomodoroId: pomodoroId)
+            let currentDate = Date().formattedDate(to: .fullMonthName)
+            let hasSubJournalCompleteToday = try await userManager.checkPomodoroSubJournalIsCompleteByDate(userId: userId, pomodoroId: pomodoroId, date: currentDate)
+            let isFirstStreak = try await userManager.checkIsFirstStreak(userId: userId)
+            if try await !userManager.checkCompletedSubJournal(userId: userId, from: currentDate),
+               try await !userManager.checkHasUndoStreak(userId: userId, from: currentDate) {
+                if hasSubJournalCompleteToday,
+                   isFirstStreak {
+                    try await userManager.deleteStreak(userId: userId)
+                } else {
+                    try await userManager.updateCountStreak(userId: userId, undo: true)
+                }
+                try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
+            }
         }
     }
 }

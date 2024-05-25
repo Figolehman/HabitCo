@@ -38,9 +38,7 @@ class NotificationHandler {
 
             UNUserNotificationCenter.current().add(request)
         }
-        UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in
-            print("\(notifications)")
-        }
+        UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in }
     }
 //    
 //    func sendNotification(date: Date, habitWeekdays: [Int], title: String, body: String, withIdentifier id: String) {

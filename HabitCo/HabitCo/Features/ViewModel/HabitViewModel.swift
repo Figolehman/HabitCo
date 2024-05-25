@@ -12,7 +12,7 @@ final class HabitViewModel: ObservableObject {
     
     @Published private(set) var habits: [HabitDB]? = []
     @Published private(set) var habit: HabitDB? = nil
-    @Published private(set) var progress: [Int: CGFloat]? = nil
+    @Published private(set) var progress: [Date: CGFloat]? = nil
     @Published private(set) var errorMessage: String? = nil
     
     private let firebaseProvider: FirebaseAuthProvider
@@ -26,21 +26,11 @@ final class HabitViewModel: ObservableObject {
 }
 
 extension HabitViewModel {
-   
+    
     // Create user habit
     public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date?) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
-            guard !habitName.isEmpty,
-                  !description.isEmpty,
-                  !label.isEmpty,
-                  frequency != 0,
-                  !repeatHabit.isEmpty,
-                  reminderHabit != nil
-            else {
-                self.errorMessage = "Please fill all fields"
-                return
-            }
             let timeString = reminderHabit?.dateToString(to: .hourAndMinute)
             try await userManager.createNewHabit(userId: userId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString ?? "")
         }
@@ -58,7 +48,7 @@ extension HabitViewModel {
     public func getHabitDetail(habitId: String){
         Task{
             guard let userId = UserDefaultManager.userID,
-                 let habits = self.habits
+                  let habits = self.habits
             else { return }
             for habit in habits {
                 if habit.id == habitId {
@@ -80,10 +70,24 @@ extension HabitViewModel {
     }
     
     // Delete Habit
-    public func deleteHabit(habitId: String){
+    public func deleteHabit(habitId: String) {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
             try? await userManager.deleteHabit(userId: userId, habitId: habitId)
+            let currentDate = Date().formattedDate(to: .fullMonthName)
+            let hasSubJournalCompleteToday = try await userManager.checkHabitSubJournalIsCompleteByDate(userId: userId, habitId: habitId, date: currentDate)
+            let isFirstStreak = try await userManager.checkIsFirstStreak(userId: userId)
+            if try await !userManager.checkCompletedSubJournal(userId: userId, from: currentDate),
+               try await !userManager.checkHasUndoStreak(userId: userId, from: currentDate) {
+                if hasSubJournalCompleteToday,
+                   isFirstStreak {
+                    try await userManager.deleteStreak(userId: userId)
+                } else {
+                    try await userManager.updateCountStreak(userId: userId, undo: true)
+                }
+                try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
+            }
         }
     }
 }
+
