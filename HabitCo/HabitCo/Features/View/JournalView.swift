@@ -139,9 +139,7 @@ struct JournalView: View {
 
                 UINavigationBar.appearance().standardAppearance = customNavigation
                 do {
-                    try userViewModel.getCurrentUserData {
-                        //UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
-                    }
+                    try userViewModel.getCurrentUserData { }
                 } catch {
                     print("No Authenticated User")
                 }
