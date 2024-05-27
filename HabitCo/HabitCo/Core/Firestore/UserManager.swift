@@ -58,6 +58,7 @@ extension UserManager: UserUseCase{
     func getUserDB(userId: String) async throws -> UserDB {
         try await userDocument(userId: userId).getDocument(as: UserDB.self)
     }
+
 }
 
 // MARK: CRUD For FutureJournal - DONE
@@ -115,19 +116,67 @@ extension UserManager: JournalUseCase {
               try await (getJournal(userId: userId, from: date) == nil)
         else { return }
         let (document, id) = generateDocumentID(userId: userId, type: nil)
-        let journal = JournalDB(id: id, date: date, dateName: date.getDayName)
+        let journal = JournalDB(id: id, date: date, dateName: date.getDayName, undoStreak: false, todayStreak: false, hasSubJournal: false)
         try document.setData(from: journal, merge: false)
         
         for subFutureJournal in subFutureJournals {
             if subFutureJournal.subJournalType == .habit {
                 let habit = try await getHabitDetail(userId: userId, habitId: subFutureJournal.habitPomodoroId ?? "")
                 try await generateSubJournal(userId: userId, journalId: id, type: subFutureJournal.subJournalType ?? .habit, habitPomodoroId: subFutureJournal.habitPomodoroId ?? "", label: habit?.label ?? "", frequencyCount: habit?.frequency ?? 0)
+                try await updateHasSubJournal(userId: userId, from: date)
             } else {
                 let pomodoro = try await getPomodoroDetail(userId: userId, pomodoroId: subFutureJournal.habitPomodoroId ?? "")
                 try await generateSubJournal(userId: userId, journalId: id, type: subFutureJournal.subJournalType ?? .pomodoro, habitPomodoroId: subFutureJournal.habitPomodoroId ?? "", label: pomodoro?.label ?? "", frequencyCount: pomodoro?.session ?? 0)
+                try await updateHasSubJournal(userId: userId, from: date)
             }
         }
         
+    }
+    
+    func checkHasSubJournal(userId: String, startDate: Date, endDate: Date) async throws -> Bool {
+        print("start: \(startDate)")
+        print("end: \(endDate)")
+        let snapshot = try await userJournalCollection(userId: userId)
+            .whereField(JournalDB.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startDate)
+            .whereField(JournalDB.CodingKeys.date.rawValue, isLessThanOrEqualTo: endDate)
+            .whereField(JournalDB.CodingKeys.hasSubJournal.rawValue, isEqualTo: true)
+            .getDocuments()
+        print(snapshot.count)
+        return !snapshot.isEmpty
+    }
+    
+    func updateHasSubJournal(userId: String, from date: Date, hasSubJournal: Bool = true) async throws {
+        let journal = try await getJournal(userId: userId, from: date)
+        let updatedData: [String: Any] = [
+            JournalDB.CodingKeys.hasSubJournal.rawValue: hasSubJournal
+        ]
+        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
+    }
+    
+    func checkHasUndo(userId: String, from date: Date) async throws -> Bool {
+        let journal = try await getJournal(userId: userId, from: date)
+        return journal?.undoStreak ?? false
+    }
+    
+    func checkTodayStreak(userId: String, from date: Date) async throws -> Bool {
+        let journal = try await getJournal(userId: userId, from: date)
+        return journal?.todayStreak ?? false
+    }
+    
+    func updateTodayStreak(userId: String, from date: Date, isTodayStreak: Bool = false) async throws {
+        let journal = try await getJournal(userId: userId, from: date)
+        let updatedData: [String: Any] = [
+            JournalDB.CodingKeys.todayStreak.rawValue: isTodayStreak
+        ]
+        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
+    }
+    
+    func updateHasUndo(userId: String, from date: Date, isUndo: Bool = false) async throws {
+        let journal = try await getJournal(userId: userId, from: date)
+        let updatedData: [String: Any] = [
+            JournalDB.CodingKeys.undoStreak.rawValue: isUndo
+        ]
+        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
     }
     
     func getAllJournal(userId: String) async throws -> [JournalDB]? {
@@ -159,10 +208,10 @@ extension UserManager: SubJournalUseCase {
         let subJournalDocument = try await userSubJournalDocument(userId: userId, journalId: journalId, subJournalId: subJournalId).getDocument()
         guard var count = subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int,
               count < subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue] as? Int ?? 0,
-              var frequency = subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue] as? Double
+              let frequency = subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue] as? Double
         else { return }
         count += 1
-       let newFraction = floor(Double(count) / frequency * 10) / 10
+        let newFraction = floor(Double(count) / frequency * 100) / 100
         let data: [String: Any] = [
             SubJournalDB.CodingKeys.startFrequency.rawValue: count,
             SubJournalDB.CodingKeys.fraction.rawValue: newFraction
@@ -176,10 +225,10 @@ extension UserManager: SubJournalUseCase {
         guard var count = subJournalDocument.data()?[SubJournalDB.CodingKeys.startFrequency.rawValue] as? Int,
               count <= subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue] as? Int ?? 0,
               count > 0,
-              var frequency = subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue] as? Double
+              let frequency = subJournalDocument.data()?[SubJournalDB.CodingKeys.frequencyCount.rawValue] as? Double
         else { return }
         count -= 1
-        let newFraction = floor(Double(count) / frequency * 10) / 10
+        let newFraction = (Double(count) / frequency * 100) / 100
         let data: [String: Any] = [
             SubJournalDB.CodingKeys.startFrequency.rawValue: count,
             SubJournalDB.CodingKeys.fraction.rawValue: newFraction
@@ -192,7 +241,6 @@ extension UserManager: SubJournalUseCase {
         guard let journal = try await getJournal(userId: userId, from: date) else { return false }
         let snapshot = try await userSubJournalCollection(userId: userId, journalId: journal.id ?? "").whereField(SubJournalDB.CodingKeys.isCompleted.rawValue, isEqualTo: true).getDocuments()
         if let document = snapshot.documents.first {
-            print(document.documentID)
             return document.exists
         }
         return false

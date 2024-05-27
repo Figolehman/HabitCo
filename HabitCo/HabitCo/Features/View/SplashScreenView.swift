@@ -10,7 +10,7 @@ import SwiftUI
 struct SplashScreenView: View {
     
     @EnvironmentObject private var appRootManager: AppRootManager
-    @StateObject private var userVM = UserViewModel()
+    @StateObject private var userViewModel = UserViewModel()
     
     var body: some View {
         VStack (spacing: 24) {
@@ -32,6 +32,17 @@ struct SplashScreenView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 if UserDefaultManager.isLogin {
                     appRootManager.currentRoot = .journalView
+                    do {
+                        try userViewModel.getCurrentUserData {
+                            do {
+                                try userViewModel.getAllJournal()
+                            } catch {
+                                print("No Journal")
+                            }
+                        }
+                    } catch {
+                        print("No Authenticated User")
+                    }
                 } else {
                     appRootManager.currentRoot = .onBoardingView
                 }

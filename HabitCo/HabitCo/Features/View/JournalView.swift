@@ -96,9 +96,9 @@ struct JournalView: View {
                                                 HabitItem(habitType: .pomodoro, habitName: item.habit?.habitName ?? "NO NAME", label: item.habit?.label ?? "", fraction: item.subJournal.fraction ?? 0.0, progress: item.subJournal.startFrequency ?? 0) {
                                                     navigateTo = .habitDetail
                                                 } action: {
-                                                    userViewModel.updateFreqeuncySubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                                    userViewModel.updateCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                                 } undoAction: {
-                                                    userViewModel.undoCount(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                                    userViewModel.undoCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                                 }
                                             } else {
                                                 HabitItem(habitType: .regular, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", label: item.pomodoro?.label ?? "", progress: item.subJournal.startFrequency ?? 0) {
@@ -106,7 +106,7 @@ struct JournalView: View {
                                                 } action: {
                                                     // action
                                                 } undoAction: {
-                                                    userViewModel.undoCount(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                                    userViewModel.undoCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                                 }
                                             }
                                         }
@@ -140,20 +140,20 @@ struct JournalView: View {
                 UINavigationBar.appearance().standardAppearance = customNavigation
                 do {
                     try userViewModel.getCurrentUserData {
-                        do {
-                            try userViewModel.getAllJournal()
-                        } catch {
-                            print("No Journal")
-                        }
+                        //UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
                     }
                 } catch {
                     print("No Authenticated User")
                 }
-
-                userViewModel.generateJournalEntries()
-                userViewModel.getSubJournals(from: selectedDate)
-                userViewModel.getStreak()
-                UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
+                do {
+                    try userViewModel.getAllJournal()
+                    userViewModel.generateJournalEntries()
+                    userViewModel.checkIsStreak()
+                    userViewModel.getSubJournals(from: selectedDate)
+                    userViewModel.getStreak()
+                } catch {
+                    print("No Journal")
+                }
             }
             .toolbar {
 
