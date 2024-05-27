@@ -134,14 +134,11 @@ extension UserManager: JournalUseCase {
     }
     
     func checkHasSubJournal(userId: String, startDate: Date, endDate: Date) async throws -> Bool {
-        print("start: \(startDate)")
-        print("end: \(endDate)")
         let snapshot = try await userJournalCollection(userId: userId)
             .whereField(JournalDB.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startDate)
             .whereField(JournalDB.CodingKeys.date.rawValue, isLessThanOrEqualTo: endDate)
             .whereField(JournalDB.CodingKeys.hasSubJournal.rawValue, isEqualTo: true)
             .getDocuments()
-        print(snapshot.count)
         return !snapshot.isEmpty
     }
     
@@ -158,6 +155,14 @@ extension UserManager: JournalUseCase {
         return journal?.undoStreak ?? false
     }
     
+    func updateHasUndo(userId: String, from date: Date, isUndo: Bool = false) async throws {
+        let journal = try await getJournal(userId: userId, from: date)
+        let updatedData: [String: Any] = [
+            JournalDB.CodingKeys.undoStreak.rawValue: isUndo
+        ]
+        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
+    }
+    
     func checkTodayStreak(userId: String, from date: Date) async throws -> Bool {
         let journal = try await getJournal(userId: userId, from: date)
         return journal?.todayStreak ?? false
@@ -167,14 +172,6 @@ extension UserManager: JournalUseCase {
         let journal = try await getJournal(userId: userId, from: date)
         let updatedData: [String: Any] = [
             JournalDB.CodingKeys.todayStreak.rawValue: isTodayStreak
-        ]
-        try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
-    }
-    
-    func updateHasUndo(userId: String, from date: Date, isUndo: Bool = false) async throws {
-        let journal = try await getJournal(userId: userId, from: date)
-        let updatedData: [String: Any] = [
-            JournalDB.CodingKeys.undoStreak.rawValue: isUndo
         ]
         try await userJournalDocument(userId: userId, journalId: journal?.id ?? "").updateData(updatedData)
     }
@@ -672,6 +669,6 @@ private extension UserManager {
             }
         return sortedSubJournals
     }
-    
+
 }
 
