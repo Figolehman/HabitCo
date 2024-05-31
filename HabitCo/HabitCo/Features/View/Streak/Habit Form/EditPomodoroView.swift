@@ -193,7 +193,7 @@ struct EditPomodoroView: View {
                                     DatePicker("", selection: $reminderTime, displayedComponents: [.hourAndMinute])
                                         .datePickerStyle(.wheel)
                                         .background(
-                                            Color.getAppColor(.primary3)
+                                            Color.getAppColor(.primary)
                                                 .cornerRadius(13)
                                         )
                                         .environment(\.colorScheme, .dark)
@@ -269,7 +269,7 @@ struct EditPomodoroView: View {
                                 }
                                 .pickerStyle(.wheel)
                                 .background(
-                                    Color.getAppColor(.primary3)
+                                    Color.getAppColor(.primary)
                                         .cornerRadius(13)
                                 )
                                 .environment(\.colorScheme, .dark)
@@ -305,7 +305,7 @@ struct EditPomodoroView: View {
                                 }
                                 .pickerStyle(.wheel)
                                 .background(
-                                    Color.getAppColor(.primary3)
+                                    Color.getAppColor(.primary)
                                         .cornerRadius(13)
                                 )
                                 .environment(\.colorScheme, .dark)
@@ -341,7 +341,7 @@ struct EditPomodoroView: View {
                                 }
                                 .pickerStyle(.wheel)
                                 .background(
-                                    Color.getAppColor(.primary3)
+                                    Color.getAppColor(.primary)
                                         .cornerRadius(13)
                                 )
                                 .environment(\.colorScheme, .dark)

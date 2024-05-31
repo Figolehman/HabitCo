@@ -167,7 +167,7 @@ struct CreatePomodoroView: View {
                                     DatePicker("", selection: $reminderTime, displayedComponents: [.hourAndMinute])
                                         .datePickerStyle(.wheel)
                                         .background(
-                                            Color.getAppColor(.primary3)
+                                            Color.getAppColor(.primary)
                                                 .cornerRadius(13)
                                         )
                                         .environment(\.colorScheme, .dark)
@@ -243,7 +243,7 @@ struct CreatePomodoroView: View {
                                 }
                                 .pickerStyle(.wheel)
                                 .background(
-                                    Color.getAppColor(.primary3)
+                                    Color.getAppColor(.primary)
                                         .cornerRadius(13)
                                 )
                                 .environment(\.colorScheme, .dark)
@@ -257,7 +257,7 @@ struct CreatePomodoroView: View {
                                 Text("Break Time")
                                 Spacer()
                                 AppButton(label: "\(breakTime == 0 ? "Not Set" : "\(breakTime)")", sizeType: .select) {
-                                    if isFocusTimeFolded {
+                                    if isBreakTimeFolded {
                                         withAnimation {
                                             isBreakTimeFolded = false
                                             if breakTime == 0 {
@@ -279,7 +279,7 @@ struct CreatePomodoroView: View {
                                 }
                                 .pickerStyle(.wheel)
                                 .background(
-                                    Color.getAppColor(.primary3)
+                                    Color.getAppColor(.primary)
                                         .cornerRadius(13)
                                 )
                                 .environment(\.colorScheme, .dark)
@@ -315,7 +315,7 @@ struct CreatePomodoroView: View {
                                 }
                                 .pickerStyle(.wheel)
                                 .background(
-                                    Color.getAppColor(.primary3)
+                                    Color.getAppColor(.primary)
                                         .cornerRadius(13)
                                 )
                                 .environment(\.colorScheme, .dark)

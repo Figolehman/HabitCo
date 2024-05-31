@@ -202,6 +202,7 @@ struct JournalView: View {
                 .frame(width: ScreenSize.width)
             }
         }
+        .accentColor(.getAppColor(.primary))
         .navigationViewStyle(.stack)
         .customSheet($showSettings, sheetType: .settings, content: {
             SettingsView(username: userViewModel.user?.fullName ?? "Full Name", userEmail: "Apple ID", initial: userViewModel.generateInitial(), showAlert: $showAlert, showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
