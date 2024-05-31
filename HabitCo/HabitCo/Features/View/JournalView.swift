@@ -15,6 +15,8 @@ private enum Navigator {
 
 struct JournalView: View {
 
+    @State private var undoArg: (String, Date)?
+
     @State private var isLoading = false
     @State private var loadingStatus = LoadingType.loading
     @State private var loadingMessage = "Signing Out..."
@@ -33,14 +35,15 @@ struct JournalView: View {
     @StateObject private var habitViewModel = HabitViewModel()
     @StateObject private var pomodoroViewModel = PomodoroViewModel()
 
-    @State var selectedDate = Date()
-    @State var showSettings = false
-    @State var showCreateHabit = false
+    @State private var selectedDate = Date()
+    @State private var showSettings = false
+    @State private var showCreateHabit = false
     @State private var isDataLoaded = false
-    @State var showPrivacyPolicy = false
-    @State var showTermsAndConditions = false
-    @State var showFilter = false
-    @State var showAlert = false
+    @State private var showPrivacyPolicy = false
+    @State private var showTermsAndConditions = false
+    @State private var showFilter = false
+    @State private var showSignOutAlert = false
+    @State private var showUndoAlert = false
 
     @Environment(\.auth) var auth
     @EnvironmentObject var appRootManager: AppRootManager
@@ -114,7 +117,8 @@ struct JournalView: View {
                                             } action: {
                                                 userViewModel.updateCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
                                             } undoAction: {
-                                                userViewModel.undoCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                                showUndoAlert = true
+                                                undoArg = (item.subJournal.id ?? "", selectedDate)
                                             }
                                         } else {
                                             HabitItem(habitType: .regular, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", label: item.pomodoro?.label ?? "", progress: item.subJournal.startFrequency ?? 0) {
@@ -124,7 +128,8 @@ struct JournalView: View {
                                                 focusNavigationArg = (item.pomodoro, item.subJournal, selectedDate)
                                                 navigateTo = .focus
                                             } undoAction: {
-                                                userViewModel.undoCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
+                                                showUndoAlert = true
+                                                undoArg = (item.subJournal.id ?? "", selectedDate)
                                             }
                                         }
                                     }
@@ -205,7 +210,7 @@ struct JournalView: View {
         .accentColor(.getAppColor(.primary))
         .navigationViewStyle(.stack)
         .customSheet($showSettings, sheetType: .settings, content: {
-            SettingsView(username: userViewModel.user?.fullName ?? "Full Name", userEmail: "Apple ID", initial: userViewModel.generateInitial(), showAlert: $showAlert, showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
+            SettingsView(username: userViewModel.user?.fullName ?? "Full Name", userEmail: "Apple ID", initial: userViewModel.generateInitial(), showAlert: $showSignOutAlert, showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
         })
         .customSheet($showPrivacyPolicy, sheetType: .rules, content: {
             PrivacyPolicyView()
@@ -213,12 +218,23 @@ struct JournalView: View {
         .customSheet($showTermsAndConditions, sheetType: .rules, content: {
             TermsAndConditionsView()
         })
-        .alertOverlay($showAlert, content: {
+        .alertOverlay($showUndoAlert, content: {
+            CustomAlertView(title: "Are you sure you want to Undo your progress?", message: "Every step forward matters. Are you sure you want to go back?", dismiss: "Cancel", destruct: "Undo") {
+                showUndoAlert = false
+            } destructAction: {
+                guard let undoArg else { return }
+                userViewModel.undoCountSubJournal(subJournalId: undoArg.0, from: undoArg.1)
+                self.undoArg = nil
+                showUndoAlert = false
+            }
+
+        })
+        .alertOverlay($showSignOutAlert, content: {
             CustomAlertView(title: "Are you sure you want to Sign Out?", message: "Signing out means that you will need to sign in again when you open the apps.", dismiss: "Cancel", destruct: "Sign Out", dismissAction: {
-                showAlert = false
+                showSignOutAlert = false
             }, destructAction: {
                 do {
-                    showAlert = false
+                    showSignOutAlert = false
                     isLoading = true
                     try auth.signOut()
                     loadingSuccess()
@@ -261,7 +277,12 @@ struct JournalView: View {
         }
     }
 
-    private func sortJournal() {
+
+}
+
+private extension JournalView {
+
+    func sortJournal() {
         switch sortType {
         case .unsort:
             userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: nil)
@@ -272,7 +293,7 @@ struct JournalView: View {
         }
     }
 
-    private func loadingSuccess() {
+    func loadingSuccess() {
         loadingMessage = "Signed Out"
         loadingStatus = .success
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -281,7 +302,7 @@ struct JournalView: View {
         }
     }
 
-    private func userViewModelInitiation() {
+    func userViewModelInitiation() {
         userViewModel.generateJournalEntries()
         userViewModel.checkIsStreak()
         userViewModel.getSubJournals(from: selectedDate)
