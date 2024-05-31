@@ -16,7 +16,8 @@ struct CalendarView: View {
     @State var days = [Date]()
     @State var selectedDate: Int?
 
-    @StateObject private var habitVM = HabitViewModel()
+    @ObservedObject private var habitVM: HabitViewModel
+    @ObservedObject private var pomodoroVM: PomodoroViewModel
 
     let habitId: String
 
@@ -31,8 +32,18 @@ struct CalendarView: View {
         }
     }
 
-    init(habitId: String) {
+    init(habitId: String, pomodoroVM: PomodoroViewModel) {
         self.habitId = habitId
+        self.pomodoroVM = pomodoroVM
+        self.habitVM = HabitViewModel()
+
+        self._days = State(initialValue: currentDate.calendarDisplayDate)
+    }
+
+    init(habitId: String, habitVM: HabitViewModel) {
+        self.habitId = habitId
+        self.pomodoroVM = PomodoroViewModel()
+        self.habitVM = habitVM
 
         self._days = State(initialValue: currentDate.calendarDisplayDate)
     }
@@ -76,8 +87,6 @@ struct CalendarView: View {
                         .foregroundColor(Color(UIColor.tertiaryLabel))
                 }
             }
-
-
 
             calendarView(fractionForDate: habitVM.progress ?? [:])
         }
@@ -198,7 +207,7 @@ struct DateMarking: ViewModifier {
             )
     }
 }
-
-#Preview {
-    CalendarView(habitId: "")
-}
+//
+//#Preview {
+//    CalendarView(habitId: "")
+//}

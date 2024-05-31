@@ -9,8 +9,12 @@ import SwiftUI
 
 struct EditPomodoroView: View {
     
-    var pomodoro: PomodoroDB
-    
+    let pomodoro: PomodoroDB
+
+    @State private var isLoading = false
+    @State private var loadingStatus = LoadingType.loading
+    @State private var loadingMessage = "Loading..."
+
     @State private var pomodoroName: String = ""
     @State private var description: String = ""
     @State private var selected: Color.FilterColors? = nil
@@ -38,12 +42,13 @@ struct EditPomodoroView: View {
     
     @State private var currentDefaultPomodoro: DefaultPomodoro?
     
-    @StateObject var pomodoroVM = PomodoroViewModel()
-    
+    @ObservedObject var pomodoroVM: PomodoroViewModel
+
     @Environment(\.presentationMode) var presentationMode
     
-    init(pomodoro: PomodoroDB) {
-        self.pomodoro = pomodoro
+    init(pomodoroVM: PomodoroViewModel) {
+        self.pomodoro = pomodoroVM.pomodoro!
+        self.pomodoroVM = pomodoroVM
         _repeatDate = State(initialValue: [])
         _pomodoroName = State(initialValue: pomodoro.pomodoroName!)
         _description = State(initialValue: pomodoro.description!)
@@ -346,18 +351,29 @@ struct EditPomodoroView: View {
                 }
                 let repeatPomodoro: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit) {
-                    pomodoroVM.editPomodoro(pomodoroId: pomodoro.id, pomodoroName: pomodoroName, description: description, label: selected?.rawValue, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderHabit: reminderTime)
-                    self.presentationMode.wrappedValue.dismiss()
+                    isLoading = true
+                    loadingMessage = "Saving..."
+                    pomodoroVM.editPomodoro(pomodoroId: pomodoro.id, pomodoroName: pomodoroName, description: description, label: selected?.rawValue, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderHabit: reminderTime) {
+                        loadingSuccess(type: .save)
+                    }
                 }
                 .padding(.top, 4)
             }
         }
+        .background (
+            Color.neutral3
+                .frame(width: ScreenSize.width, height: ScreenSize.height)
+                .ignoresSafeArea()
+        )
         .alertOverlay($showAlert, content: {
             CustomAlertView(title: "Are you sure you want to Delete this pomodoro?", message: "Any progress and data linked to this will be lost permanently, and you wont be able to recover it", dismiss: "Cancel", destruct: "Delete", dismissAction: {
                 showAlert = false
             }, destructAction: {
-                pomodoroVM.deletePomodoro(pomodoroId: pomodoro.id)
-                self.presentationMode.wrappedValue.dismiss()
+                isLoading = true
+                loadingMessage = "Deleting..."
+                pomodoroVM.deletePomodoro(pomodoroId: pomodoro.id) {
+                    loadingSuccess(type: .delete)
+                }
             })
         })
         .toolbar {
@@ -379,6 +395,9 @@ struct EditPomodoroView: View {
                }
             }
         }
+        .alertOverlay($isLoading, content: {
+            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
+        })
         .navigationTitle("Edit Pomodoro Form")
         .navigationBarTitleDisplayMode(.large)
     }
@@ -386,3 +405,22 @@ struct EditPomodoroView: View {
     
 }
 
+fileprivate enum QueryType {
+    case delete, save
+}
+
+private extension EditPomodoroView {
+    func loadingSuccess(type: QueryType) {
+        switch type {
+        case .delete:
+            loadingMessage = "Deleted"
+        case .save:
+            loadingMessage = "Saved"
+        }
+        loadingStatus = .success
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isLoading = false
+            self.presentationMode.wrappedValue.dismiss()
+        }
+    }
+}

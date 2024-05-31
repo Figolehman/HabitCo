@@ -15,11 +15,15 @@ private enum Navigator {
 
 struct JournalView: View {
 
+    @State private var isLoading = false
+    @State private var loadingStatus = LoadingType.loading
+    @State private var loadingMessage = "Signing Out..."
+
     @State private var firstOpen = true
 
     @State private var navigateTo: Navigator? = Navigator.none
-    @State private var habitNavigationArg: HabitDB?
-    @State private var pomodoroNavigationArg: PomodoroDB?
+//    @State private var habitNavigationArg: HabitDB?
+//    @State private var pomodoroNavigationArg: PomodoroDB?
     @State private var focusNavigationArg: (PomodoroDB?, SubJournalDB?, Date)?
 
     @State private var sortType = SortImage.unsort
@@ -60,10 +64,10 @@ struct JournalView: View {
                     NavigationLink(destination: CreatePomodoroView(habitNotificationId: userViewModel.habitNotificationId ?? "", pomodoroVM: pomodoroViewModel), tag: .createPomodoro, selection: $navigateTo) {
                         EmptyView()
                     }
-                    NavigationLink(destination: HabitDetailView(habit: habitNavigationArg), tag: .habitDetail, selection: $navigateTo) {
+                    NavigationLink(destination: HabitDetailView(habitVM: habitViewModel), tag: .habitDetail, selection: $navigateTo) {
                         EmptyView()
                     }
-                    NavigationLink(destination: PomodoroDetailView(pomodoro: pomodoroNavigationArg), tag: .pomodoroDetail, selection: $navigateTo) {
+                  NavigationLink(destination: PomodoroDetailView(pomodoroVM: pomodoroViewModel), tag: .pomodoroDetail, selection: $navigateTo) {
                         EmptyView()
                     }
                     if focusNavigationArg != nil {
@@ -105,7 +109,7 @@ struct JournalView: View {
                                     ForEach(userViewModel.subJournals ?? [], id: \.subJournal.id) { item in
                                         if item.subJournal.subJournalType == .habit {
                                             HabitItem(habitType: .pomodoro, habitName: item.habit?.habitName ?? "NO NAME", label: item.habit?.label ?? "", fraction: item.subJournal.fraction ?? 0.0, progress: item.subJournal.startFrequency ?? 0) {
-                                                habitNavigationArg = item.habit
+                                                habitViewModel.setHabit(habit: item.habit!)
                                                 navigateTo = .habitDetail
                                             } action: {
                                                 userViewModel.updateCountSubJournal(subJournalId: item.subJournal.id ?? "", from: selectedDate)
@@ -114,7 +118,7 @@ struct JournalView: View {
                                             }
                                         } else {
                                             HabitItem(habitType: .regular, habitName: item.pomodoro?.pomodoroName ?? "NO NAME", label: item.pomodoro?.label ?? "", progress: item.subJournal.startFrequency ?? 0) {
-                                                pomodoroNavigationArg = item.pomodoro
+                                                pomodoroViewModel.setPomodoro(pomodoro: item.pomodoro!)
                                                 navigateTo = .pomodoroDetail
                                             } action: {
                                                 focusNavigationArg = (item.pomodoro, item.subJournal, selectedDate)
@@ -147,9 +151,14 @@ struct JournalView: View {
             }
             .padding(.top, 8)
             .background(
-                Image("blobsJournal")
-                    .frame(width: .getResponsiveWidth(558.86658), height: .getResponsiveHeight(509.7464))
-                    .offset(y: .getResponsiveHeight(-530))
+                ZStack {
+                    Color.getAppColor(.neutral3)
+                        .ignoresSafeArea()
+
+                    Image("blobsJournal")
+                        .frame(width: .getResponsiveWidth(558.86658), height: .getResponsiveHeight(509.7464))
+                        .offset(y: .getResponsiveHeight(-530))
+                }
             )
             .onAppear {
                 if firstOpen {
@@ -193,6 +202,7 @@ struct JournalView: View {
                 .frame(width: ScreenSize.width)
             }
         }
+        .navigationViewStyle(.stack)
         .customSheet($showSettings, sheetType: .settings, content: {
             SettingsView(username: userViewModel.user?.fullName ?? "Full Name", userEmail: "Apple ID", initial: userViewModel.generateInitial(), showAlert: $showAlert, showPrivacyPolicy: $showPrivacyPolicy, showTermsAndConditions: $showTermsAndConditions)
         })
@@ -207,8 +217,10 @@ struct JournalView: View {
                 showAlert = false
             }, destructAction: {
                 do {
+                    showAlert = false
+                    isLoading = true
                     try auth.signOut()
-                    appRootManager.currentRoot = .onBoardingView
+                    loadingSuccess()
                 } catch {
                     print(error)
                 }
@@ -240,6 +252,9 @@ struct JournalView: View {
                 }
             }
         })
+        .alertOverlay($isLoading, content: {
+            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
+        })
         .onChange(of: selectedDate) { newValue in
             userViewModel.getSubJournals(from: newValue)
         }
@@ -253,6 +268,15 @@ struct JournalView: View {
             userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: true)
         case .descending:
             userViewModel.filterSubJournalsByProgress(from: selectedDate, isAscending: false)
+        }
+    }
+
+    private func loadingSuccess() {
+        loadingMessage = "Signed Out"
+        loadingStatus = .success
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isLoading = false
+            appRootManager.currentRoot = .onBoardingView
         }
     }
 

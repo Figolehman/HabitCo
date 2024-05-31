@@ -26,13 +26,18 @@ final class HabitViewModel: ObservableObject {
 }
 
 extension HabitViewModel {
-    
+
+    public func setHabit(habit: HabitDB) {
+        self.habit = habit
+    }
+
     // Create user habit
-    public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date?) {
+    public func createUserHabit(habitName: String, description: String, label: String, frequency: Int, repeatHabit: [Int], reminderHabit: Date?, completion: @escaping () -> Void = {}) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             let timeString = reminderHabit?.dateToString(to: .hourAndMinute)
             try await userManager.createNewHabit(userId: userId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: timeString ?? "")
+            completion()
         }
     }
     
@@ -62,16 +67,17 @@ extension HabitViewModel {
     }
     
     // Edit Habit
-    public func editHabit(habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: Date?) {
+    public func editHabit(habitId: String, habitName: String?, description: String?, label: String?, frequency: Int?, repeatHabit: [Int]?, reminderHabit: Date?, completion: @escaping () -> Void) {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
             let reminder = reminderHabit?.dateToString(to: .hourAndMinute)
             self.habit = try await userManager.editHabit(userId: userId, habitId: habitId, habitName: habitName, description: description, label: label, frequency: frequency, repeatHabit: repeatHabit, reminderHabit: reminder)
+            completion()
         }
     }
     
     // Delete Habit
-    public func deleteHabit(habitId: String) {
+    public func deleteHabit(habitId: String, completion: @escaping () -> Void = {}) {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
             try? await userManager.deleteHabit(userId: userId, habitId: habitId)
@@ -88,6 +94,7 @@ extension HabitViewModel {
                 }
                 try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
             }
+            completion()
         }
     }
 }

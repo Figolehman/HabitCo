@@ -29,11 +29,12 @@ final class PomodoroViewModel: ObservableObject {
 extension PomodoroViewModel {
    
     // Create pomodoro
-    public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date?){
+    public func createUserPomodoro(pomodoroName: String, description: String, label: String, session: Int, focusTime: Int, breakTime: Int, longBreakTime: Int, repeatPomodoro: [Int], reminderPomodoro: Date?, completion: @escaping () -> Void = {}){
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             let timeString = reminderPomodoro?.dateToString(to: .hourAndMinute)
             try await userManager.createNewPomodoro(userId: userId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: timeString ?? "")
+            completion()
         }
     }
     
@@ -60,16 +61,17 @@ extension PomodoroViewModel {
         }
     }
     
-    public func editPomodoro(pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, longBreakTime: Int?, repeatPomodoro: [Int]?, reminderHabit: Date?) {
+    public func editPomodoro(pomodoroId: String, pomodoroName: String?, description: String?, label: String?, session: Int?, focusTime: Int?, breakTime: Int?, longBreakTime: Int?, repeatPomodoro: [Int]?, reminderHabit: Date?, completion: @escaping () -> Void = {}) {
         Task{
             guard let userId = UserDefaultManager.userID else { return }
             let reminder = reminderHabit?.dateToString(to: .hourAndMinute)
             self.pomodoro = try await userManager.editPomodoro(userId: userId, pomodoroId: pomodoroId, pomodoroName: pomodoroName, description: description, label: label, session: session, focusTime: focusTime, breakTime: breakTime, repeatPomodoro: repeatPomodoro, longBreakTime: longBreakTime, reminderPomodoro: reminder)
+            completion()
         }
     }
     
     // Delete pomodoro
-    public func deletePomodoro(pomodoroId: String) {
+    public func deletePomodoro(pomodoroId: String, completion: @escaping () -> Void) {
         Task {
             guard let userId = UserDefaultManager.userID else { return }
             try await userManager.deletePomodoro(userId: userId, pomodoroId: pomodoroId)
@@ -86,6 +88,11 @@ extension PomodoroViewModel {
                 }
                 try await userManager.updateTodayStreak(userId: userId, from: currentDate, isTodayStreak: false)
             }
+            completion()
         }
+    }
+
+    public func setPomodoro(pomodoro: PomodoroDB) {
+        self.pomodoro = pomodoro
     }
 }

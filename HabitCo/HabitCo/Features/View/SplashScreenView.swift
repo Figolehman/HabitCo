@@ -28,6 +28,11 @@ struct SplashScreenView: View {
                 .foregroundColor(.getAppColor(.neutral))
             
         }
+        .background (
+            Color.neutral3
+                .frame(width: ScreenSize.width, height: ScreenSize.height)
+                .ignoresSafeArea()
+        )
         .onAppear{
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 if UserDefaultManager.isLogin {

@@ -138,6 +138,11 @@ struct FocusView: View {
                 }
             }
         }
+        .background (
+            Color.neutral3
+                .frame(width: ScreenSize.width, height: ScreenSize.height)
+                .ignoresSafeArea()
+        )
         .navigationTitle("Habit Name")
     }
 }

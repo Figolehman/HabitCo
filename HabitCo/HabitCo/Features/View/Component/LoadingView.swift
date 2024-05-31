@@ -27,9 +27,9 @@ enum LoadingType {
 }
 
 struct LoadingView: View {
-    var loadingType: LoadingType
-    var message: String
-    
+    @Binding var loadingType: LoadingType
+    @Binding var message: String
+
     var body: some View {
         ZStack {
             Rectangle()
@@ -39,6 +39,11 @@ struct LoadingView: View {
                 .overlay (
                     VStack {
                         if loadingType != .loading {
+                            Spacer()
+                            Image(systemName: loadingType.view)
+                                .foregroundColor(loadingType == .success ? .getAppColor(.primary) : .getAppColor(.danger))
+                                .font(.system(size: 68, weight: .light))
+                            Spacer(minLength: .getResponsiveHeight(15))
                             Text(message)
                         } else {
                             Spacer()
@@ -59,24 +64,9 @@ struct LoadingView: View {
     }
 }
 
-extension LoadingView {
-    mutating func changeLoadingStatus (message: String, type: LoadingType) {
-        changeLoadingType(type)
-        changeLoadingMessage(message)
-    }
-    
-    mutating func changeLoadingMessage(_ message: String) {
-        self.message = message
-    }
-    
-    mutating func changeLoadingType(_ type: LoadingType) {
-        self.loadingType = type
-    }
-}
-
 #Preview {
     EmptyView()
         .alertOverlay(.constant(true)) {
-            LoadingView(loadingType: .loading, message: "Saving..")
+            LoadingView(loadingType: .constant(.error), message: .constant("Saving..."))
         }
 }

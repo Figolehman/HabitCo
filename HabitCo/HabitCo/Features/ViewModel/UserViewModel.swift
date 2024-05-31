@@ -87,14 +87,13 @@ extension UserViewModel{
                     {
                         try await userManager.createJournal(userId: UserDefaultManager.userID ?? "", date: missedDate)
                         checkIsStreak()
-                        getSubJournals(from: currentDate)
                     }
                 }
+                getSubJournals(from: currentDate)
                 UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
             } else {
                 try await userManager.createJournal(userId: UserDefaultManager.userID ?? "", date: currentDate)
                 checkIsStreak()
-                getSubJournals(from: currentDate)
                 UserDefaultManager.lastEntryDate = Date().formattedDate(to: .fullMonthName)
             }
         }

@@ -304,7 +304,6 @@
 		1B560C7B2BA2025400CE2DC6 /* Files */ = {
 			isa = PBXGroup;
 			children = (
-				1BB0C1802BDAE8E90071F595 /* Sounds */,
 				1BAA2F902BA777E500235B3D /* Info.plist */,
 				1B4B25782B7320B70081929F /* GoogleService-Info.plist */,
 				1BBC952A2B7286D900FF9353 /* Assets.xcassets */,
@@ -391,13 +390,6 @@
 				1BB0C1792BDAAA6F0071F595 /* SoundHandler.swift */,
 			);
 			path = Sound;
-			sourceTree = "<group>";
-		};
-		1BB0C1802BDAE8E90071F595 /* Sounds */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Sounds;
 			sourceTree = "<group>";
 		};
 		1BBC951A2B7286D800FF9353 = {

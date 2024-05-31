@@ -11,6 +11,10 @@ struct CreatePomodoroView: View {
 
     let habitNotificationId: String
 
+    @State private var isLoading = false
+    @State private var loadingStatus = LoadingType.loading
+    @State private var loadingMessage = "Saving..."
+
     @State private var pomodoroName: String = ""
     @State private var description: String = ""
     @State private var selected: Color.FilterColors? = nil
@@ -322,22 +326,42 @@ struct CreatePomodoroView: View {
                 let repeatPomodoro: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit, isDisabled: !isSavable()) {
                     if isSavable() {
-                        pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderTime)
-                        self.presentationMode.wrappedValue.dismiss()
+                        isLoading = true
+                        pomodoroVM.createUserPomodoro(pomodoroName: pomodoroName, description: description, label: selected?.rawValue ?? "", session: session, focusTime: focusTime, breakTime: breakTime, longBreakTime: longBreakTime, repeatPomodoro: repeatPomodoro, reminderPomodoro: reminderTime) {
+                            loadingSuccess()
+                        }
                     }
                 }
                 .padding(.top, 4)
             }
         }
+        .alertOverlay($isLoading, content: {
+            LoadingView(loadingType: $loadingStatus, message: $loadingMessage)
+        })
+        .background (
+            Color.neutral3
+                .frame(width: ScreenSize.width, height: ScreenSize.height)
+                .ignoresSafeArea()
+        )
+        .padding(.top, .getResponsiveHeight(36))
         .navigationTitle("Create Pomodoro Form")
         .navigationBarTitleDisplayMode(.large)
     }
 }
 
 // MARK: -
-extension CreatePomodoroView {
+private extension CreatePomodoroView {
     func isSavable() -> Bool {
         return isRepeatOn && isReminderOn && focusTime != 0 && breakTime != 0 && longBreakTime != 0
+    }
+
+    func loadingSuccess() {
+        loadingMessage = "Saved"
+        loadingStatus = .success
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isLoading = false
+            self.presentationMode.wrappedValue.dismiss()
+        }
     }
 }
 
