@@ -20,6 +20,7 @@
 		1B4B2A392BAD95980059559F /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B2A382BAD95980059559F /* ScreenSize.swift */; };
 		1B4B2A3B2BADAE770059559F /* SignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B2A3A2BADAE770059559F /* SignInButton.swift */; };
 		1B4B2A3D2BADEE3E0059559F /* CGFloat+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4B2A3C2BADEE3E0059559F /* CGFloat+Extension.swift */; };
+		1B5487932C8301FF004F6724 /* InformationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5487922C8301FF004F6724 /* InformationButton.swift */; };
 		1B560C7E2BA2028C00CE2DC6 /* AppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */; };
 		1B560C822BA222BE00CE2DC6 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C812BA222BE00CE2DC6 /* Color+Extension.swift */; };
 		1B560C842BA2C25E00CE2DC6 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B560C832BA2C25E00CE2DC6 /* ControlButton.swift */; };
@@ -154,6 +155,7 @@
 		1B4B2A382BAD95980059559F /* ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSize.swift; sourceTree = "<group>"; };
 		1B4B2A3A2BADAE770059559F /* SignInButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInButton.swift; sourceTree = "<group>"; };
 		1B4B2A3C2BADEE3E0059559F /* CGFloat+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extension.swift"; sourceTree = "<group>"; };
+		1B5487922C8301FF004F6724 /* InformationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationButton.swift; sourceTree = "<group>"; };
 		1B560C7D2BA2028C00CE2DC6 /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppButton.swift; path = HabitCo/Features/View/Component/Button/AppButton.swift; sourceTree = SOURCE_ROOT; };
 		1B560C812BA222BE00CE2DC6 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		1B560C832BA2C25E00CE2DC6 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
@@ -566,6 +568,7 @@
 				1BC23B102BAB69F000133C27 /* SignInWithAppleButtonViewRepresentable.swift */,
 				1B4B2A3A2BADAE770059559F /* SignInButton.swift */,
 				1BC868252BB13ABA00B348FE /* CreateLabel.swift */,
+				1B5487922C8301FF004F6724 /* InformationButton.swift */,
 			);
 			path = Button;
 			sourceTree = "<group>";
@@ -756,6 +759,7 @@
 				1BC23AF22BAB53CC00133C27 /* UserDB.swift in Sources */,
 				1B897F3C2BA424800018BEAA /* CalendarView.swift in Sources */,
 				1BD50F1E2BA61F8D00FC7BCF /* SettingButton.swift in Sources */,
+				1B5487932C8301FF004F6724 /* InformationButton.swift in Sources */,
 				1B7A24AB2BB6D0480045E8D4 /* HabitDetailView.swift in Sources */,
 				1B7A24A92BB5DC280045E8D4 /* Prompt.swift in Sources */,
 				1BCAD47B2BFE5BAD004C81D4 /* UIApplication.swift in Sources */,

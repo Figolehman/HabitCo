@@ -12,6 +12,15 @@ struct EditPomodoroView: View {
     let fromFocusView: Bool
     let pomodoro: PomodoroDB
 
+    @State private var showLabelInformation = false
+    @State private var showRepeatInformation = false
+    @State private var showReminderInformation = false
+    @State private var showSessionInformation = false
+    @State private var showAutoSetInformation = false
+    @State private var showFocusInformation = false
+    @State private var showBreakInformation = false
+    @State private var showLongBreakInformation = false
+
     @Binding var loading: (Bool, LoadingType, String)
     @Binding var showBackAlert: Bool
 
@@ -121,8 +130,11 @@ struct EditPomodoroView: View {
                     VStack (spacing: 24) {
                         CardView {
                             VStack (spacing: 12) {
-                                HStack {
+                                HStack (spacing: 4) {
                                     Text("Label")
+                                    InformationButton {
+                                        showLabelInformation.toggle()
+                                    }
                                     Spacer()
                                     Rectangle()
                                         .cornerRadius(12)
@@ -143,11 +155,21 @@ struct EditPomodoroView: View {
                                 }
                             }
                         }
+                        .if(showLabelInformation) { view in
+                            view
+                                .overlay(
+                                    Image(.labelInformation)
+                                        .offset(x: 22, y: isLabelFolded ? -50 : -100)
+                                )
+                        }
 
                         CardView {
                             VStack (spacing: 12) {
-                                HStack {
+                                HStack (spacing: 4) {
                                     Text("Repeat")
+                                    InformationButton {
+                                        showRepeatInformation.toggle()
+                                    }
                                     Spacer()
                                     AppButton(label: "\(repeatDate.getRepeatLabel())", sizeType: .select) {
                                         if isRepeatFolded {
@@ -175,11 +197,21 @@ struct EditPomodoroView: View {
                                 }
                             }
                         }
+                        .if(showRepeatInformation) { view in
+                            view
+                                .overlay(
+                                    Image(.repeatInformation)
+                                        .offset(x: isRepeatFolded ? 10 : 17, y: isRepeatFolded ? -50 : -98)
+                                )
+                        }
 
                         CardView {
                             VStack (spacing: 12) {
-                                HStack {
+                                HStack (spacing: 4) {
                                     Text("Reminder")
+                                    InformationButton {
+                                        showReminderInformation.toggle()
+                                    }
                                     Spacer()
                                     AppButton(label: "\(isReminderOn ? reminderTime.getFormattedTime() : "No Reminder")", sizeType: .select) {
                                         if isReminderFolded{
@@ -211,20 +243,42 @@ struct EditPomodoroView: View {
                                 }
                             }
                         }
+                        .if(showReminderInformation) { view in
+                            view
+                                .overlay(
+                                    Image(.reminderInformation)
+                                        .offset(x: isReminderFolded ? 12 : 20, y: isReminderFolded ? -50 : -185)
+                                )
+                        }
                     }
                 }
 
                 CardView {
-                    HStack {
+                    HStack (spacing: 4) {
                         Text("Session")
+                        InformationButton {
+                            showSessionInformation.toggle()
+                        }
                         Spacer()
                         LabeledStepper(frequency: $session )
                     }
                 }
+                .if(showSessionInformation) { view in
+                    view
+                        .overlay(
+                            Image(.sessionInformation)
+                                .offset(x: 8, y: -50)
+                        )
+                }
 
                 CardView {
                     VStack (alignment: .leading, spacing: 12){
-                        Text("Auto Set Pomodoro")
+                        HStack (spacing: 4) {
+                            Text("Auto Set Pomodoro")
+                            InformationButton {
+                                showAutoSetInformation.toggle()
+                            }
+                        }
                         HStack {
                             ForEach(DefaultPomodoro.allCases, id: \.self) { type in
                                 Button {
@@ -249,11 +303,21 @@ struct EditPomodoroView: View {
                         }
                     }
                 }
+                .if(showAutoSetInformation) { view in
+                    view
+                        .overlay(
+                            Image(.autoSetInformation)
+                                .offset(x: 64, y: -80)
+                        )
+                }
 
                 CardView {
                     VStack (spacing: 12) {
-                        HStack {
+                        HStack (spacing: 4) {
                             Text("Focus Time")
+                            InformationButton {
+                                showFocusInformation.toggle()
+                            }
                             Spacer()
                             AppButton(label: "\(focusTime == 0 ? "Not Set" : "\(focusTime)")", sizeType: .select) {
                                 if isFocusTimeFolded {
@@ -285,11 +349,21 @@ struct EditPomodoroView: View {
                         }
                     }
                 }
+                .if(showFocusInformation) { view in
+                    view
+                        .overlay(
+                            Image(.focusInformation)
+                                .offset(x: -2, y: isFocusTimeFolded ? -50 : -164)
+                        )
+                }
 
                 CardView {
                     VStack (spacing: 12) {
-                        HStack {
+                        HStack (spacing: 4) {
                             Text("Break Time")
+                            InformationButton {
+                                showBreakInformation.toggle()
+                            }
                             Spacer()
                             AppButton(label: "\(breakTime == 0 ? "Not Set" : "\(breakTime)")", sizeType: .select) {
                                 if isBreakTimeFolded {
@@ -321,11 +395,21 @@ struct EditPomodoroView: View {
                         }
                     }
                 }
+                .if(showBreakInformation) { view in
+                    view
+                        .overlay(
+                            Image(.breakInformation)
+                                .offset(x: -5, y: isBreakTimeFolded ? -50 : -164)
+                        )
+                }
 
                 CardView {
                     VStack (spacing: 12) {
-                        HStack {
+                        HStack (spacing: 4) {
                             Text("Long Break Time")
+                            InformationButton {
+                                showLongBreakInformation.toggle()
+                            }
                             Spacer()
                             AppButton(label: "\(focusTime == 0 ? "Not Set" : "\(longBreakTime)")", sizeType: .select) {
                                 if isLongBreakTimeFolded {
@@ -357,6 +441,13 @@ struct EditPomodoroView: View {
                         }
                     }
                 }
+                .if(showLongBreakInformation) { view in
+                    view
+                        .overlay(
+                            Image(.longBreakInformation)
+                                .offset(x: -3, y: isLongBreakTimeFolded ? -50 : -164)
+                        )
+                }
 
                 let repeatPomodoro: [Int] = repeatDate.map { $0.weekday }
                 AppButton(label: "Save", sizeType: .submit) {
@@ -374,6 +465,7 @@ struct EditPomodoroView: View {
                 }
                 .padding(.top, 4)
             }
+            .frame(maxWidth: .infinity)
         }
         .onTapGesture {
             UIApplication.shared.endEditing()
@@ -407,7 +499,7 @@ struct EditPomodoroView: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 BackButton {
-                  showBackAlert = true
+                    showBackAlert = true
                 }
             }
             ToolbarItem(placement: .primaryAction) {

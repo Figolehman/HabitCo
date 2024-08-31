@@ -11,6 +11,11 @@ struct CreateHabitView: View {
 
     let habitNotificationId: String
 
+    @State private var showLabelInformation = false
+    @State private var showFrequencyInformation = false
+    @State private var showRepeatInformation = false
+    @State private var showReminderInformation = false
+
     @Binding var loading: (Bool, LoadingType, String)
     @Binding var showAlertView: Bool
 
@@ -18,19 +23,19 @@ struct CreateHabitView: View {
     @State private var description: String = ""
     @State private var label: Color.FilterColors? = nil
     @State private var frequency: Int = 1
-    
+
     @State private var isRepeatOn = false
     @State private var isReminderOn = false
-    
+
     @State private var isRepeatFolded = true
     @State private var isReminderFolded = true
     @State private var isLabelFolded = true
-    
+
     @State private var repeatDate: Set<RepeatDay> = []
     @State private var reminderTime: Date = Date()
 
     @ObservedObject var habitVM: HabitViewModel
-    
+
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -45,9 +50,15 @@ struct CreateHabitView: View {
                 VStack (spacing: 24) {
                     CardView {
                         VStack (spacing: 12) {
-                            HStack {
+                            HStack (spacing: 4) {
                                 Text("Label")
+
+                                InformationButton {
+                                    showLabelInformation.toggle()
+                                }
+
                                 Spacer()
+
                                 Rectangle()
                                     .cornerRadius(12)
                                     .frame(width: .getResponsiveWidth(124), height: .getResponsiveHeight(46))
@@ -67,19 +78,40 @@ struct CreateHabitView: View {
                             }
                         }
                     }
-                    
+                    .if(showLabelInformation) { view in
+                        view
+                            .overlay(
+                                Image(.labelInformation)
+                                    .offset(x: 22, y: isLabelFolded ? -50 : -100)
+                            )
+                    }
+
                     CardView {
-                        HStack {
+                        HStack(spacing: 4) {
                             Text("Frequency")
+                            InformationButton {
+                                showFrequencyInformation.toggle()
+                            }
                             Spacer()
                             LabeledStepper(frequency: $frequency )
                         }
                     }
-                    
+                    .if(showFrequencyInformation) { view in
+                        view
+                            .overlay(
+                                Image(.frequencyInformation)
+                                    .offset(x: 8, y: -50)
+                            )
+                    }
+
+
                     CardView {
                         VStack (spacing: 12) {
-                            HStack {
+                            HStack (spacing: 4) {
                                 Text("Repeat")
+                                InformationButton {
+                                    showRepeatInformation.toggle()
+                                }
                                 Spacer()
                                 AppButton(label: "\(repeatDate.getRepeatLabel())", sizeType: .select) {
                                     if isRepeatFolded {
@@ -92,7 +124,7 @@ struct CreateHabitView: View {
                                             isRepeatFolded = true
                                         }
                                     }
-                                    
+
                                 }
                             }
                             if !isRepeatFolded {
@@ -106,14 +138,23 @@ struct CreateHabitView: View {
                                     }
                                 }
                             }
-                            
                         }
                     }
-                    
+                    .if(showRepeatInformation) { view in
+                        view
+                            .overlay(
+                                Image(.repeatInformation)
+                                    .offset(x: isRepeatFolded ? 10 : 17, y: isRepeatFolded ? -50 : -98)
+                            )
+                    }
+
                     CardView {
                         VStack (spacing: 12) {
-                            HStack {
+                            HStack (spacing: 4) {
                                 Text("Reminder")
+                                InformationButton {
+                                    showReminderInformation.toggle()
+                                }
                                 Spacer()
                                 AppButton(label: "\(isReminderOn ? reminderTime.getFormattedTime() : "No Reminder")", sizeType: .select) {
                                     if isReminderFolded{
@@ -131,7 +172,7 @@ struct CreateHabitView: View {
                             if !isReminderFolded {
                                 Toggle("Set reminder", isOn: $isReminderOn.animation())
                                     .toggleStyle(SwitchToggleStyle(tint: .getAppColor(.primary)))
-                                
+
                                 if isReminderOn {
                                     DatePicker("", selection: $reminderTime, displayedComponents: [.hourAndMinute])
                                         .datePickerStyle(.wheel)
@@ -144,6 +185,13 @@ struct CreateHabitView: View {
                                 }
                             }
                         }
+                    }
+                    .if(showReminderInformation) { view in
+                        view
+                            .overlay(
+                                Image(.reminderInformation)
+                                    .offset(x: isReminderFolded ? 12 : 20, y: isReminderFolded ? -50 : -185)
+                            )
                     }
                 }
                 let repeatDateInt: [Int] = repeatDate.map { $0.weekday }
@@ -159,6 +207,7 @@ struct CreateHabitView: View {
                 }
                 .padding(.top, 4)
             }
+            .frame(maxWidth: .infinity)
         }
         .onTapGesture {
             UIApplication.shared.endEditing()
